@@ -2,9 +2,6 @@ import {
   Sparkles,
   ArrowRight,
   ArrowUpRight,
-  Linkedin,
-  Twitter,
-  Github,
   Terminal,
   Shield,
   Layers,
@@ -12,6 +9,34 @@ import {
   Briefcase,
 } from 'lucide-react';
 import DepthCarousel, { type DepthCarouselItemObject } from '../components/DepthCarousel';
+
+function LinkedinIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6.94 8.5H3.56V19.5H6.94V8.5ZM5.25 3.5C4.14 3.5 3.25 4.39 3.25 5.5C3.25 6.6 4.14 7.5 5.25 7.5C6.35 7.5 7.25 6.6 7.25 5.5C7.25 4.39 6.35 3.5 5.25 3.5ZM20.44 13.02C20.44 9.88 18.76 8.22 16.16 8.22C14.37 8.22 13.48 9.21 13.02 9.93V8.5H9.65C9.7 9.48 9.65 19.5 9.65 19.5H13.02V13.36C13.02 13.02 13.05 12.69 13.15 12.45C13.42 11.78 14.03 11.09 15.07 11.09C16.41 11.09 17.06 12.11 17.06 13.6V19.5H20.44V13.02Z" />
+    </svg>
+  );
+}
+
+function TwitterIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.244 2.25H21.552L14.325 10.51L22.827 21.75H16.17L10.956 14.933L4.99 21.75H1.68L9.41 12.915L1.254 2.25H8.08L12.793 8.481L18.244 2.25ZM17.083 19.77H18.916L7.084 4.126H5.117L17.083 19.77Z" />
+    </svg>
+  );
+}
+
+function GithubIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.477 2 2 6.484 2 12.017C2 16.446 4.87 20.198 8.84 21.52C9.34 21.61 9.52 21.3 9.52 21.03C9.52 20.79 9.51 20.15 9.51 19.31C6.73 19.91 6.14 17.97 6.14 17.97C5.68 16.81 5.03 16.5 5.03 16.5C4.12 15.88 5.1 15.9 5.1 15.9C6.1 15.97 6.63 16.93 6.63 16.93C7.52 18.45 8.97 18.01 9.54 17.76C9.63 17.11 9.89 16.67 10.17 16.42C7.95 16.17 5.62 15.31 5.62 11.5C5.62 10.41 6.01 9.52 6.65 8.82C6.55 8.57 6.21 7.55 6.75 6.19C6.75 6.19 7.59 5.92 9.5 7.21C10.3 6.99 11.15 6.88 12 6.88C12.85 6.88 13.7 6.99 14.5 7.21C16.41 5.92 17.25 6.19 17.25 6.19C17.79 7.55 17.45 8.57 17.35 8.82C17.99 9.52 18.38 10.41 18.38 11.5C18.38 15.32 16.04 16.16 13.81 16.41C14.17 16.72 14.49 17.33 14.49 18.26C14.49 19.6 14.48 20.68 14.48 21.03C14.48 21.3 14.66 21.62 15.17 21.52C19.14 20.19 22 16.44 22 12.017C22 6.484 17.522 2 12 2Z"
+      />
+    </svg>
+  );
+}
 
 interface TeamPageProps {
   onOpenModal: () => void;
@@ -367,7 +392,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                         aria-label={`${member.name} LinkedIn`}
                         className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-gray-400 transition-colors hover:border-violet-400 hover:text-white"
                       >
-                        <Linkedin className="h-3.5 w-3.5" />
+                        <LinkedinIcon className="h-3.5 w-3.5" />
                       </a>
                     )}
                     {member.socials.twitter && (
@@ -376,7 +401,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                         aria-label={`${member.name} Twitter`}
                         className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-gray-400 transition-colors hover:border-violet-400 hover:text-white"
                       >
-                        <Twitter className="h-3.5 w-3.5" />
+                        <TwitterIcon className="h-3.5 w-3.5" />
                       </a>
                     )}
                     {member.socials.github && (
@@ -385,7 +410,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                         aria-label={`${member.name} GitHub`}
                         className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-gray-400 transition-colors hover:border-violet-400 hover:text-white"
                       >
-                        <Github className="h-3.5 w-3.5" />
+                        <GithubIcon className="h-3.5 w-3.5" />
                       </a>
                     )}
                   </div>
