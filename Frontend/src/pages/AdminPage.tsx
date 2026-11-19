@@ -38,6 +38,7 @@ type CmsSection =
   | 'services'
   | 'team'
   | 'testimonials'
+  | 'logos'
   | 'about'
   | 'contact'
   | 'inquiries'
@@ -59,6 +60,9 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     addTestimonial,
     updateTestimonial,
     deleteTestimonial,
+    addClientLogo,
+    updateClientLogo,
+    deleteClientLogo,
     saveAndPublish,
     resetToDefaults,
     isSaving,
@@ -74,11 +78,13 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
   const [editingTeamMemberId, setEditingTeamMemberId] = useState<string | null>(null);
   const [editingTestimonialId, setEditingTestimonialId] = useState<string | null>(null);
+  const [editingLogoId, setEditingLogoId] = useState<string | null>(null);
 
   // New Item Modals
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false);
   const [isAddTeamOpen, setIsAddTeamOpen] = useState(false);
   const [isAddTestimonialOpen, setIsAddTestimonialOpen] = useState(false);
+  const [isAddLogoOpen, setIsAddLogoOpen] = useState(false);
 
   // Form buffers for new items
   const [newServiceForm, setNewServiceForm] = useState({
@@ -103,6 +109,12 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     avatar: '/images/client-1.jpg',
     rating: 5,
     quote: '',
+  });
+
+  const [newLogoForm, setNewLogoForm] = useState({
+    name: '',
+    subtitle: 'Enterprise Partner',
+    src: '/images/logos/figma.svg',
   });
 
   // Handle master publish
@@ -139,6 +151,15 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
         t.role.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [cms.testimonials, searchQuery]);
+
+  // Filtered Client Logos
+  const filteredLogos = useMemo(() => {
+    return (cms.clientLogos || []).filter(
+      (l) =>
+        l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (l.subtitle && l.subtitle.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  }, [cms.clientLogos, searchQuery]);
 
   return (
     <div className="flex min-h-screen bg-[#07040d] text-white selection:bg-violet-600/40">
@@ -188,6 +209,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                 { id: 'services', label: 'Services & Disciplines', icon: Layers, count: cms.services.length },
                 { id: 'team', label: 'Team Directory', icon: Users, count: cms.team.length },
                 { id: 'testimonials', label: 'Client Testimonials', icon: MessageSquare, count: cms.testimonials.length },
+                { id: 'logos', label: 'Partner Logos', icon: Star, count: cms.clientLogos.length },
                 { id: 'about', label: 'About Studio & Stats', icon: Building2 },
                 { id: 'contact', label: 'Global Hubs & Contact', icon: MapPin },
               ].map((item) => {
@@ -312,6 +334,8 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                   ? 'Team Directory CMS'
                   : activeSection === 'testimonials'
                   ? 'Client Testimonials CMS'
+                  : activeSection === 'logos'
+                  ? 'Client Partner Logos CMS'
                   : activeSection === 'about'
                   ? 'About Studio & Pillars'
                   : activeSection === 'contact'
@@ -954,6 +978,110 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                           <div className="mt-4 border-t border-white/10 pt-3">
                             <h4 className="font-display text-sm font-bold text-white">{item.name}</h4>
                             <p className="text-[11px] text-violet-300">{item.role}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* ==================================================== */}
+          {/* SECTION: CLIENT PARTNER LOGOS CMS */}
+          {/* ==================================================== */}
+          {activeSection === 'logos' && (
+            <div className="space-y-6">
+              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                <div>
+                  <h3 className="font-display text-lg font-bold text-white">
+                    Client &amp; Partner Logos ({(cms.clientLogos || []).length})
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Brand partners presented in the dynamic interactive liquid carousel on the Home &amp; Services pages.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsAddLogoOpen(true)}
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-[#0a0612] hover:bg-violet-100"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>Add Partner Logo</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredLogos.map((item) => {
+                  const isEditing = editingLogoId === item.id;
+                  return (
+                    <div
+                      key={item.id}
+                      className="rounded-3xl border border-white/10 bg-[#0d0718]/90 p-6 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 p-2">
+                            <img
+                              src={item.src || '/images/logos/figma.svg'}
+                              alt={item.name}
+                              className="max-h-8 max-w-8 object-contain"
+                            />
+                          </div>
+                          <div>
+                            <h4 className="font-display text-sm font-bold text-white">{item.name}</h4>
+                            <p className="text-xs text-violet-300">{item.subtitle || 'Enterprise Partner'}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setEditingLogoId(isEditing ? null : item.id)}
+                            className="cursor-pointer text-xs text-gray-300 hover:text-white"
+                          >
+                            {isEditing ? 'Done' : 'Edit'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => deleteClientLogo(item.id)}
+                            className="cursor-pointer text-gray-500 hover:text-rose-400"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {isEditing && (
+                        <div className="mt-5 space-y-3 border-t border-white/10 pt-4 text-xs">
+                          <div>
+                            <label className="text-gray-400">Brand / Company Name</label>
+                            <input
+                              type="text"
+                              value={item.name}
+                              onChange={(e) => updateClientLogo(item.id, { name: e.target.value })}
+                              className="mt-1 w-full rounded-lg border border-white/10 bg-white/[0.04] p-2 text-white font-semibold"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-gray-400">Subtitle / Category</label>
+                            <input
+                              type="text"
+                              value={item.subtitle || ''}
+                              onChange={(e) => updateClientLogo(item.id, { subtitle: e.target.value })}
+                              className="mt-1 w-full rounded-lg border border-white/10 bg-white/[0.04] p-2 text-gray-300"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-gray-400">Logo SVG / Image Path</label>
+                            <input
+                              type="text"
+                              value={item.src || ''}
+                              onChange={(e) => updateClientLogo(item.id, { src: e.target.value })}
+                              className="mt-1 w-full rounded-lg border border-white/10 bg-white/[0.04] p-2 text-gray-300 font-mono text-[11px]"
+                            />
                           </div>
                         </div>
                       )}

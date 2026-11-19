@@ -244,6 +244,13 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCms((prev) => ({ ...prev, clientLogos: [...prev.clientLogos, created] }));
   }, []);
 
+  const updateClientLogo = useCallback((id: string, updated: Partial<ClientLogo>) => {
+    setCms((prev) => ({
+      ...prev,
+      clientLogos: prev.clientLogos.map((l) => (l.id === id ? { ...l, ...updated } : l)),
+    }));
+  }, []);
+
   const deleteClientLogo = useCallback((id: string) => {
     setCms((prev) => ({
       ...prev,
@@ -296,6 +303,7 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateTestimonial,
         deleteTestimonial,
         addClientLogo,
+        updateClientLogo,
         deleteClientLogo,
         saveAndPublish,
         resetToDefaults,
@@ -308,11 +316,5 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   );
 };
 
-export const useCms = (): CmsContextValue => {
-  const context = useContext(CmsContext);
-  if (!context) {
-    throw new Error('useCms must be used within a CmsProvider');
-  }
-  return context;
-};
+export { useCms } from './useCms';
 
