@@ -5,7 +5,6 @@ import { About } from './components/About';
 import { Services } from './components/Services';
 import { TrustedClients } from './components/TrustedClients';
 import { ClientFeedbackSection } from './components/ClientFeedbackSection';
-import { Team } from './components/Team';
 import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
 import { AboutPage } from './pages/AboutPage';
@@ -118,7 +117,6 @@ export function App() {
             <Services onOpenModal={() => setModalOpen(true)} />
             <TrustedClients />
             <ClientFeedbackSection />
-            <Team />
           </>
         )}
 
