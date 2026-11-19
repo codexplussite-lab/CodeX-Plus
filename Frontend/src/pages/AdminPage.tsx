@@ -260,9 +260,8 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
       {/* LEFT CMS SIDEBAR */}
       {/* -------------------------------------------------------- */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col justify-between border-r border-white/10 bg-[#090513] p-5 backdrop-blur-xl transition-transform duration-300 lg:static lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col justify-between border-r border-white/10 bg-[#090513] p-5 backdrop-blur-xl transition-transform duration-300 lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div>
           {/* Logo & Hub Badge */}
