@@ -278,7 +278,7 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
               onClick={() => handleNav('admin')}
               className="cursor-pointer text-gray-500 transition-colors hover:text-violet-300"
             >
-              Admin Portal
+              Admin Panel
             </button>
           </div>
         </div>
