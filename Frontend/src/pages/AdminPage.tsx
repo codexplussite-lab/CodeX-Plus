@@ -1575,6 +1575,92 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           </div>
         </div>
       )}
+
+      {/* -------------------------------------------------------- */}
+      {/* MODAL: ADD CLIENT LOGO */}
+      {/* -------------------------------------------------------- */}
+      {isAddLogoOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+          onClick={() => setIsAddLogoOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-md rounded-3xl border border-violet-400/30 bg-[#120822] p-8 shadow-[0_24px_90px_rgba(124,58,237,0.35)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setIsAddLogoOpen(false)}
+              className="absolute top-5 right-5 text-gray-400 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <h3 className="font-display text-xl font-bold text-white">Add Partner Brand Logo</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newLogoForm.name) return;
+                addClientLogo(newLogoForm);
+                setIsAddLogoOpen(false);
+                setNewLogoForm({
+                  name: '',
+                  subtitle: 'Enterprise Partner',
+                  src: '/images/logos/figma.svg',
+                });
+              }}
+              className="mt-5 space-y-4 text-xs"
+            >
+              <div>
+                <label className="text-gray-300 font-medium">Brand / Company Name</label>
+                <input
+                  type="text"
+                  required
+                  value={newLogoForm.name}
+                  onChange={(e) =>
+                    setNewLogoForm((prev) => ({ ...prev, name: e.target.value }))
+                  }
+                  placeholder="e.g. OpenAI"
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white"
+                />
+              </div>
+              <div>
+                <label className="text-gray-300 font-medium">Subtitle / Category</label>
+                <input
+                  type="text"
+                  required
+                  value={newLogoForm.subtitle}
+                  onChange={(e) =>
+                    setNewLogoForm((prev) => ({ ...prev, subtitle: e.target.value }))
+                  }
+                  placeholder="e.g. Frontier AI Systems"
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white"
+                />
+              </div>
+              <div>
+                <label className="text-gray-300 font-medium">Logo SVG / Image Path</label>
+                <input
+                  type="text"
+                  required
+                  value={newLogoForm.src}
+                  onChange={(e) =>
+                    setNewLogoForm((prev) => ({ ...prev, src: e.target.value }))
+                  }
+                  placeholder="/images/logos/stripe.svg"
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white font-mono text-[11px]"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full rounded-full bg-white py-3 font-semibold text-[#0a0612] hover:bg-violet-100"
+              >
+                Add Partner Logo
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
