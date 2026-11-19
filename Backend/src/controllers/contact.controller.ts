@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { storage } from '../db/storage';
+import { ContactInquiry } from '../types';
 
 export const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
@@ -33,6 +34,7 @@ export const handleContactSubmit = async (req: Request, res: Response): Promise<
     data: {
       id: inquiry.id,
       createdAt: inquiry.createdAt,
+      status: inquiry.status,
     },
   });
 };
@@ -43,5 +45,51 @@ export const getInquiriesList = async (_req: Request, res: Response): Promise<vo
     success: true,
     count: list.length,
     data: list,
+  });
+};
+
+export const updateInquiryStatusHandler = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const { status } = req.body as { status: ContactInquiry['status'] };
+
+  if (!status || !['new', 'in_review', 'contacted', 'archived'].includes(status)) {
+    res.status(400).json({
+      success: false,
+      message: 'Invalid status. Must be one of: new, in_review, contacted, archived',
+    });
+    return;
+  }
+
+  const updated = storage.updateInquiryStatus(id, status);
+  if (!updated) {
+    res.status(404).json({
+      success: false,
+      message: `Inquiry with ID '${id}' not found`,
+    });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `Inquiry status updated to ${status}`,
+    data: updated,
+  });
+};
+
+export const deleteInquiryHandler = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const deleted = storage.deleteInquiry(id);
+
+  if (!deleted) {
+    res.status(404).json({
+      success: false,
+      message: `Inquiry with ID '${id}' not found`,
+    });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `Inquiry '${id}' deleted successfully`,
   });
 };

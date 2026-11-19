@@ -6,6 +6,7 @@ export interface ContactInquiry {
   service: string;
   budget: string;
   message: string;
+  status: 'new' | 'in_review' | 'contacted' | 'archived';
   createdAt: string;
   ipAddress?: string;
 }
@@ -17,6 +18,7 @@ export interface BookingRequest {
   service: string;
   preferredDate?: string;
   notes?: string;
+  status: 'pending' | 'confirmed' | 'rescheduled' | 'completed';
   createdAt: string;
   ipAddress?: string;
 }

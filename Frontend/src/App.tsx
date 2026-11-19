@@ -12,13 +12,16 @@ import { AboutPage } from './pages/AboutPage';
 import { ServicesPage } from './pages/ServicesPage';
 import { TeamPage } from './pages/TeamPage';
 import { ContactPage } from './pages/ContactPage';
+import { AdminPage } from './pages/AdminPage';
 
 function getInitialPage(): AppPage {
+  const path = window.location.pathname.toLowerCase();
   const hash = window.location.hash.toLowerCase();
-  if (hash === '#about') return 'about';
-  if (hash === '#services') return 'services';
-  if (hash === '#team') return 'team';
-  if (hash === '#contact') return 'contact';
+  if (path === '/admin' || hash === '#admin') return 'admin';
+  if (path === '/about' || hash === '#about') return 'about';
+  if (path === '/services' || hash === '#services') return 'services';
+  if (path === '/team' || hash === '#team') return 'team';
+  if (path === '/contact' || hash === '#contact') return 'contact';
   return 'home';
 }
 
@@ -29,31 +32,46 @@ export function App() {
   const handleNavigate = useCallback((page: AppPage, targetHash?: string) => {
     setCurrentPage(page);
 
+    if (page === 'admin') {
+      window.history.pushState(null, '', '/admin');
+      window.location.hash = '#admin';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     if (page === 'about') {
+      if (window.location.pathname === '/admin') window.history.pushState(null, '', '/');
       window.location.hash = '#about';
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
     if (page === 'services') {
+      if (window.location.pathname === '/admin') window.history.pushState(null, '', '/');
       window.location.hash = '#services';
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
     if (page === 'team') {
+      if (window.location.pathname === '/admin') window.history.pushState(null, '', '/');
       window.location.hash = '#team';
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
     if (page === 'contact') {
+      if (window.location.pathname === '/admin') window.history.pushState(null, '', '/');
       window.location.hash = '#contact';
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
     // Home page navigation
+    if (window.location.pathname === '/admin') {
+      window.history.pushState(null, '', '/');
+    }
+
     if (targetHash && targetHash !== '#home') {
       window.location.hash = targetHash;
       setTimeout(() => {
@@ -69,15 +87,19 @@ export function App() {
     }
   }, []);
 
-  // Listen to browser Back / Forward buttons
+  // Listen to browser Back / Forward buttons & popstate
   useEffect(() => {
-    const onHashChange = () => {
+    const onLocationChange = () => {
       const page = getInitialPage();
       setCurrentPage(page);
     };
 
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    window.addEventListener('hashchange', onLocationChange);
+    window.addEventListener('popstate', onLocationChange);
+    return () => {
+      window.removeEventListener('hashchange', onLocationChange);
+      window.removeEventListener('popstate', onLocationChange);
+    };
   }, []);
 
   return (
@@ -130,12 +152,20 @@ export function App() {
             onNavigateHome={() => handleNavigate('home', '#home')}
           />
         )}
+
+        {currentPage === 'admin' && (
+          <AdminPage
+            onNavigateHome={() => handleNavigate('home', '#home')}
+          />
+        )}
       </main>
 
-      <Footer
-        onOpenModal={() => setModalOpen(true)}
-        onNavigate={handleNavigate}
-      />
+      {currentPage !== 'admin' && (
+        <Footer
+          onOpenModal={() => setModalOpen(true)}
+          onNavigate={handleNavigate}
+        />
+      )}
 
       <BookingModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>

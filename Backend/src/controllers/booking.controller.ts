@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { storage } from '../db/storage';
+import { BookingRequest } from '../types';
 
 export const bookingSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
@@ -31,6 +32,7 @@ export const handleBookingSubmit = async (req: Request, res: Response): Promise<
     data: {
       id: booking.id,
       createdAt: booking.createdAt,
+      status: booking.status,
     },
   });
 };
@@ -41,5 +43,51 @@ export const getBookingsList = async (_req: Request, res: Response): Promise<voi
     success: true,
     count: list.length,
     data: list,
+  });
+};
+
+export const updateBookingStatusHandler = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const { status } = req.body as { status: BookingRequest['status'] };
+
+  if (!status || !['pending', 'confirmed', 'rescheduled', 'completed'].includes(status)) {
+    res.status(400).json({
+      success: false,
+      message: 'Invalid status. Must be one of: pending, confirmed, rescheduled, completed',
+    });
+    return;
+  }
+
+  const updated = storage.updateBookingStatus(id, status);
+  if (!updated) {
+    res.status(404).json({
+      success: false,
+      message: `Booking with ID '${id}' not found`,
+    });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `Booking status updated to ${status}`,
+    data: updated,
+  });
+};
+
+export const deleteBookingHandler = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const deleted = storage.deleteBooking(id);
+
+  if (!deleted) {
+    res.status(404).json({
+      success: false,
+      message: `Booking with ID '${id}' not found`,
+    });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `Booking '${id}' deleted successfully`,
   });
 };

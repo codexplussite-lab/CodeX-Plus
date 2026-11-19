@@ -273,6 +273,13 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
             >
               T&amp;C and Privacy Policies
             </a>
+            <button
+              type="button"
+              onClick={() => handleNav('admin')}
+              className="cursor-pointer text-gray-500 transition-colors hover:text-violet-300"
+            >
+              Admin Portal
+            </button>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 
-export type AppPage = 'home' | 'about' | 'services' | 'team' | 'contact';
+export type AppPage = 'home' | 'about' | 'services' | 'team' | 'contact' | 'admin';
 
 interface NavbarProps {
   onOpenModal: () => void;
@@ -89,6 +89,10 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
     setMobileOpen(false);
     onNavigate(item.page, item.hash);
   };
+
+  if (currentPage === 'admin') {
+    return null;
+  }
 
   return (
     <header
