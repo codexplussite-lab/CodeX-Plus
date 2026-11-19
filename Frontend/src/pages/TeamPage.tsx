@@ -124,12 +124,12 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
               href="#directory"
               className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-violet-300 hover:bg-white/10"
             >
-              Browse {teamList.length}-Member Directory
+              Browse 12-Member Directory
             </a>
           </div>
         </div>
 
-        {/* Complete Directory Grid */}
+        {/* Complete 12-Member Directory Grid */}
         <div id="directory" className="mt-20">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
@@ -137,7 +137,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                 Studio Directory
               </span>
               <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
-                All {teamList.length} Studio Principals
+                All 12 Studio Principals
               </h2>
             </div>
             <p className="max-w-md text-sm leading-relaxed text-gray-400">

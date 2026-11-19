@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { X, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
+import { useCms } from '../context/useCms';
+import { SERVICES as DEFAULT_SERVICES } from '../data/siteData';
 
 interface BookingModalProps {
   open: boolean;
@@ -7,11 +9,17 @@ interface BookingModalProps {
 }
 
 export function BookingModal({ open, onClose }: BookingModalProps) {
+  const { cms } = useCms();
+  const servicesList =
+    cms.services && cms.services.length > 0 ? cms.services : DEFAULT_SERVICES;
+
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [service, setService] = useState('AI Innovation & Development');
+  const [service, setService] = useState(
+    () => servicesList[0]?.title || 'AI Innovation & Development'
+  );
 
   if (!open) return null;
 
@@ -19,7 +27,7 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await fetch('http://localhost:5000/api/bookings', {
+      await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -98,19 +106,19 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
             </div>
             <h3
               id="booking-modal-title"
-              className="mt-4 font-display text-2xl font-semibold text-white"
+              className="mt-4 font-display text-2xl font-bold tracking-tight text-white"
             >
-              Start Building with CODEXX PLUS
+              Direct Architecture Discovery
             </h3>
             <p className="mt-2 text-sm text-gray-400">
-              Share your goals and we&apos;ll pair you with our solution
-              architects.
+              Brief our senior architects on your next platform, brand milestone,
+              or autonomous AI workflow.
             </p>
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-gray-300">
-                  Full Name
+                  Your Name
                 </label>
                 <input
                   type="text"
@@ -145,11 +153,11 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
                   onChange={(e) => setService(e.target.value)}
                   className="w-full rounded-xl border border-white/15 bg-[#190e2b] px-4 py-3 text-sm text-white focus:border-violet-400 focus:outline-none"
                 >
-                  <option>AI Innovation &amp; Development</option>
-                  <option>Graphics Design &amp; Branding</option>
-                  <option>Video Editing &amp; Motion</option>
-                  <option>Social Media Marketing</option>
-                  <option>SEO / GEO Growth</option>
+                  {servicesList.map((svc) => (
+                    <option key={svc.id} value={svc.title}>
+                      {svc.title} ({svc.tag})
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -168,4 +176,3 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
     </div>
   );
 }
-

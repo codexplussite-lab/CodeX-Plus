@@ -14,6 +14,7 @@ export interface ClientLogo {
   id: string;
   name: string;
   subtitle?: string;
+  src?: string;
 }
 
 export interface TestimonialItem {
@@ -46,49 +47,90 @@ export const NAV_LINKS = [
 export const SERVICES: ServiceItem[] = [
   {
     id: 'development',
-    title: 'Development',
+    title: 'Full-Stack & Autonomous AI',
     tag: 'Full-Stack & AI',
+    lead: 'Bespoke engineering architectures combining high-throughput cloud infrastructure, proprietary autonomous agent pipelines, and lightning-fast web applications.',
     description:
-      'Bespoke engineering architectures combining high-throughput cloud infrastructure, proprietary autonomous agent pipelines, and lightning-fast web applications.',
+      'We construct mission-critical software systems that handle massive traffic without degradation. From deterministic LLM workflows to event-driven microservices and reactive interfaces, every line of code is structured for long-term maintainability and sub-second execution.',
+    techStack: ['React 19 & Next.js', 'Node.js & Python', 'LangChain & Agentic Workflows', 'PostgreSQL & Redis', 'Cloudflare Edge'],
+    deliverables: [
+      'Multi-agent autonomous automation pipelines',
+      'High-throughput REST & GraphQL API services',
+      'Enterprise database architecture & schema design',
+      'Zero-downtime CI/CD deployment infrastructure',
+    ],
     isLarge: true,
   },
   {
     id: 'graphics-design',
-    title: 'Graphics Design',
+    title: 'Graphics & Visual Identity',
     tag: 'Visual Identity',
+    lead: 'Cinematic visual storytelling, authoritative brand guidelines, and dark-luxury design tokens engineered for global enterprise prestige.',
     description:
-      'Cinematic visual storytelling, authoritative brand guidelines, and dark-luxury design tokens engineered for global enterprise prestige.',
+      'Great products fail when wrapped in mundane design. We sculpt visual languages that instantly signal elite positioning: bespoke design token systems, crisp specular lighting, custom iconography, and high-conversion typography designed to captivate discerning enterprise buyers.',
+    techStack: ['Figma Enterprise', 'Token Studio', 'Vector Systems', 'Custom Typography', 'Design System Guidelines'],
+    deliverables: [
+      'Complete luxury dark design system & component library',
+      'Comprehensive brand identity, voice, and guidelines',
+      'Custom vector iconography and illustration assets',
+      'Pitch decks, collateral & marketing asset kits',
+    ],
   },
   {
     id: 'video-editing',
-    title: 'Video Editing',
+    title: '3D Motion & WebGL Experiences',
     tag: 'Motion & Post',
+    lead: 'World-class post-production, interactive 3D WebGL motion graphics, and high-impact product keynote films crafted for conversion.',
     description:
-      'World-class post-production, interactive 3D WebGL motion graphics, and high-impact product keynote films crafted for conversion.',
+      'We bridge modern Hollywood-grade visual fidelity with 60fps web performance. By marrying GPU shader code with fluid GSAP micro-choreography, we transform static corporate sites into immersive digital flagship destinations.',
+    techStack: ['Three.js & OGL', 'GLSL Custom Shaders', 'GSAP Animation Suite', 'DaVinci Resolve Studio', 'After Effects'],
+    deliverables: [
+      'Interactive 3D WebGL hero scenes & product showcases',
+      'Keynote product announcement & brand launch videos',
+      'Physics-based gesture animations & page transitions',
+      'Sound design & cinematic audio mastering',
+    ],
     featured: true,
   },
   {
     id: 'social-media-marketing',
-    title: 'Social Media Marketing',
+    title: 'Social Media & Growth Engine',
     tag: 'Growth Engine',
+    lead: 'Omnichannel narrative orchestration, strategic executive positioning, and data-backed distribution driving measurable qualified pipeline.',
     description:
-      'Omnichannel narrative orchestration, strategic executive positioning, and data-backed distribution driving measurable qualified pipeline.',
+      'Visibility without conversion is vanity. We craft targeted content architectures, founder-led social strategies, and algorithmic distribution playbooks that turn industry attention into qualified enterprise inbound.',
+    techStack: ['Attribution Engines', 'Multi-Platform Distribution', 'Competitive Analytics', 'Founder Narrative Mapping'],
+    deliverables: [
+      'C-suite executive thought leadership ghostwriting',
+      'Data-driven omnichannel content publishing schedules',
+      'High-converting product demo shorts & carousels',
+      'Inbound attribution analytics & lead tracking',
+    ],
   },
   {
     id: 'seo-geo',
-    title: 'SEO / GEO',
+    title: 'Next-Gen SEO & AI Engine Discovery',
     tag: 'Search & AI Discovery',
+    lead: 'Next-generation search authority optimized for both traditional algorithmic rankings and generative AI engine discovery worldwide.',
     description:
-      'Next-generation search authority optimized for both traditional algorithmic rankings and generative AI engine discovery worldwide.',
+      'As search behaviors transition from ten blue links to generative summaries (Perplexity, ChatGPT, Google Gemini), we engineer algorithmic GEO architectures ensuring your domain is quoted as the canonical source of truth.',
+    techStack: ['Generative Engine Optimization (GEO)', 'Semantic Entity Graphs', 'Automated Content Caching', 'Technical Schema Architecture'],
+    deliverables: [
+      'Full generative AI visibility audit & entity positioning',
+      'Structured microdata & schema knowledge graphs',
+      'Deep technical performance & Core Web Vitals optimization',
+      'Competitive authority & backlinks acquisition strategy',
+    ],
   },
 ];
 
 export const CLIENT_LOGOS: ClientLogo[] = [
-  { id: 'owl', name: 'OWL', subtitle: 'AI Systems' },
-  { id: 'morheme', name: 'Morheme Tech', subtitle: 'Enterprise Cloud' },
-  { id: 'zainab', name: 'Zainab Bees', subtitle: 'Organic Collective' },
-  { id: 'lumina', name: 'Lumina Labs', subtitle: 'Neural Ops' },
-  { id: 'veritas', name: 'Veritas Capital', subtitle: 'FinTech' },
+  { id: 'godaddy', name: 'GoDaddy', subtitle: 'Cloud Infrastructure', src: '/images/logos/godaddy.svg' },
+  { id: 'hotjar', name: 'Hotjar', subtitle: 'Behavior Analytics', src: '/images/logos/hotjar.svg' },
+  { id: 'tripadvisor', name: 'Tripadvisor', subtitle: 'Global Hospitality', src: '/images/logos/tripadvisor.svg' },
+  { id: 'google-fonts', name: 'Google Fonts', subtitle: 'Design Systems', src: '/images/logos/google-fonts.svg' },
+  { id: 'figma', name: 'Figma', subtitle: 'Product Design', src: '/images/logos/figma.svg' },
+  { id: 'stripe', name: 'Stripe', subtitle: 'Global Payments', src: '/images/logos/stripe.svg' },
 ];
 
 export const TESTIMONIALS: TestimonialItem[] = [

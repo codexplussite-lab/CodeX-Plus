@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Sparkles,
   ArrowRight,
@@ -15,8 +15,8 @@ import {
   ShieldCheck,
   Check,
 } from 'lucide-react';
-import { CLIENT_LOGOS } from '../data/siteData';
 import { useCms } from '../context/useCms';
+import { SERVICES as DEFAULT_SERVICES, CLIENT_LOGOS as DEFAULT_LOGOS } from '../data/siteData';
 
 interface ServicesPageProps {
   onOpenModal: () => void;
@@ -24,7 +24,7 @@ interface ServicesPageProps {
   onNavigateHome: () => void;
 }
 
-const DISCIPLINES = [
+const ICONS = [Code2, Palette, Film, TrendingUp, Search, Cpu, Layers, ShieldCheck];
   {
     id: 'development',
     step: '01',
@@ -200,21 +200,31 @@ const ENGAGEMENT_TIERS = [
 
 export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }: ServicesPageProps) {
   const { cms } = useCms();
-  const rawServices = cms.services && cms.services.length > 0 ? cms.services : DISCIPLINES;
-  const disciplinesList = rawServices.map((item, idx) => ({
-    id: item.id,
-    step: String(idx + 1).padStart(2, '0'),
-    title: item.title,
-    tag: item.tag,
-    icon: idx === 0 ? Code2 : idx === 1 ? Palette : idx === 2 ? Film : idx === 3 ? TrendingUp : Search,
-    lead: ('lead' in item && typeof item.lead === 'string') ? item.lead : item.description,
-    description: item.description,
-    techStack: Array.isArray(item.techStack) && item.techStack.length > 0 ? item.techStack : ['React 19 & Next.js', 'High-Performance APIs', 'Cloud Architecture'],
-    deliverables: Array.isArray(item.deliverables) && item.deliverables.length > 0 ? item.deliverables : ['Full system architecture & specification', 'Production deployment & documentation'],
-  }));
+
+  const services = cms.services && cms.services.length > 0 ? cms.services : DEFAULT_SERVICES;
+  const clientLogos = cms.clientLogos && cms.clientLogos.length > 0 ? cms.clientLogos : DEFAULT_LOGOS;
+
+  const disciplines = useMemo(() => {
+    return services.map((s, idx) => ({
+      id: s.id,
+      step: String(idx + 1).padStart(2, '0'),
+      title: s.title,
+      tag: s.tag,
+      icon: ICONS[idx % ICONS.length],
+      lead: s.lead || s.description.slice(0, 160) + '...',
+      description: s.description,
+      techStack: s.techStack || ['React 19 & Next.js', 'Node.js & Python', 'LangChain & Agentic Workflows', 'Cloudflare Edge'],
+      deliverables: s.deliverables || [
+        'Enterprise architecture & schema design',
+        'Zero-downtime CI/CD deployment infrastructure',
+        'Deterministic security & threat modeling',
+        '24/7 high-availability SLA monitoring',
+      ],
+    }));
+  }, [services]);
 
   const [activeDiscipline, setActiveDiscipline] = useState<string>(
-    disciplinesList[0]?.id || 'development'
+    () => disciplines[0]?.id || 'development'
   );
 
   return (
@@ -312,7 +322,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
 
           {/* Quick discipline switcher buttons */}
           <div className="mt-10 flex flex-wrap gap-2">
-            {disciplinesList.map((d) => {
+            {disciplines.map((d) => {
               const active = activeDiscipline === d.id;
               return (
                 <button
@@ -333,7 +343,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
 
           {/* Disciplines Grid */}
           <div className="mt-8 space-y-6">
-            {disciplinesList.map((item) => {
+            {disciplines.map((item) => {
               const Icon = item.icon;
               const isSelected = activeDiscipline === item.id;
               return (
@@ -381,7 +391,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                           Technologies &amp; Frameworks
                         </span>
                         <div className="mt-2.5 flex flex-wrap gap-2">
-                          {item.techStack.map((tech: string) => (
+                          {item.techStack.map((tech) => (
                             <span
                               key={tech}
                               className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300"
@@ -403,7 +413,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                           </h4>
                         </div>
                         <ul className="mt-5 space-y-3">
-                          {item.deliverables.map((deliv: string) => (
+                          {item.deliverables.map((deliv) => (
                             <li key={deliv} className="flex items-start gap-2.5 text-xs text-gray-300">
                               <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-400" />
                               <span className="leading-relaxed">{deliv}</span>
@@ -566,7 +576,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
             </span>
           </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-8 sm:gap-14">
-            {CLIENT_LOGOS.map((client) => (
+            {clientLogos.map((client) => (
               <div key={client.id} className="text-center">
                 <span className="font-display text-xl font-bold tracking-tight text-white/80 transition-colors hover:text-white sm:text-2xl">
                   {client.name}

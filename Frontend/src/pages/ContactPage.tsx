@@ -22,7 +22,7 @@ const BUDGET_TIERS = [
   'Monthly Retainer',
 ];
 
-const DEFAULT_GLOBAL_HUBS = [
+const GLOBAL_HUBS = [
   {
     city: 'San Francisco',
     address: '500 Howard St, Financial District',
@@ -49,7 +49,7 @@ const DEFAULT_GLOBAL_HUBS = [
   },
 ];
 
-const DEFAULT_FAQS = [
+const FAQS = [
   {
     q: 'What is the typical turnaround timeline for a flagship engagement?',
     a: 'Comprehensive web platforms and brand design sprints typically run 4 to 8 weeks. Enterprise AI integrations and multi-agent systems are delivered in iterative two-week deployment milestones with continuous staging visibility.',
@@ -70,8 +70,45 @@ const DEFAULT_FAQS = [
 
 export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
   const { cms } = useCms();
+  const contact = cms.contact;
+  const emailAddress = contact.email || 'Info@codexplus.site';
+  const phoneAmericas = contact.phoneAmericas || '+1 (555) 839-2041';
 
-  const [selectedService, setSelectedService] = useState('Full-Stack Platform');
+  const serviceOptions =
+    cms.services && cms.services.length > 0
+      ? cms.services.map((s) => s.title)
+      : SERVICE_OPTIONS;
+
+  const dynamicHubs = [
+    {
+      city: 'San Francisco',
+      address: contact.sfAddress || '500 Howard St, Financial District',
+      hours: 'Mon – Fri: 09:00 – 18:00 PST',
+      phone: phoneAmericas,
+    },
+    {
+      city: 'Zurich',
+      address: contact.zurichAddress || 'Bahnhofstrasse 45, Tech Core',
+      hours: 'Mon – Fri: 08:30 – 17:30 CET',
+      phone: contact.phoneEurope || '+41 44 211 4890',
+    },
+    {
+      city: 'London',
+      address: contact.londonAddress || '10 Berkeley Square, Mayfair',
+      hours: 'Mon – Fri: 09:00 – 18:00 GMT',
+      phone: '+44 20 7946 0912',
+    },
+    {
+      city: 'Dubai',
+      address: contact.dubaiAddress || 'DIFC Gate Tower, Level 14',
+      hours: 'Sun – Thu: 09:00 – 18:00 GST',
+      phone: '+971 4 362 7700',
+    },
+  ];
+
+  const [selectedService, setSelectedService] = useState(
+    () => serviceOptions[0] || 'Full-Stack Platform'
+  );
   const [selectedBudget, setSelectedBudget] = useState('$50k – $100k');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -82,56 +119,42 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
   const [copied, setCopied] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
-  const contactEmail = cms.contact?.email || 'Info@codexplus.site';
-  const phoneAmericas = cms.contact?.phoneAmericas || '+1 (555) 839-2041';
-  const hubs = cms.contact?.hubs && cms.contact.hubs.length > 0 ? cms.contact.hubs : DEFAULT_GLOBAL_HUBS;
-  const faqs = cms.contact?.faqs && cms.contact.faqs.length > 0 ? cms.contact.faqs : DEFAULT_FAQS;
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(emailAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
-
     setSubmitting(true);
     try {
-      const res = await fetch('/api/inquiries', {
+      await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fullName: name,
+          name,
           email,
-          company: company || 'Not specified',
-          serviceRequested: selectedService,
-          projectScope: selectedBudget,
+          company,
+          service: selectedService,
           budget: selectedBudget,
-          message: message || 'Inquiry initiated via direct contact page form.',
+          message,
         }),
       });
-
-      if (res.ok) {
-        setSubmitted(true);
-      } else {
-        // Fallback local acknowledgment
-        setSubmitted(true);
-      }
+      setSubmitted(true);
     } catch {
-      // Local fallback
+      // Graceful offline fallback
       setSubmitted(true);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(contactEmail);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <div className="relative min-h-screen pt-28 pb-20">
-      {/* Ambient background glows */}
-      <div className="pointer-events-none absolute top-12 left-1/2 h-[520px] w-[950px] -translate-x-1/2 rounded-full bg-violet-700/15 blur-[160px]" />
-      <div className="pointer-events-none absolute top-[900px] left-0 h-[480px] w-[500px] rounded-full bg-fuchsia-700/10 blur-[150px]" />
+      {/* Background ambient lighting */}
+      <div className="pointer-events-none absolute top-12 left-1/3 h-[520px] w-[800px] -translate-x-1/2 rounded-full bg-violet-700/15 blur-[160px]" />
+      <div className="pointer-events-none absolute top-[700px] right-0 h-[450px] w-[450px] rounded-full bg-fuchsia-700/10 blur-[150px]" />
 
       <div className="relative z-10 mx-auto max-w-[1600px] px-6">
         {/* Breadcrumb Navigation */}
@@ -144,48 +167,41 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
             Home
           </button>
           <span>/</span>
-          <span className="text-violet-300">Contact &amp; Discovery</span>
+          <span className="text-violet-300">Contact</span>
         </div>
 
-        {/* Hero Section */}
-        <div className="mt-8 max-w-4xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3.5 py-1 text-xs font-semibold tracking-[0.2em] text-violet-300 uppercase shadow-[0_0_20px_rgba(139,92,246,0.2)]">
-            <Sparkles className="h-3.5 w-3.5" />
-            Executive Inquiries
+        {/* Hero Header */}
+        <div className="mt-8 max-w-3xl">
+          <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3.5 py-1 text-xs font-semibold tracking-[0.2em] text-violet-300 uppercase">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+            Studio Open &amp; Accepting Q1/Q2 Engagements
           </span>
-          <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
-            Let&apos;s Architect Your Next Category-Defining Platform.
+          <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
+            Let&apos;s engineer your next digital breakthrough.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-gray-300 sm:text-xl">
-            Whether initiating a greenfield autonomous platform, commissioning a bespoke WebGL experience,
-            or conducting an executive code review—you speak directly with senior leads.
+            Whether you need a flagship web platform, scalable enterprise AI pipelines, or an
+            unforgettable dark luxury brand identity, our principals are ready to scope your roadmap.
           </p>
         </div>
 
-        {/* Main Contact Grid */}
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* Left Column: Direct Inquiry Form */}
+        {/* Main Grid: Form (Left) & Hubs (Right) */}
+        <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* Left Column: Interactive Form */}
           <div className="lg:col-span-7">
-            <div className="rounded-3xl border border-white/10 bg-[#120822]/70 p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)] backdrop-blur-xl sm:p-12">
-              <div className="flex items-center justify-between border-b border-white/10 pb-6">
-                <div>
-                  <h3 className="font-display text-2xl font-bold text-white">Direct Brief Submission</h3>
-                  <p className="mt-1 text-xs text-gray-400">Response guaranteed within 24 hours under NDA.</p>
-                </div>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
-                  Active Intake
-                </span>
-              </div>
-
+            <div className="specular-card relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#140a25]/90 via-[#10071e]/90 to-[#0b0515]/95 p-8 shadow-[0_24px_80px_rgba(0,0,0,0.55)] sm:p-12">
               {submitted ? (
-                <div className="py-14 text-center">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-violet-400/40 bg-violet-500/20 text-violet-300 shadow-[0_0_30px_rgba(139,92,246,0.4)]">
+                <div className="py-16 text-center">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-violet-400/40 bg-violet-500/20 text-violet-300">
                     <CheckCircle2 className="h-8 w-8" />
                   </div>
-                  <h4 className="mt-6 font-display text-2xl font-bold text-white">Project Brief Transmitted</h4>
-                  <p className="mx-auto mt-2 max-w-md text-sm text-gray-300">
-                    Thank you, {name}. A principal architect has received your brief and will review your scope specifications shortly.
+                  <h3 className="mt-6 font-display text-3xl font-bold text-white">
+                    Inquiry Received
+                  </h3>
+                  <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-gray-300">
+                    Thank you, <span className="font-semibold text-white">{name || 'partner'}</span>.
+                    Our principal engineering team will review your brief and return an NDA-protected
+                    scoping summary to <span className="text-violet-300">{email}</span> within 24 business hours.
                   </p>
                   <button
                     type="button"
@@ -196,18 +212,25 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                       setCompany('');
                       setMessage('');
                     }}
-                    className="mt-8 cursor-pointer rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-semibold text-white transition-all hover:bg-white/10"
+                    className="mt-8 cursor-pointer rounded-full bg-white px-8 py-3 text-sm font-semibold text-[#0a0612] transition-colors hover:bg-violet-100"
                   >
-                    Submit Additional Brief
+                    Send Another Inquiry
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-                  {/* Name and Email */}
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  <div>
+                    <h3 className="font-display text-2xl font-bold text-white">Project Inquiry</h3>
+                    <p className="mt-1 text-sm text-gray-400">
+                      Fill out the brief below and a lead architect will connect directly.
+                    </p>
+                  </div>
+
+                  {/* Name, Email & Company */}
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
                       <label htmlFor="contact-name" className="block text-xs font-semibold tracking-wider text-gray-300 uppercase">
-                        Your Name *
+                        Full Name *
                       </label>
                       <input
                         id="contact-name"
@@ -215,13 +238,13 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="Alexander Reid"
+                        placeholder="Ashley Cole"
                         className="mt-2.5 w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none transition-all focus:border-violet-400 focus:bg-white/[0.07] focus:ring-2 focus:ring-violet-400/20"
                       />
                     </div>
                     <div>
                       <label htmlFor="contact-email" className="block text-xs font-semibold tracking-wider text-gray-300 uppercase">
-                        Corporate Email *
+                        Work Email *
                       </label>
                       <input
                         id="contact-email"
@@ -229,16 +252,15 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="alexander@enterprise.com"
+                        placeholder="ashley@company.com"
                         className="mt-2.5 w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none transition-all focus:border-violet-400 focus:bg-white/[0.07] focus:ring-2 focus:ring-violet-400/20"
                       />
                     </div>
                   </div>
 
-                  {/* Company */}
                   <div>
                     <label htmlFor="contact-company" className="block text-xs font-semibold tracking-wider text-gray-300 uppercase">
-                      Company / Organization Name
+                      Company / Organization
                     </label>
                     <input
                       id="contact-company"
@@ -256,7 +278,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                       Required Scope / Discipline
                     </span>
                     <div className="mt-3 flex flex-wrap gap-2.5">
-                      {SERVICE_OPTIONS.map((svc) => {
+                      {serviceOptions.map((svc) => {
                         const active = selectedService === svc;
                         return (
                           <button
@@ -350,11 +372,11 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                   <span className="text-xs text-gray-400 uppercase">General Inquiries</span>
                   <div className="mt-1 flex items-center justify-between gap-3">
                     <a
-                      href={`mailto:${contactEmail}`}
+                      href={`mailto:${emailAddress}`}
                       className="flex items-center gap-2 font-display text-base font-semibold text-white transition-colors hover:text-violet-300 sm:text-lg"
                     >
                       <Mail className="h-4 w-4 text-violet-400" />
-                      {contactEmail}
+                      {emailAddress}
                     </a>
                     <button
                       type="button"
@@ -380,7 +402,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                 <div>
                   <span className="text-xs text-gray-400 uppercase">Enterprise Hotline</span>
                   <a
-                    href={`tel:${phoneAmericas.replace(/[^0-9+]/g, '')}`}
+                    href={`tel:${phoneAmericas.replace(/\s+/g, '')}`}
                     className="mt-1 flex items-center gap-2 font-display text-base font-semibold text-white transition-colors hover:text-violet-300 sm:text-lg"
                   >
                     <Phone className="h-4 w-4 text-violet-400" />
@@ -412,7 +434,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
               <h3 className="mt-2 font-display text-xl font-bold text-white">Global Studio Hubs</h3>
 
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {hubs.map((hub) => (
+                {dynamicHubs.map((hub) => (
                   <div
                     key={hub.city}
                     className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 transition-colors hover:border-violet-400/30"
@@ -443,7 +465,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
           </div>
 
           <div className="mx-auto mt-12 max-w-4xl space-y-4">
-            {faqs.map((faq, index) => {
+            {FAQS.map((faq, index) => {
               const isOpen = expandedFaq === index;
               return (
                 <div
@@ -479,3 +501,4 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
     </div>
   );
 }
+

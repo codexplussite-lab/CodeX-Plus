@@ -7,34 +7,74 @@ interface FooterProps {
   onNavigate?: (page: AppPage, targetHash?: string) => void;
 }
 
+const SOCIAL_LINKS = [
+  {
+    name: 'LinkedIn',
+    href: 'https://linkedin.com',
+    icon: (
+      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M6.94 8.5H3.56V19.5H6.94V8.5ZM5.25 3.5C4.14 3.5 3.25 4.39 3.25 5.5C3.25 6.6 4.14 7.5 5.25 7.5C6.35 7.5 7.25 6.6 7.25 5.5C7.25 4.39 6.35 3.5 5.25 3.5ZM20.44 13.02C20.44 9.88 18.76 8.22 16.16 8.22C14.37 8.22 13.48 9.21 13.02 9.93V8.5H9.65C9.7 9.48 9.65 19.5 9.65 19.5H13.02V13.36C13.02 13.02 13.05 12.69 13.15 12.45C13.42 11.78 14.03 11.09 15.07 11.09C16.41 11.09 17.06 12.11 17.06 13.6V19.5H20.44V13.02Z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'Instagram',
+    href: 'https://instagram.com',
+    icon: (
+      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    name: 'Facebook',
+    href: 'https://facebook.com',
+    icon: (
+      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14 13.5H16.5L17.5 9.5H14V7.5C14 6.47 14 5.5 16 5.5H17.5V2.14C17.17 2.1 15.94 2 14.64 2C11.93 2 10 3.66 10 6.7V9.5H7V13.5H10V22H14V13.5Z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'X',
+    href: 'https://x.com',
+    icon: (
+      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25H21.552L14.325 10.51L22.827 21.75H16.17L10.956 14.933L4.99 21.75H1.68L9.41 12.915L1.254 2.25H8.08L12.793 8.481L18.244 2.25ZM17.083 19.77H18.916L7.084 4.126H5.117L17.083 19.77Z" />
+      </svg>
+    ),
+  },
+];
+
 const CURRENT_YEAR = new Date().getFullYear();
 
 export function Footer({ onOpenModal, onNavigate }: FooterProps) {
   const { cms } = useCms();
-
-  const brandName = cms.branding?.name || 'CODEXX PLUS';
-  const tagline = cms.branding?.tagline || 'Architecting Autonomous Intelligence & Digital Luxury';
-  const primaryEmail = cms.branding?.primaryEmail || cms.contact?.email || 'Info@codexplus.site';
-  const footerBio =
-    cms.branding?.footerBio ||
-    'We architect next-generation digital products, high-throughput AI pipelines, and bespoke luxury interfaces for industry leaders redefining the modern web.';
-  const copyrightText =
-    cms.branding?.copyrightText || `© ${CURRENT_YEAR} ${brandName}. All rights reserved.`;
-
-  const hubs = cms.contact?.hubs && cms.contact.hubs.length > 0 ? cms.contact.hubs : [
-    { city: 'San Francisco', address: '500 Howard St, Financial District', phone: '+1 (415) 890-3321' },
-    { city: 'Zurich', address: 'Bahnhofstrasse 45, Tech Core', phone: '+41 44 211 4890' },
-    { city: 'London', address: '10 Berkeley Square, Mayfair', phone: '+44 20 7946 0912' },
-    { city: 'Dubai', address: 'DIFC Gate Tower, Level 14', phone: '+971 4 362 7700' },
-  ];
-
-  const servicesList = cms.services && cms.services.length > 0 ? cms.services : [];
 
   const handleNav = (page: AppPage, hash?: string) => {
     if (onNavigate) {
       onNavigate(page, hash);
     }
   };
+
+  const email = cms.contact.email || 'Info@codexplus.site';
+  const phoneAmericas = cms.contact.phoneAmericas || '+1 (555) 839-2041';
+  const phoneEurope = cms.contact.phoneEurope || '+41 44 211 4890';
+  const sfAddress = cms.contact.sfAddress || '500 Howard St, Financial District, CA';
+  const zurichAddress = cms.contact.zurichAddress || 'Bahnhofstrasse 45, Tech Core, Switzerland';
+
+  const disciplines =
+    cms.services && cms.services.length > 0
+      ? cms.services.slice(0, 5)
+      : [
+          { id: '1', title: 'Full-Stack Development' },
+          { id: '2', title: 'Enterprise AI & LLM Systems' },
+          { id: '3', title: 'Dark Luxury UI/UX' },
+          { id: '4', title: 'Motion & 3D WebGL' },
+          { id: '5', title: 'SEO / GEO Discovery' },
+        ];
 
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-[#08040f] pt-24 pb-8">
@@ -49,51 +89,71 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
               Let&apos;s collaborate! Say hi
             </p>
             <a
-              href={`mailto:${primaryEmail}`}
+              href={`mailto:${email}`}
               className="mt-3 inline-block font-display text-3xl font-semibold tracking-tight text-white transition-colors hover:text-violet-300 sm:text-5xl lg:text-6xl"
             >
-              {primaryEmail}
+              {email}
             </a>
           </div>
 
-          <button
-            type="button"
-            onClick={onOpenModal}
-            className="group inline-flex cursor-pointer items-center gap-3 self-start rounded-full bg-white px-8 py-4 text-sm font-semibold text-[#0a0612] shadow-[0_0_32px_rgba(168,85,247,0.35)] transition-all duration-300 hover:bg-violet-100 hover:shadow-[0_0_48px_rgba(168,85,247,0.6)] lg:self-auto"
-          >
-            <span>Start a Project</span>
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0a0612] text-white transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-              <ArrowUpRight className="h-4 w-4" />
-            </span>
-          </button>
+          <div className="flex flex-wrap items-center gap-4">
+            <button
+              type="button"
+              onClick={onOpenModal}
+              className="group inline-flex cursor-pointer items-center gap-3 rounded-full bg-white px-7 py-4 text-sm font-semibold text-[#0a0612] shadow-[0_0_32px_rgba(168,85,247,0.35)] transition-all duration-300 hover:bg-violet-100 hover:shadow-[0_0_45px_rgba(168,85,247,0.6)]"
+            >
+              <span>Book a 15-min call</span>
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleNav('contact')}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-4 text-sm font-semibold text-white transition-all hover:border-violet-300 hover:bg-white/10"
+            >
+              <span>Contact Page</span>
+            </button>
+          </div>
         </div>
 
-        {/* Multi-Column Links Section */}
-        <div className="grid grid-cols-1 gap-12 py-16 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
-          {/* Brand Info */}
-          <div className="space-y-5 lg:col-span-4">
-            <div className="flex items-center gap-3">
-              <span className="font-display text-lg font-bold tracking-[0.18em] text-white">
-                {brandName}
-              </span>
+        {/* Main Footer Columns */}
+        <div className="grid grid-cols-1 gap-12 py-16 sm:grid-cols-2 lg:grid-cols-12">
+          {/* Column 1: Brand Description */}
+          <div className="lg:col-span-4">
+            <div className="font-display text-2xl font-bold tracking-tight text-white">
+              CODEXX <span className="text-violet-300">PLUS</span>
             </div>
-            <p className="text-sm font-medium text-violet-300">{tagline}</p>
-            <p className="max-w-sm text-sm leading-relaxed text-gray-400">
-              {footerBio}
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-gray-400">
+              We explore every idea with curiosity and care, crafting purposeful
+              AI-powered digital products, distinctive brands, and immersive web
+              experiences built to endure.
             </p>
+            <div className="mt-7 flex items-center gap-3">
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.name}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-gray-300 transition-all duration-300 hover:border-violet-400/60 hover:bg-violet-500/20 hover:text-white"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Navigation Pages */}
-          <div className="space-y-4 lg:col-span-2">
-            <h4 className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
+          {/* Column 2: Quick Links */}
+          <div className="lg:col-span-2">
+            <h3 className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
               Navigation
-            </h4>
-            <ul className="space-y-3 text-sm">
+            </h3>
+            <ul className="mt-5 space-y-3.5">
               <li>
                 <button
                   type="button"
                   onClick={() => handleNav('home', '#home')}
-                  className="cursor-pointer text-gray-300 transition-colors hover:text-white"
+                  className="cursor-pointer text-sm text-gray-300 transition-colors hover:text-violet-300"
                 >
                   Home
                 </button>
@@ -102,7 +162,7 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
                 <button
                   type="button"
                   onClick={() => handleNav('about')}
-                  className="cursor-pointer text-gray-300 transition-colors hover:text-white"
+                  className="cursor-pointer text-sm text-gray-300 transition-colors hover:text-violet-300"
                 >
                   About Us
                 </button>
@@ -111,16 +171,16 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
                 <button
                   type="button"
                   onClick={() => handleNav('services')}
-                  className="cursor-pointer text-gray-300 transition-colors hover:text-white"
+                  className="cursor-pointer text-sm text-gray-300 transition-colors hover:text-violet-300"
                 >
-                  Capabilities
+                  Services
                 </button>
               </li>
               <li>
                 <button
                   type="button"
                   onClick={() => handleNav('team')}
-                  className="cursor-pointer text-gray-300 transition-colors hover:text-white"
+                  className="cursor-pointer text-sm text-gray-300 transition-colors hover:text-violet-300"
                 >
                   Our Team
                 </button>
@@ -129,82 +189,121 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
                 <button
                   type="button"
                   onClick={() => handleNav('contact')}
-                  className="cursor-pointer text-gray-300 transition-colors hover:text-white"
+                  className="cursor-pointer text-sm text-gray-300 transition-colors hover:text-violet-300"
                 >
-                  Contact
+                  Contact Us
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Capabilities */}
-          <div className="space-y-4 lg:col-span-3">
-            <h4 className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
-              Core Capabilities
-            </h4>
-            <ul className="space-y-3 text-sm">
-              {servicesList.slice(0, 5).map((service) => (
-                <li key={service.id}>
+          {/* Column 3: Services (Dynamic from CMS) */}
+          <div className="lg:col-span-2">
+            <h3 className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
+              Disciplines
+            </h3>
+            <ul className="mt-5 space-y-3.5">
+              {disciplines.map((item) => (
+                <li key={item.id || item.title}>
                   <button
                     type="button"
                     onClick={() => handleNav('services')}
-                    className="cursor-pointer text-left text-gray-300 transition-colors hover:text-white"
+                    className="cursor-pointer text-left text-sm text-gray-300 transition-colors hover:text-violet-300"
                   >
-                    {service.title}
+                    {item.title}
                   </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Global Studio Hubs */}
-          <div className="space-y-4 lg:col-span-3">
-            <h4 className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
+          {/* Column 4: Contact Details (Dynamic from CMS) */}
+          <div className="lg:col-span-4">
+            <h3 className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
               Global Hubs
-            </h4>
-            <div className="space-y-3 text-sm text-gray-400">
-              {hubs.slice(0, 3).map((hub, idx) => (
-                <div key={idx} className="flex items-start gap-2.5">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-violet-400" />
-                  <div>
-                    <span className="font-semibold text-white">{hub.city}:</span>{' '}
-                    <span>{hub.address}</span>
-                  </div>
+            </h3>
+            <div className="mt-5 space-y-4 text-sm text-gray-300">
+              <div className="flex items-start gap-3">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-violet-400" />
+                <div className="space-y-1">
+                  <a
+                    href={`tel:${phoneAmericas.replace(/\s+/g, '')}`}
+                    className="block transition-colors hover:text-white"
+                  >
+                    {phoneAmericas} (Americas)
+                  </a>
+                  <a
+                    href={`tel:${phoneEurope.replace(/\s+/g, '')}`}
+                    className="block transition-colors hover:text-white"
+                  >
+                    {phoneEurope} (Europe Core)
+                  </a>
                 </div>
-              ))}
-              {cms.contact?.phoneAmericas && (
-                <div className="flex items-center gap-2.5 pt-2">
-                  <Phone className="h-4 w-4 text-violet-400" />
-                  <span>{cms.contact.phoneAmericas}</span>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-violet-400" />
+                <div className="space-y-2 text-gray-400">
+                  <p>
+                    <span className="font-medium text-gray-200">
+                      San Francisco:
+                    </span>{' '}
+                    {sfAddress}
+                  </p>
+                  <p>
+                    <span className="font-medium text-gray-200">
+                      Zurich Hub:
+                    </span>{' '}
+                    {zurichAddress}
+                  </p>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright & Admin Panel Link */}
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
-          <p className="text-xs text-gray-500">
-            {copyrightText}
-          </p>
-
-          <div className="flex items-center gap-6 text-xs text-gray-400">
-            <button
-              type="button"
-              onClick={() => handleNav('home', '#home')}
-              className="cursor-pointer transition-colors hover:text-white"
+        {/* Bottom Copyright & Policies */}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-gray-400 sm:flex-row">
+          <p>All rights reserved &copy; {CURRENT_YEAR} CODEXX PLUS.</p>
+          <div className="flex items-center gap-6">
+            <a
+              href="#payment-policy"
+              onClick={(e) => {
+                e.preventDefault();
+                onOpenModal();
+              }}
+              className="transition-colors hover:text-white"
             >
-              Back to Top ↑
-            </button>
-            <span>&middot;</span>
+              Payment Policy
+            </a>
+            <a
+              href="#privacy-policy"
+              onClick={(e) => {
+                e.preventDefault();
+                onOpenModal();
+              }}
+              className="transition-colors hover:text-white"
+            >
+              T&amp;C and Privacy Policies
+            </a>
             <button
               type="button"
               onClick={() => handleNav('admin')}
-              className="cursor-pointer font-medium text-violet-400 transition-colors hover:text-violet-300 hover:underline"
+              className="cursor-pointer text-gray-500 transition-colors hover:text-violet-300"
             >
               Admin Panel
             </button>
           </div>
+        </div>
+
+        {/* Massive Glowing Outline Wordmark */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none mt-10 select-none overflow-hidden text-center"
+        >
+          <span className="codexplus-outline-text block font-display text-[15vw] leading-[0.85] font-extrabold tracking-[0.04em] uppercase xl:text-[215px]">
+            CODEXPLUS
+          </span>
         </div>
       </div>
     </footer>
