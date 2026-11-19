@@ -11,8 +11,6 @@ import {
   Plus,
   Trash2,
   Check,
-  Eye,
-  ArrowLeft,
   Sparkles,
   Save,
   RotateCcw,
@@ -20,13 +18,10 @@ import {
   ExternalLink,
   Star,
   MapPin,
-  Clock,
   X,
   Menu,
 } from 'lucide-react';
-import { useCms } from '../context/CmsContext';
-import type { ServiceItem, TestimonialItem } from '../data/siteData';
-import type { FullTeamMember } from '../data/teamData';
+import { useCms } from '../context/useCms';
 
 interface AdminPageProps {
   onNavigateHome: () => void;

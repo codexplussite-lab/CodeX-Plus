@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import {
   SERVICES as DEFAULT_SERVICES,
   CLIENT_LOGOS as DEFAULT_LOGOS,
@@ -103,6 +103,7 @@ interface CmsContextValue {
   deleteTestimonial: (id: string) => void;
   // Brand Logos
   addClientLogo: (logo: Omit<ClientLogo, 'id'>) => void;
+  updateClientLogo: (id: string, logo: Partial<ClientLogo>) => void;
   deleteClientLogo: (id: string) => void;
   // Master Save & Reset
   saveAndPublish: () => Promise<boolean>;
@@ -316,5 +317,5 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   );
 };
 
-export { useCms } from './useCms';
+
 

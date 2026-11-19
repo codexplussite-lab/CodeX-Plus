@@ -22,33 +22,6 @@ const BUDGET_TIERS = [
   'Monthly Retainer',
 ];
 
-const GLOBAL_HUBS = [
-  {
-    city: 'San Francisco',
-    address: '500 Howard St, Financial District',
-    hours: 'Mon – Fri: 09:00 – 18:00 PST',
-    phone: '+1 (415) 890-3321',
-  },
-  {
-    city: 'Zurich',
-    address: 'Bahnhofstrasse 45, Tech Core',
-    hours: 'Mon – Fri: 08:30 – 17:30 CET',
-    phone: '+41 44 211 4890',
-  },
-  {
-    city: 'London',
-    address: '10 Berkeley Square, Mayfair',
-    hours: 'Mon – Fri: 09:00 – 18:00 GMT',
-    phone: '+44 20 7946 0912',
-  },
-  {
-    city: 'Dubai',
-    address: 'DIFC Gate Tower, Level 14',
-    hours: 'Sun – Thu: 09:00 – 18:00 GST',
-    phone: '+971 4 362 7700',
-  },
-];
-
 const FAQS = [
   {
     q: 'What is the typical turnaround timeline for a flagship engagement?',
