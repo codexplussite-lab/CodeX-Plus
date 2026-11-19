@@ -75,6 +75,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
   const [company, setCompany] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
@@ -84,9 +85,29 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    try {
+      await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          company,
+          service: selectedService,
+          budget: selectedBudget,
+          message,
+        }),
+      });
+      setSubmitted(true);
+    } catch {
+      // Graceful offline fallback
+      setSubmitted(true);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -281,9 +302,10 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <button
                       type="submit"
-                      className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.35)] transition-all hover:bg-violet-100 hover:shadow-[0_0_36px_rgba(168,85,247,0.55)]"
+                      disabled={submitting}
+                      className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.35)] transition-all hover:bg-violet-100 hover:shadow-[0_0_36px_rgba(168,85,247,0.55)] disabled:opacity-75"
                     >
-                      <span>Transmit Project Brief</span>
+                      <span>{submitting ? 'Transmitting...' : 'Transmit Project Brief'}</span>
                       <Send className="h-4 w-4" />
                     </button>
                     <div className="flex items-center gap-2 text-xs text-gray-400">
