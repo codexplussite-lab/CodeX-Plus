@@ -9,11 +9,15 @@ import { Team } from './components/Team';
 import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
 import { AboutPage } from './pages/AboutPage';
+import { ServicesPage } from './pages/ServicesPage';
+import { TeamPage } from './pages/TeamPage';
 import { ContactPage } from './pages/ContactPage';
 
 function getInitialPage(): AppPage {
   const hash = window.location.hash.toLowerCase();
   if (hash === '#about') return 'about';
+  if (hash === '#services') return 'services';
+  if (hash === '#team') return 'team';
   if (hash === '#contact') return 'contact';
   return 'home';
 }
@@ -27,6 +31,18 @@ export function App() {
 
     if (page === 'about') {
       window.location.hash = '#about';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (page === 'services') {
+      window.location.hash = '#services';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (page === 'team') {
+      window.location.hash = '#team';
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -86,6 +102,22 @@ export function App() {
 
         {currentPage === 'about' && (
           <AboutPage
+            onOpenModal={() => setModalOpen(true)}
+            onNavigateContact={() => handleNavigate('contact')}
+            onNavigateHome={() => handleNavigate('home', '#home')}
+          />
+        )}
+
+        {currentPage === 'services' && (
+          <ServicesPage
+            onOpenModal={() => setModalOpen(true)}
+            onNavigateContact={() => handleNavigate('contact')}
+            onNavigateHome={() => handleNavigate('home', '#home')}
+          />
+        )}
+
+        {currentPage === 'team' && (
+          <TeamPage
             onOpenModal={() => setModalOpen(true)}
             onNavigateContact={() => handleNavigate('contact')}
             onNavigateHome={() => handleNavigate('home', '#home')}

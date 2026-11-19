@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 
-export type AppPage = 'home' | 'about' | 'contact';
+export type AppPage = 'home' | 'about' | 'services' | 'team' | 'contact';
 
 interface NavbarProps {
   onOpenModal: () => void;
@@ -17,10 +17,9 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Home', page: 'home', hash: '#home' },
-  { label: 'About', page: 'about' },
-  { label: 'Services', page: 'home', hash: '#services' },
-  { label: 'Clients', page: 'home', hash: '#clients' },
-  { label: 'Team', page: 'home', hash: '#team' },
+  { label: 'About Us', page: 'about' },
+  { label: 'Services', page: 'services' },
+  { label: 'Our Team', page: 'team' },
   { label: 'Contact', page: 'contact' },
 ];
 
@@ -107,9 +106,7 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
           className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1.5 backdrop-blur-md lg:flex"
         >
           {NAV_ITEMS.map((item) => {
-            const isActive =
-              item.page === currentPage &&
-              (currentPage !== 'home' || !item.hash || item.hash === '#home');
+            const isActive = item.page === currentPage;
 
             return (
               <button

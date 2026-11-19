@@ -151,13 +151,13 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
                   onClick={() => handleNav('about')}
                   className="cursor-pointer text-sm text-gray-300 transition-colors hover:text-violet-300"
                 >
-                  About Studio
+                  About Us
                 </button>
               </li>
               <li>
                 <button
                   type="button"
-                  onClick={() => handleNav('home', '#services')}
+                  onClick={() => handleNav('services')}
                   className="cursor-pointer text-sm text-gray-300 transition-colors hover:text-violet-300"
                 >
                   Services
@@ -166,10 +166,10 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
               <li>
                 <button
                   type="button"
-                  onClick={() => handleNav('home', '#clients')}
+                  onClick={() => handleNav('team')}
                   className="cursor-pointer text-sm text-gray-300 transition-colors hover:text-violet-300"
                 >
-                  Testimonials
+                  Our Team
                 </button>
               </li>
               <li>
@@ -194,7 +194,7 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
                 <li key={item.label}>
                   <button
                     type="button"
-                    onClick={() => handleNav('home', '#services')}
+                    onClick={() => handleNav('services')}
                     className="cursor-pointer text-left text-sm text-gray-300 transition-colors hover:text-violet-300"
                   >
                     {item.label}
