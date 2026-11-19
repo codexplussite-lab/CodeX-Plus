@@ -6,6 +6,7 @@ interface DatabaseSchema {
   inquiries: ContactInquiry[];
   bookings: BookingRequest[];
   subscriptions: NewsletterSubscription[];
+  cmsContent?: Record<string, unknown>;
 }
 
 const DB_DIR = path.resolve(__dirname, '../../data');
@@ -182,6 +183,17 @@ class StorageEngine {
 
   public getBookings(): BookingRequest[] {
     return this.data.bookings;
+  }
+
+  // --- CMS Content ---
+  public getCmsContent(): Record<string, unknown> | null {
+    return this.data.cmsContent || null;
+  }
+
+  public updateCmsContent(content: Record<string, unknown>): Record<string, unknown> {
+    this.data.cmsContent = content;
+    this.flushToDisk();
+    return this.data.cmsContent;
   }
 
   public updateBookingStatus(id: string, status: BookingRequest['status']): BookingRequest | null {

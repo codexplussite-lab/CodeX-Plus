@@ -17,7 +17,9 @@ export interface TestimonialItem {
   id: string;
   name: string;
   role: string;
-  avatar: string;
+  avatar?: string;
+  image?: string;
+  company?: string;
   rating: number;
   quote: string;
 }

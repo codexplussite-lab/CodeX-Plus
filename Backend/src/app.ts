@@ -8,6 +8,7 @@ import contactRoutes from './routes/contact.routes';
 import bookingRoutes from './routes/booking.routes';
 import teamRoutes from './routes/team.routes';
 import servicesRoutes from './routes/services.routes';
+import cmsRoutes from './routes/cms.routes';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 
 export const createApp = (): Application => {
@@ -64,6 +65,7 @@ export const createApp = (): Application => {
   app.use('/api/bookings', bookingRoutes);
   app.use('/api/team', teamRoutes);
   app.use('/api/services', servicesRoutes);
+  app.use('/api/cms', cmsRoutes);
 
   // Fallback 404 & Error handlers
   app.use(notFoundHandler);

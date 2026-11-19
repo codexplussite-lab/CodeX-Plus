@@ -1,160 +1,72 @@
 import DepthCarousel, { type DepthCarouselItemObject } from './DepthCarousel';
-
-export interface TeamMember {
-  id: string;
-  name: string;
-  role: string;
-  image: string;
-  alt: string;
-}
-
-const teamMembers: TeamMember[] = [
-  {
-    id: 'sophia-lindqvist',
-    name: 'Sophia Lindqvist',
-    role: 'Lead AI Architect',
-    image:
-      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Sophia Lindqvist, Lead AI Architect',
-  },
-  {
-    id: 'marcus-thorne',
-    name: 'Marcus Thorne',
-    role: 'Principal Product Designer',
-    image:
-      'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Marcus Thorne, Principal Product Designer',
-  },
-  {
-    id: 'alexander-reid',
-    name: 'Alexander Reid',
-    role: 'Founder & CEO',
-    image:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Alexander Reid, Founder & CEO',
-  },
-  {
-    id: 'elena-vance',
-    name: 'Elena Vance',
-    role: 'Head of Engineering',
-    image:
-      'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Elena Vance, Head of Engineering',
-  },
-  {
-    id: 'zara-al-mansoor',
-    name: 'Zara Al-Mansoor',
-    role: 'Motion & 3D Lead',
-    image:
-      'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Zara Al-Mansoor, Motion & 3D Lead',
-  },
-  {
-    id: 'liam-chen',
-    name: 'Liam Chen',
-    role: 'Systems Security Lead',
-    image:
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Liam Chen, Systems Security Lead',
-  },
-  {
-    id: 'maya-patel',
-    name: 'Maya Patel',
-    role: 'Head of Brand Strategy',
-    image:
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Maya Patel, Head of Brand Strategy',
-  },
-  {
-    id: 'kai-takahashi',
-    name: 'Kai Takahashi',
-    role: 'Lead Cloud Architect',
-    image:
-      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Kai Takahashi, Lead Cloud Architect',
-  },
-  {
-    id: 'david-keller',
-    name: 'David Keller',
-    role: 'Principal AI Systems Engineer',
-    image:
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of David Keller, Principal AI Systems Engineer',
-  },
-  {
-    id: 'amara-okafor',
-    name: 'Amara Okafor',
-    role: 'Head of Product Strategy',
-    image:
-      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Amara Okafor, Head of Product Strategy',
-  },
-  {
-    id: 'lucas-silva',
-    name: 'Lucas Silva',
-    role: 'Senior WebGL & 3D Engineer',
-    image:
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Lucas Silva, Senior WebGL & 3D Engineer',
-  },
-  {
-    id: 'chloe-dupont',
-    name: 'Chloe Dupont',
-    role: 'VP of Brand & Visual Design',
-    image:
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80',
-    alt: 'Portrait of Chloe Dupont, VP of Brand & Visual Design',
-  },
-];
-
-const carouselItems: DepthCarouselItemObject[] = teamMembers.map((member) => ({
-  image: member.image,
-  alt: member.alt,
-  title: member.name,
-  subtitle: member.role,
-}));
+import { useCms } from '../context/useCms';
+import { ALL_TEAM_MEMBERS } from '../data/teamData';
 
 export function OurTeamSection() {
+  const { cms } = useCms();
+
+  const members = cms.team && cms.team.length > 0 ? cms.team : ALL_TEAM_MEMBERS;
+
+  const carouselItems: DepthCarouselItemObject[] = members.map((member) => ({
+    image: member.image,
+    alt: `Portrait of ${member.name}, ${member.role}`,
+    title: member.name,
+    subtitle: member.role,
+    badge: member.specialty
+      ? member.specialty.split('&')[0].split('•')[0].trim()
+      : undefined,
+  }));
+
+  // Initial index set to Liam Chen to match flagship showcase
+  const liamIndex = members.findIndex((m) => m.id === 'liam-chen');
+  const initialIndex = liamIndex >= 0 ? liamIndex : 0;
+
   return (
     <section
       id="team"
       aria-label="Our Team"
-      className="w-full overflow-hidden bg-[#0E0B12] px-6 py-20 md:px-12"
+      className="relative w-full overflow-hidden bg-[#0a0612] px-6 py-24 md:px-12"
     >
-      <div className="mx-auto max-w-[1600px]">
+      {/* Ambient background glows */}
+      <div className="pointer-events-none absolute top-10 left-1/2 h-[450px] w-[800px] -translate-x-1/2 rounded-full bg-violet-800/10 blur-[150px]" />
+      <div className="pointer-events-none absolute top-1/2 right-10 h-[300px] w-[350px] rounded-full bg-fuchsia-800/10 blur-[130px]" />
+
+      <div className="relative z-10 mx-auto max-w-[1600px]">
         {/* Centered Header Block */}
         <div className="text-center">
-          <h2 className="text-center text-4xl font-bold tracking-tight text-white/95 md:text-5xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3.5 py-1 text-xs font-semibold tracking-[0.2em] text-violet-300 uppercase shadow-[0_0_20px_rgba(139,92,246,0.2)]">
+            Studio Architects &amp; Leads
+          </div>
+          <h2 className="mt-4 text-center font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
             Our Team
           </h2>
-          <p className="mx-auto mt-4 mb-12 max-w-xl text-center text-sm leading-relaxed text-gray-300/80 md:text-base">
-            The creative minds and technical experts turning complex ideas into seamless digital
-            solutions.
+          <p className="mx-auto mt-4 mb-10 max-w-xl text-center text-sm leading-relaxed text-gray-300/80 md:text-base">
+            Drag, swipe, or use arrows to cycle through our active engineering and design leads.
           </p>
         </div>
 
         {/* DepthCarousel 3D Stage */}
-        <div className="relative h-[460px] w-full md:h-[520px]">
+        <div className="relative h-[480px] w-full md:h-[530px]">
           <DepthCarousel
             items={carouselItems}
-            cardWidth={310}
+            cardWidth={300}
             cardHeight={400}
-            radius={20}
-            tint="#0E0B12"
-            depth={80}
-            spread={160}
-            tilt={14}
+            radius={22}
+            tint="#0a0612"
+            depth={55}
+            spread={52}
+            tilt={11}
             tiltDirection="right"
-            perspective={2400}
-            activeCount={5}
-            centerOffset={0}
+            perspective={1800}
             visibleCards={6}
-            falloff={0.11}
-            blur={5}
+            initialIndex={initialIndex}
+            centerOffset={0}
+            falloff={0.12}
+            blur={3}
             duration={450}
             ease="power3.out"
             autoplay={true}
-            autoplayDelay={3200}
+            autoplayDelay={3600}
             loop={true}
             showControls={true}
             showIndicators={true}

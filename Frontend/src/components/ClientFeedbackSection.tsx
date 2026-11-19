@@ -1,17 +1,9 @@
 import { useState } from 'react';
 import { ElasticReel } from './ElasticReel';
+import { useCms } from '../context/useCms';
+import type { TestimonialItem } from '../data/siteData';
 
-export interface TestimonialItem {
-  id: string;
-  name: string;
-  role: string;
-  company: string;
-  rating: number;
-  quote: string;
-  image: string;
-}
-
-const testimonials: TestimonialItem[] = [
+const DEFAULT_TESTIMONIALS: TestimonialItem[] = [
   {
     id: 'ashley-cole',
     name: 'Ashley Cole',
@@ -95,7 +87,13 @@ const testimonials: TestimonialItem[] = [
 ];
 
 export function ClientFeedbackSection() {
+  const { cms } = useCms();
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const testimonialsList: TestimonialItem[] =
+    cms.testimonials && cms.testimonials.length > 0
+      ? cms.testimonials
+      : DEFAULT_TESTIMONIALS;
 
   return (
     <section
@@ -134,7 +132,7 @@ export function ClientFeedbackSection() {
 
         {/* Elastic Reel Showcase */}
         <ElasticReel
-          items={testimonials}
+          items={testimonialsList}
           getKey={(item) => item.id}
           activeIndex={activeIndex}
           onActiveIndexChange={setActiveIndex}
@@ -154,7 +152,7 @@ export function ClientFeedbackSection() {
 
               {/* Center Portrait */}
               <img
-                src={item.image}
+                src={item.image || item.avatar || '/images/client-1.jpg'}
                 alt={item.name}
                 loading="lazy"
                 className={`h-full w-full object-cover object-top transition-all duration-500 ease-out ${
@@ -214,7 +212,7 @@ export function ClientFeedbackSection() {
 
         {/* Minimal Selector Pills */}
         <div className="mt-6 flex items-center justify-center gap-2" aria-label="Testimonial selector">
-          {testimonials.map((item, idx) => {
+          {testimonialsList.map((item, idx) => {
             const active = idx === activeIndex;
             return (
               <button
@@ -223,10 +221,10 @@ export function ClientFeedbackSection() {
                 onClick={() => setActiveIndex(idx)}
                 aria-label={`View testimonial from ${item.name}`}
                 aria-current={active ? 'true' : undefined}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
+                className={`cursor-pointer rounded-full transition-all duration-300 ${
                   active
-                    ? 'w-7 bg-violet-400 shadow-[0_0_12px_rgba(167,139,250,0.65)]'
-                    : 'w-1.5 bg-white/20 hover:bg-white/40'
+                    ? 'h-1.5 w-7 bg-violet-400 shadow-[0_0_12px_rgba(167,139,250,0.65)]'
+                    : 'h-1.5 w-1.5 bg-white/20 hover:bg-white/40'
                 }`}
               />
             );

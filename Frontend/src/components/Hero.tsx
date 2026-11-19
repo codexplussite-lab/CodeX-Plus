@@ -1,12 +1,27 @@
 import { ArrowDownRight, ArrowDown, ArrowRight, Sparkles } from 'lucide-react';
 import MoltenMetal from './MoltenMetal';
 import BlurText from './BlurText';
+import { useCms } from '../context/useCms';
 
 interface HeroProps {
   onOpenModal?: () => void;
 }
 
 export function Hero({ onOpenModal }: HeroProps) {
+  const { cms } = useCms();
+  const hero = cms.hero;
+
+  const eyebrow = hero.eyebrow || 'Next-Gen Enterprise Intelligence & Craft';
+  const headline =
+    hero.headline || 'Empower Your Business with Next-Generation AI Innovation';
+  const subtitle =
+    hero.subtitle ||
+    'Harness powerful artificial intelligence to streamline workflows, unlock actionable insights, and drive sustainable growth with a secure, enterprise-ready platform built for the future.';
+  const ctaPrimary = hero.ctaPrimary || 'Schedule Discovery';
+  const ctaSecondary = hero.ctaSecondary || 'Explore Capabilities';
+  const badgeText =
+    hero.badgeText || 'Trusted by 500+ enterprises worldwide · 99.98% platform reliability';
+
   return (
     <section
       id="home"
@@ -49,12 +64,12 @@ export function Hero({ onOpenModal }: HeroProps) {
       <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-1 flex-col items-center justify-center px-6 py-12 text-center">
         <div className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-violet-400/25 bg-violet-500/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-violet-200 uppercase backdrop-blur-md shadow-[0_0_20px_rgba(139,92,246,0.2)]">
           <Sparkles className="h-3.5 w-3.5 text-violet-300" />
-          Next-Gen Enterprise Intelligence &amp; Craft
+          {eyebrow}
         </div>
 
         <BlurText
           as="h1"
-          text="Empower Your Business with Next-Generation AI Innovation"
+          text={headline}
           effect="blur"
           animateBy="letters"
           direction="top"
@@ -71,7 +86,7 @@ export function Hero({ onOpenModal }: HeroProps) {
         />
 
         <BlurText
-          text="Harness powerful artificial intelligence to streamline workflows, unlock actionable insights, and drive sustainable growth with a secure, enterprise-ready platform built for the future."
+          text={subtitle}
           effect="blur"
           animateBy="words"
           direction="top"
@@ -94,7 +109,7 @@ export function Hero({ onOpenModal }: HeroProps) {
             onClick={onOpenModal}
             className="group relative inline-flex cursor-pointer items-center gap-3 overflow-hidden rounded-full bg-white px-8 py-4 text-sm font-semibold text-[#0a0612] shadow-[0_0_36px_rgba(168,85,247,0.45)] transition-all duration-300 hover:bg-violet-100 hover:shadow-[0_0_50px_rgba(168,85,247,0.7)]"
           >
-            <span>Schedule Discovery</span>
+            <span>{ctaPrimary}</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </button>
 
@@ -102,7 +117,7 @@ export function Hero({ onOpenModal }: HeroProps) {
             href="#services"
             className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-7 py-4 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:border-violet-400/50 hover:bg-white/[0.08]"
           >
-            <span>Explore Capabilities</span>
+            <span>{ctaSecondary}</span>
             <ArrowDownRight className="h-4 w-4 text-violet-300" />
           </a>
         </div>
@@ -110,7 +125,7 @@ export function Hero({ onOpenModal }: HeroProps) {
         {/* Trust Badge */}
         <div className="mt-8 flex items-center gap-2 text-xs font-medium tracking-wide text-gray-400">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
-          <span>Trusted by 500+ enterprises worldwide · 99.98% platform reliability</span>
+          <span>{badgeText}</span>
         </div>
       </div>
 

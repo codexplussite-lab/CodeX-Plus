@@ -1,13 +1,19 @@
 import { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { SERVICES } from '../data/siteData';
+import { useCms } from '../context/useCms';
+import { SERVICES as DEFAULT_SERVICES } from '../data/siteData';
 
 interface ServicesProps {
   onOpenModal: () => void;
 }
 
 export function Services({ onOpenModal }: ServicesProps) {
-  const [activeId, setActiveId] = useState<string>('video-editing');
+  const { cms } = useCms();
+  const servicesList =
+    cms.services && cms.services.length > 0 ? cms.services : DEFAULT_SERVICES;
+  const [activeId, setActiveId] = useState<string>(
+    servicesList[0]?.id || 'video-editing'
+  );
 
   return (
     <section id="services" className="relative py-24 lg:py-32">
@@ -42,9 +48,9 @@ export function Services({ onOpenModal }: ServicesProps) {
 
         {/* Bento Grid: 1 large vertical card on the left + 4 cards in 2x2 on the right */}
         <div className="mt-14 grid grid-cols-1 gap-5 lg:grid-cols-3 lg:grid-rows-2">
-          {SERVICES.map((service, idx) => {
+          {servicesList.map((service, idx) => {
             const isActive = activeId === service.id;
-            const isLarge = Boolean(service.isLarge);
+            const isLarge = Boolean(service.isLarge || idx === 0);
 
             return (
               <article
@@ -128,4 +134,3 @@ export function Services({ onOpenModal }: ServicesProps) {
     </section>
   );
 }
-
