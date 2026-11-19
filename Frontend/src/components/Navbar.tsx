@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useCms } from '../context/useCms';
 
 export type AppPage = 'home' | 'about' | 'services' | 'team' | 'contact' | 'admin';
 
@@ -23,13 +24,17 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Contact', page: 'contact' },
 ];
 
-export function CodexxLogo({ onClick }: { onClick?: () => void }) {
+export function CodexxLogo({ onClick, brandName = 'CODEXX PLUS' }: { onClick?: () => void; brandName?: string }) {
+  const words = brandName.trim().split(' ');
+  const firstWord = words[0] || 'CODEXX';
+  const restWords = words.slice(1).join(' ') || 'PLUS';
+
   return (
     <button
       type="button"
       onClick={onClick}
       className="group inline-flex cursor-pointer items-center gap-3 focus:outline-none"
-      aria-label="CODEXX PLUS Home"
+      aria-label={`${brandName} Home`}
     >
       <div className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-violet-400/30 bg-gradient-to-br from-violet-600/30 via-[#1a0d30] to-fuchsia-600/20 shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-transform duration-300 group-hover:scale-105">
         <svg
@@ -69,15 +74,20 @@ export function CodexxLogo({ onClick }: { onClick?: () => void }) {
         </svg>
       </div>
       <span className="font-display text-sm font-bold tracking-[0.18em] text-white sm:text-base">
-        CODEXX <span className="text-violet-300">PLUS</span>
+        {firstWord} <span className="text-violet-300">{restWords}</span>
       </span>
     </button>
   );
 }
 
 export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
+  const { cms } = useCms();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const brandName = cms.branding?.name || 'CODEXX PLUS';
+  const availabilityBadge = cms.branding?.availabilityBadge || 'Accepting Q1/Q2 Engagements';
+  const ctaButtonText = cms.branding?.ctaButtonText || 'Schedule Discovery';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -96,14 +106,14 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'border-b border-white/10 bg-[#0a0612]/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.45)]'
+          ? 'border-b border-white/10 bg-[#0a0612]/80 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-xl'
           : 'bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-20 max-w-[1600px] items-center justify-between px-6">
-        <CodexxLogo onClick={() => onNavigate('home', '#home')} />
+        <CodexxLogo brandName={brandName} onClick={() => onNavigate('home', '#home')} />
 
         <nav
           aria-label="Primary Navigation"
@@ -119,8 +129,8 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
                 onClick={() => handleLinkClick(item)}
                 className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
                   isActive
-                    ? 'border border-violet-400/40 bg-violet-500/20 text-white shadow-[0_0_12px_rgba(168,85,247,0.3)]'
-                    : 'text-gray-300 hover:bg-white/[0.08] hover:text-white'
+                    ? 'border border-violet-400/40 bg-violet-600/25 text-white shadow-[0_0_16px_rgba(168,85,247,0.35)]'
+                    : 'text-gray-300 hover:bg-white/[0.05] hover:text-white'
                 }`}
               >
                 {item.label}
@@ -129,58 +139,73 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="hidden items-center gap-4 lg:flex">
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-xs text-gray-300">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            <span>{availabilityBadge}</span>
+          </div>
+
           <button
             type="button"
             onClick={onOpenModal}
-            className="hidden cursor-pointer rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.35)] transition-all duration-200 hover:bg-violet-100 hover:shadow-[0_0_32px_rgba(168,85,247,0.6)] sm:inline-flex"
+            className="cursor-pointer rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.35)] transition-all duration-300 hover:bg-violet-100 hover:shadow-[0_0_36px_rgba(168,85,247,0.55)]"
           >
-            Get Started
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setMobileOpen((prev) => !prev)}
-            className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/5 text-white lg:hidden"
-            aria-label="Toggle navigation menu"
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {ctaButtonText}
           </button>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white lg:hidden"
+          aria-label={mobileOpen ? 'Close Menu' : 'Open Menu'}
+        >
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
 
       {mobileOpen && (
-        <div className="border-b border-white/10 bg-[#0d0718]/95 px-6 pb-6 pt-3 backdrop-blur-xl lg:hidden">
-          <div className="mx-auto flex max-w-[1600px] flex-col gap-2">
+        <div className="border-b border-white/10 bg-[#0a0612]/95 px-6 py-6 shadow-2xl backdrop-blur-2xl lg:hidden">
+          <nav className="flex flex-col gap-2">
             {NAV_ITEMS.map((item) => {
               const isActive = item.page === currentPage;
+
               return (
                 <button
                   key={item.label}
                   type="button"
                   onClick={() => handleLinkClick(item)}
-                  className={`cursor-pointer rounded-xl px-4 py-3 text-left text-base font-medium transition-colors ${
+                  className={`cursor-pointer rounded-xl px-4 py-3 text-left text-base font-medium transition-all ${
                     isActive
-                      ? 'border border-violet-400/40 bg-violet-500/20 text-white'
-                      : 'text-gray-200 hover:bg-white/10 hover:text-white'
+                      ? 'border border-violet-400/40 bg-violet-600/25 text-white'
+                      : 'text-gray-300 hover:bg-white/[0.04] hover:text-white'
                   }`}
                 >
                   {item.label}
                 </button>
               );
             })}
-            <button
-              type="button"
-              onClick={() => {
-                setMobileOpen(false);
-                onOpenModal();
-              }}
-              className="mt-2 w-full cursor-pointer rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0a0612]"
-            >
-              Get Started
-            </button>
-          </div>
+
+            <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-3">
+              <div className="flex items-center gap-2 px-2 text-xs text-gray-300">
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                <span>{availabilityBadge}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  onOpenModal();
+                }}
+                className="w-full cursor-pointer rounded-full bg-white py-3 text-center text-sm font-semibold text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.35)]"
+              >
+                {ctaButtonText}
+              </button>
+            </div>
+          </nav>
         </div>
       )}
     </header>

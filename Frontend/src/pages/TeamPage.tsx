@@ -38,6 +38,7 @@ function GithubIcon({ className }: { className?: string }) {
 }
 
 import { ALL_TEAM_MEMBERS } from '../data/teamData';
+import { useCms } from '../context/useCms';
 
 interface TeamPageProps {
   onOpenModal: () => void;
@@ -73,6 +74,9 @@ const STUDIO_PRINCIPLES = [
 ];
 
 export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: TeamPageProps) {
+  const { cms } = useCms();
+  const teamList = cms.team && cms.team.length > 0 ? cms.team : ALL_TEAM_MEMBERS;
+
   return (
     <div className="relative min-h-screen pt-28 pb-20">
       {/* Ambient background glows */}
@@ -120,12 +124,12 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
               href="#directory"
               className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-violet-300 hover:bg-white/10"
             >
-              Browse 12-Member Directory
+              Browse {teamList.length}-Member Directory
             </a>
           </div>
         </div>
 
-        {/* Complete 12-Member Directory Grid */}
+        {/* Complete Directory Grid */}
         <div id="directory" className="mt-20">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
@@ -133,7 +137,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                 Studio Directory
               </span>
               <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
-                All 12 Studio Principals
+                All {teamList.length} Studio Principals
               </h2>
             </div>
             <p className="max-w-md text-sm leading-relaxed text-gray-400">
@@ -143,7 +147,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
           </div>
 
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {ALL_TEAM_MEMBERS.map((member) => (
+            {teamList.map((member) => (
               <article
                 key={member.id}
                 className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-[#10081c]/80 p-5 shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-400/40 hover:shadow-[0_20px_50px_rgba(139,92,246,0.2)]"

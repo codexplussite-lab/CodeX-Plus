@@ -3,6 +3,9 @@ export interface ServiceItem {
   title: string;
   description: string;
   tag: string;
+  lead?: string;
+  techStack?: string[];
+  deliverables?: string[];
   featured?: boolean;
   isLarge?: boolean;
 }

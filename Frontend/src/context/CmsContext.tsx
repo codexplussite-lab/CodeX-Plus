@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type {
   ServiceItem,
-  ClientLogo,
   TestimonialItem,
 } from '../data/siteData';
 import type { FullTeamMember } from '../data/teamData';
@@ -9,16 +8,30 @@ import {
   CmsContext,
   DEFAULT_CMS_DATA,
   type CmsData,
+  type CmsBranding,
   type CmsHeroContent,
   type CmsAboutContent,
   type CmsContactInfo,
+  type CmsTrustedClientItem,
+  type CmsContactHub,
+  type CmsFaqItem,
 } from './cmsStore';
 
 export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cms, setCms] = useState<CmsData>(() => {
     try {
       const saved = localStorage.getItem('codex_cms_content');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          ...DEFAULT_CMS_DATA,
+          ...parsed,
+          branding: { ...DEFAULT_CMS_DATA.branding, ...(parsed.branding || {}) },
+          hero: { ...DEFAULT_CMS_DATA.hero, ...(parsed.hero || {}) },
+          about: { ...DEFAULT_CMS_DATA.about, ...(parsed.about || {}) },
+          contact: { ...DEFAULT_CMS_DATA.contact, ...(parsed.contact || {}) },
+        };
+      }
     } catch {
       // fallback
     }
@@ -46,6 +59,10 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             setCms((prev) => ({
               ...prev,
               ...json.data,
+              branding: { ...prev.branding, ...(json.data.branding || {}) },
+              hero: { ...prev.hero, ...(json.data.hero || {}) },
+              about: { ...prev.about, ...(json.data.about || {}) },
+              contact: { ...prev.contact, ...(json.data.contact || {}) },
             }));
             if (json.updatedAt) setLastPublished(json.updatedAt);
           }
@@ -62,6 +79,10 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, []);
 
+  const updateBranding = useCallback((branding: Partial<CmsBranding>) => {
+    setCms((prev) => ({ ...prev, branding: { ...prev.branding, ...branding } }));
+  }, []);
+
   const updateHero = useCallback((hero: Partial<CmsHeroContent>) => {
     setCms((prev) => ({ ...prev, hero: { ...prev.hero, ...hero } }));
   }, []);
@@ -72,6 +93,10 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateContact = useCallback((contact: Partial<CmsContactInfo>) => {
     setCms((prev) => ({ ...prev, contact: { ...prev.contact, ...contact } }));
+  }, []);
+
+  const updateTeamCarouselSubtitle = useCallback((teamCarouselSubtitle: string) => {
+    setCms((prev) => ({ ...prev, teamCarouselSubtitle }));
   }, []);
 
   // Services CRUD
@@ -145,19 +170,90 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }));
   }, []);
 
-  // Logos CRUD
-  const addClientLogo = useCallback((logo: Omit<ClientLogo, 'id'>) => {
-    const newLogo: ClientLogo = {
-      ...logo,
-      id: `logo-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+  // Trusted Clients CRUD
+  const addTrustedClient = useCallback((client: Omit<CmsTrustedClientItem, 'id'>) => {
+    const newClient: CmsTrustedClientItem = {
+      ...client,
+      id: `client-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     };
-    setCms((prev) => ({ ...prev, clientLogos: [...prev.clientLogos, newLogo] }));
+    setCms((prev) => ({ ...prev, trustedClients: [...prev.trustedClients, newClient] }));
   }, []);
 
-  const deleteClientLogo = useCallback((id: string) => {
+  const updateTrustedClient = useCallback((id: string, updated: Partial<CmsTrustedClientItem>) => {
     setCms((prev) => ({
       ...prev,
-      clientLogos: prev.clientLogos.filter((item) => item.id !== id),
+      trustedClients: prev.trustedClients.map((item) =>
+        item.id === id ? { ...item, ...updated } : item
+      ),
+    }));
+  }, []);
+
+  const deleteTrustedClient = useCallback((id: string) => {
+    setCms((prev) => ({
+      ...prev,
+      trustedClients: prev.trustedClients.filter((item) => item.id !== id),
+    }));
+  }, []);
+
+  // Hubs CRUD
+  const addHub = useCallback((hub: CmsContactHub) => {
+    setCms((prev) => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        hubs: [...prev.contact.hubs, hub],
+      },
+    }));
+  }, []);
+
+  const updateHub = useCallback((index: number, updated: Partial<CmsContactHub>) => {
+    setCms((prev) => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        hubs: prev.contact.hubs.map((hub, i) => (i === index ? { ...hub, ...updated } : hub)),
+      },
+    }));
+  }, []);
+
+  const deleteHub = useCallback((index: number) => {
+    setCms((prev) => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        hubs: prev.contact.hubs.filter((_, i) => i !== index),
+      },
+    }));
+  }, []);
+
+  // FAQs CRUD
+  const addFaq = useCallback((faq: CmsFaqItem) => {
+    setCms((prev) => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        faqs: [...prev.contact.faqs, faq],
+      },
+    }));
+  }, []);
+
+  const updateFaq = useCallback((index: number, updated: Partial<CmsFaqItem>) => {
+    setCms((prev) => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        faqs: prev.contact.faqs.map((f, i) => (i === index ? { ...f, ...updated } : f)),
+      },
+    }));
+  }, []);
+
+  const deleteFaq = useCallback((index: number) => {
+    setCms((prev) => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        faqs: prev.contact.faqs.filter((_, i) => i !== index),
+      },
     }));
   }, []);
 
@@ -198,9 +294,11 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     <CmsContext.Provider
       value={{
         cms,
+        updateBranding,
         updateHero,
         updateAbout,
         updateContact,
+        updateTeamCarouselSubtitle,
         addService,
         updateService,
         deleteService,
@@ -210,8 +308,15 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addTestimonial,
         updateTestimonial,
         deleteTestimonial,
-        addClientLogo,
-        deleteClientLogo,
+        addTrustedClient,
+        updateTrustedClient,
+        deleteTrustedClient,
+        addHub,
+        updateHub,
+        deleteHub,
+        addFaq,
+        updateFaq,
+        deleteFaq,
         saveAndPublish,
         resetToDefaults,
         isSaving,

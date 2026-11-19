@@ -16,6 +16,7 @@ import {
   Check,
 } from 'lucide-react';
 import { CLIENT_LOGOS } from '../data/siteData';
+import { useCms } from '../context/useCms';
 
 interface ServicesPageProps {
   onOpenModal: () => void;
@@ -198,7 +199,23 @@ const ENGAGEMENT_TIERS = [
 ];
 
 export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }: ServicesPageProps) {
-  const [activeDiscipline, setActiveDiscipline] = useState<string>('development');
+  const { cms } = useCms();
+  const rawServices = cms.services && cms.services.length > 0 ? cms.services : DISCIPLINES;
+  const disciplinesList = rawServices.map((item, idx) => ({
+    id: item.id,
+    step: String(idx + 1).padStart(2, '0'),
+    title: item.title,
+    tag: item.tag,
+    icon: idx === 0 ? Code2 : idx === 1 ? Palette : idx === 2 ? Film : idx === 3 ? TrendingUp : Search,
+    lead: ('lead' in item && typeof item.lead === 'string') ? item.lead : item.description,
+    description: item.description,
+    techStack: Array.isArray(item.techStack) && item.techStack.length > 0 ? item.techStack : ['React 19 & Next.js', 'High-Performance APIs', 'Cloud Architecture'],
+    deliverables: Array.isArray(item.deliverables) && item.deliverables.length > 0 ? item.deliverables : ['Full system architecture & specification', 'Production deployment & documentation'],
+  }));
+
+  const [activeDiscipline, setActiveDiscipline] = useState<string>(
+    disciplinesList[0]?.id || 'development'
+  );
 
   return (
     <div className="relative min-h-screen pt-28 pb-20">
@@ -295,7 +312,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
 
           {/* Quick discipline switcher buttons */}
           <div className="mt-10 flex flex-wrap gap-2">
-            {DISCIPLINES.map((d) => {
+            {disciplinesList.map((d) => {
               const active = activeDiscipline === d.id;
               return (
                 <button
@@ -316,7 +333,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
 
           {/* Disciplines Grid */}
           <div className="mt-8 space-y-6">
-            {DISCIPLINES.map((item) => {
+            {disciplinesList.map((item) => {
               const Icon = item.icon;
               const isSelected = activeDiscipline === item.id;
               return (
@@ -364,7 +381,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                           Technologies &amp; Frameworks
                         </span>
                         <div className="mt-2.5 flex flex-wrap gap-2">
-                          {item.techStack.map((tech) => (
+                          {item.techStack.map((tech: string) => (
                             <span
                               key={tech}
                               className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300"
@@ -386,7 +403,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                           </h4>
                         </div>
                         <ul className="mt-5 space-y-3">
-                          {item.deliverables.map((deliv) => (
+                          {item.deliverables.map((deliv: string) => (
                             <li key={deliv} className="flex items-start gap-2.5 text-xs text-gray-300">
                               <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-400" />
                               <span className="leading-relaxed">{deliv}</span>
