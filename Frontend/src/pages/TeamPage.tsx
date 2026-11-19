@@ -8,7 +8,6 @@ import {
   HeartHandshake,
   Briefcase,
 } from 'lucide-react';
-import DepthCarousel, { type DepthCarouselItemObject } from '../components/DepthCarousel';
 
 function LinkedinIcon({ className }: { className?: string }) {
   return (
@@ -194,14 +193,6 @@ const ALL_TEAM_MEMBERS: FullTeamMember[] = [
   },
 ];
 
-const CAROUSEL_ITEMS: DepthCarouselItemObject[] = ALL_TEAM_MEMBERS.map((member) => ({
-  image: member.image,
-  alt: `Portrait of ${member.name}, ${member.role}`,
-  title: member.name,
-  subtitle: member.role,
-  badge: member.specialty.split('&')[0].trim(),
-}));
-
 const STUDIO_PRINCIPLES = [
   {
     icon: Terminal,
@@ -282,50 +273,8 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
           </div>
         </div>
 
-        {/* 3D DepthCarousel Interactive Stage */}
-        <div className="mt-16 rounded-3xl border border-white/10 bg-gradient-to-b from-[#120822]/90 via-[#0d0619]/90 to-[#08040f] p-8 sm:p-12">
-          <div className="text-center">
-            <span className="text-xs font-semibold tracking-[0.22em] text-violet-300 uppercase">
-              Interactive 3D Stage
-            </span>
-            <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-white sm:text-4xl">
-              Meet Our Studio Core
-            </h2>
-            <p className="mx-auto mt-2 max-w-lg text-xs leading-relaxed text-gray-400 sm:text-sm">
-              Drag, swipe, or use arrows to cycle through our active engineering and design leads.
-            </p>
-          </div>
-
-          <div className="relative mt-8 h-[460px] w-full md:h-[520px]">
-            <DepthCarousel
-              items={CAROUSEL_ITEMS}
-              cardWidth={310}
-              cardHeight={400}
-              radius={20}
-              tint="#0E0B12"
-              depth={80}
-              spread={160}
-              tilt={14}
-              tiltDirection="right"
-              perspective={2400}
-              activeCount={5}
-              centerOffset={0}
-              visibleCards={6}
-              falloff={0.11}
-              blur={5}
-              duration={450}
-              ease="power3.out"
-              autoplay={true}
-              autoplayDelay={3200}
-              loop={true}
-              showControls={true}
-              showIndicators={true}
-            />
-          </div>
-        </div>
-
         {/* Complete 12-Member Directory Grid */}
-        <div id="directory" className="mt-28">
+        <div id="directory" className="mt-20">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <span className="text-xs font-semibold tracking-[0.22em] text-violet-300 uppercase">
