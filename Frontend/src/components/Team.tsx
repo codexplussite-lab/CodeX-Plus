@@ -11,7 +11,14 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
 
   const members = cms.team && cms.team.length > 0 ? cms.team : ALL_TEAM_MEMBERS;
 
-  const carouselItems: DepthCarouselItemObject[] = members.map((member) => ({
+  // Position Liam Chen as active initial lead
+  const liamIndex = members.findIndex((m) => m.id === 'liam-chen');
+  const orderedMembers =
+    liamIndex > 0
+      ? [...members.slice(liamIndex), ...members.slice(0, liamIndex)]
+      : members;
+
+  const carouselItems: DepthCarouselItemObject[] = orderedMembers.map((member) => ({
     image: member.image,
     alt: `Portrait of ${member.name}, ${member.role}`,
     title: member.name,
@@ -20,10 +27,6 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
       ? member.specialty.split('&')[0].split('•')[0].trim()
       : undefined,
   }));
-
-  // Liam Chen active lead
-  const liamIndex = members.findIndex((m) => m.id === 'liam-chen');
-  const initialIndex = liamIndex >= 0 ? liamIndex : 0;
 
   return (
     <section
@@ -36,7 +39,7 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
       <div className="pointer-events-none absolute top-1/2 right-0 h-[450px] w-[450px] -translate-y-1/2 rounded-full bg-fuchsia-900/10 blur-[160px]" />
 
       <div className="relative z-10 mx-auto max-w-[1600px]">
-        {/* Split 2-Column Section Layout matching design spec */}
+        {/* Split 2-Column Section Layout */}
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
           {/* Left Column: Heading, Subtitle & See More CTA */}
           <div className="flex flex-col items-start justify-center text-left lg:col-span-5">
@@ -70,27 +73,25 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
           </div>
 
           {/* Right Column: 3D DepthCarousel Stage */}
-          <div className="relative flex h-[440px] w-full items-center justify-center overflow-visible sm:h-[480px] lg:col-span-7 lg:h-[500px]">
+          <div className="relative flex h-[480px] w-full items-center justify-center overflow-visible sm:h-[520px] lg:col-span-7">
             <DepthCarousel
               items={carouselItems}
-              cardWidth={330}
-              cardHeight={370}
-              radius={22}
+              cardWidth={300}
+              cardHeight={380}
+              radius={18}
               tint="#0a0612"
-              depth={50}
-              spread={46}
-              tilt={10}
+              depth={220}
+              spread={90}
+              tilt={22}
               tiltDirection="right"
-              perspective={1600}
-              visibleCards={5}
-              initialIndex={initialIndex}
-              centerOffset={-35}
-              falloff={0.12}
-              blur={2}
-              duration={450}
+              perspective={1400}
+              visibleCards={4}
+              falloff={0.2}
+              blur={6}
+              duration={700}
               ease="power3.out"
               autoplay={true}
-              autoplayDelay={3600}
+              autoplayDelay={3200}
               loop={true}
               showControls={false}
               showIndicators={true}
