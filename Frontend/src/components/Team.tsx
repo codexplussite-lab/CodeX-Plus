@@ -2,7 +2,11 @@ import DepthCarousel, { type DepthCarouselItemObject } from './DepthCarousel';
 import { useCms } from '../context/useCms';
 import { ALL_TEAM_MEMBERS } from '../data/teamData';
 
-export function OurTeamSection() {
+interface OurTeamSectionProps {
+  onNavigateTeam?: () => void;
+}
+
+export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
   const { cms } = useCms();
 
   const members = cms.team && cms.team.length > 0 ? cms.team : ALL_TEAM_MEMBERS;
@@ -17,7 +21,7 @@ export function OurTeamSection() {
       : undefined,
   }));
 
-  // Initial index set to Liam Chen to match flagship showcase
+  // Liam Chen active lead
   const liamIndex = members.findIndex((m) => m.id === 'liam-chen');
   const initialIndex = liamIndex >= 0 ? liamIndex : 0;
 
@@ -25,52 +29,73 @@ export function OurTeamSection() {
     <section
       id="team"
       aria-label="Our Team"
-      className="relative w-full overflow-hidden bg-[#0a0612] px-6 py-24 md:px-12"
+      className="relative w-full overflow-hidden bg-[#0a0612] px-6 py-24 sm:py-32 md:px-12 lg:px-16"
     >
       {/* Ambient background glows */}
-      <div className="pointer-events-none absolute top-10 left-1/2 h-[450px] w-[800px] -translate-x-1/2 rounded-full bg-violet-800/10 blur-[150px]" />
-      <div className="pointer-events-none absolute top-1/2 right-10 h-[300px] w-[350px] rounded-full bg-fuchsia-800/10 blur-[130px]" />
+      <div className="pointer-events-none absolute top-1/2 left-0 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-violet-900/10 blur-[160px]" />
+      <div className="pointer-events-none absolute top-1/2 right-0 h-[450px] w-[450px] -translate-y-1/2 rounded-full bg-fuchsia-900/10 blur-[160px]" />
 
       <div className="relative z-10 mx-auto max-w-[1600px]">
-        {/* Centered Header Block */}
-        <div className="text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3.5 py-1 text-xs font-semibold tracking-[0.2em] text-violet-300 uppercase shadow-[0_0_20px_rgba(139,92,246,0.2)]">
-            Studio Architects &amp; Leads
-          </div>
-          <h2 className="mt-4 text-center font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Our Team
-          </h2>
-          <p className="mx-auto mt-4 mb-10 max-w-xl text-center text-sm leading-relaxed text-gray-300/80 md:text-base">
-            Drag, swipe, or use arrows to cycle through our active engineering and design leads.
-          </p>
-        </div>
+        {/* Split 2-Column Section Layout matching design spec */}
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+          {/* Left Column: Heading, Subtitle & See More CTA */}
+          <div className="flex flex-col items-start justify-center text-left lg:col-span-5">
+            <span className="text-xs font-semibold tracking-[0.25em] text-gray-400 uppercase">
+              STUDIO ARCHITECTS &amp; LEADS
+            </span>
 
-        {/* DepthCarousel 3D Stage */}
-        <div className="relative h-[480px] w-full md:h-[530px]">
-          <DepthCarousel
-            items={carouselItems}
-            cardWidth={300}
-            cardHeight={400}
-            radius={22}
-            tint="#0a0612"
-            depth={55}
-            spread={52}
-            tilt={11}
-            tiltDirection="right"
-            perspective={1800}
-            visibleCards={6}
-            initialIndex={initialIndex}
-            centerOffset={0}
-            falloff={0.12}
-            blur={3}
-            duration={450}
-            ease="power3.out"
-            autoplay={true}
-            autoplayDelay={3600}
-            loop={true}
-            showControls={true}
-            showIndicators={true}
-          />
+            <h2 className="mt-4 font-display text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              Our Team
+            </h2>
+
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-gray-400 sm:text-base">
+              Drag, swipe, or use arrows to cycle through our active engineering and design leads.
+            </p>
+
+            <div className="mt-8">
+              <button
+                type="button"
+                onClick={() => {
+                  if (onNavigateTeam) {
+                    onNavigateTeam();
+                  } else {
+                    window.location.hash = '#team';
+                  }
+                }}
+                className="inline-flex cursor-pointer items-center justify-center rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#0a0612] shadow-[0_4px_24px_rgba(255,255,255,0.12)] transition-all duration-200 hover:bg-gray-200 hover:shadow-[0_4px_30px_rgba(255,255,255,0.22)] active:scale-95"
+              >
+                See More
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column: 3D DepthCarousel Stage */}
+          <div className="relative flex h-[440px] w-full items-center justify-center overflow-visible sm:h-[480px] lg:col-span-7 lg:h-[500px]">
+            <DepthCarousel
+              items={carouselItems}
+              cardWidth={330}
+              cardHeight={370}
+              radius={22}
+              tint="#0a0612"
+              depth={50}
+              spread={46}
+              tilt={10}
+              tiltDirection="right"
+              perspective={1600}
+              visibleCards={5}
+              initialIndex={initialIndex}
+              centerOffset={-35}
+              falloff={0.12}
+              blur={2}
+              duration={450}
+              ease="power3.out"
+              autoplay={true}
+              autoplayDelay={3600}
+              loop={true}
+              showControls={false}
+              showIndicators={true}
+            />
+          </div>
         </div>
       </div>
     </section>

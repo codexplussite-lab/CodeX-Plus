@@ -118,7 +118,7 @@ export function App() {
             <Services onOpenModal={() => setModalOpen(true)} />
             <TrustedClients />
             <ClientFeedbackSection />
-            <Team />
+            <Team onNavigateTeam={() => handleNavigate('team')} />
           </>
         )}
 

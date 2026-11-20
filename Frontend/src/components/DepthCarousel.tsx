@@ -511,7 +511,7 @@ export default function DepthCarousel({
               onClick={() => onCardClick(i)}
             >
               <img
-                className="block h-full w-full select-none object-cover object-top grayscale contrast-110 [pointer-events:none] [-webkit-user-drag:none]"
+                className="block h-full w-full select-none object-cover object-top contrast-105 [pointer-events:none] [-webkit-user-drag:none]"
                 src={item.image}
                 alt={item.alt || item.title || ''}
                 draggable={false}
@@ -618,7 +618,7 @@ export default function DepthCarousel({
       {/* Pagination Dot Indicators */}
       {showIndicators && count > 1 && (
         <div
-          className="absolute bottom-4 left-1/2 z-[3000] flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-[#120820]/80 px-4 py-2 shadow-lg backdrop-blur-md"
+          className="absolute bottom-1 left-1/2 z-[3000] flex -translate-x-1/2 items-center gap-2"
           role="tablist"
           aria-label="Team Members"
         >
@@ -631,8 +631,8 @@ export default function DepthCarousel({
               aria-label={`Go to slide ${i + 1}`}
               className={`cursor-pointer rounded-full transition-all duration-300 ${
                 active === i
-                  ? 'h-[7px] w-6 bg-violet-400 shadow-[0_0_12px_rgba(167,139,250,0.75)]'
-                  : 'h-[7px] w-[7px] bg-white/20 hover:bg-white/50'
+                  ? 'h-[5px] w-6 bg-white shadow-[0_0_10px_rgba(255,255,255,0.85)]'
+                  : 'h-[5px] w-[5px] bg-white/30 hover:bg-white/60'
               }`}
               onClick={(e) => {
                 e.stopPropagation();
