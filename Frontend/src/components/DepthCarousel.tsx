@@ -534,7 +534,7 @@ const DepthCarousel = ({
         {data.map((item, i) => (
           <div
             key={i}
-            className="absolute left-1/2 top-1/2 cursor-pointer overflow-hidden bg-[#0b0d12] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.65),0_8px_20px_-10px_rgba(0,0,0,0.5)] [transform:translate(-50%,-50%)] [transform-origin:center] [will-change:transform,opacity,filter]"
+            className="absolute left-1/2 top-1/2 cursor-pointer overflow-hidden border border-white/10 bg-[#0c0915] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.06)] ring-1 ring-white/5 [transform:translate(-50%,-50%)] [transform-origin:center] [will-change:transform,opacity,filter]"
             ref={(el) => {
               cardRefs.current[i] = el;
             }}
@@ -565,7 +565,7 @@ const DepthCarousel = ({
                   }`}
                 >
                   {item.badge && active === i && (
-                    <span className="inline-block rounded-full border border-white/20 bg-black/80 px-3.5 py-1 text-xs font-semibold tracking-wide text-white shadow-lg backdrop-blur-md">
+                    <span className="inline-block rounded-full border border-violet-400/30 bg-[#120d22]/85 px-3.5 py-1 text-xs font-semibold tracking-wide text-violet-200 shadow-lg backdrop-blur-md">
                       {item.badge}
                     </span>
                   )}
@@ -635,7 +635,7 @@ const DepthCarousel = ({
 
       {showIndicators && count > 1 && (
         <div
-          className={`absolute bottom-4 z-[3000] flex gap-2 rounded-full bg-[rgba(14,16,22,0.4)] px-3 py-2 backdrop-blur-sm ${
+          className={`absolute bottom-2 z-[3000] flex gap-2 rounded-full border border-white/10 bg-[rgba(10,6,18,0.7)] px-3.5 py-1.5 backdrop-blur-md shadow-lg ${
             align === 'left' ? 'left-6 sm:left-8' : 'left-1/2 -translate-x-1/2'
           }`}
           role="tablist"
@@ -648,8 +648,10 @@ const DepthCarousel = ({
               role="tab"
               aria-selected={active === i}
               aria-label={`Go to slide ${i + 1}`}
-              className={`h-[7px] cursor-pointer rounded-full transition-[width,background] duration-[250ms] ${
-                active === i ? 'w-5 bg-white' : 'w-[7px] bg-white/30'
+              className={`h-[6px] cursor-pointer rounded-full transition-all duration-[300ms] ${
+                active === i
+                  ? 'w-6 bg-violet-400 shadow-[0_0_12px_rgba(139,92,246,0.65)]'
+                  : 'w-1.5 bg-white/25 hover:bg-white/50'
               }`}
               onClick={() => setFocus(i, true)}
             />
