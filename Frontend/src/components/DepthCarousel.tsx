@@ -132,6 +132,7 @@ const DepthCarousel = ({
   const focusRef = useRef(validInitial);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
   const scaleRef = useRef(1);
+  const initializedRef = useRef(false);
   const [active, setActive] = useState(validInitial);
   const cfgRef = useRef<CarouselConfig>({
     count,
@@ -158,7 +159,8 @@ const DepthCarousel = ({
   const reducedRef = useRef(false);
 
   useEffect(() => {
-    if (initialIndex !== undefined && initialIndex >= 0 && initialIndex < count && focusRef.current !== initialIndex) {
+    if (!initializedRef.current && initialIndex !== undefined && initialIndex >= 0 && initialIndex < count) {
+      initializedRef.current = true;
       focusRef.current = initialIndex;
       posRef.current = initialIndex;
       setActive(initialIndex);
@@ -234,13 +236,18 @@ const DepthCarousel = ({
 
       const back = Math.max(0, d);
       const az = Math.abs(d);
-      const shown = az <= cfg.visibleCards + 0.5;
+      const shown = az <= cfg.visibleCards + 0.8;
 
       const tz = -cfg.depth * d;
       const tx = baseShift + dir * cfg.spread * d;
       const ry = dir * cfg.tilt * clamp(d, 0, 1);
 
-      let opacity = d < 0 ? Math.max(0, 1 + d) : 1;
+      let opacity = 1;
+      if (d < 0) {
+        opacity = Math.max(0, 1 + d);
+      } else if (d > cfg.visibleCards - 0.4) {
+        opacity = Math.max(0, 1 - (d - (cfg.visibleCards - 0.4)) / 0.8);
+      }
       if (!shown) opacity = 0;
 
       const brightness = Math.max(0.15, 1 - back * cfg.falloff);
@@ -424,27 +431,36 @@ const DepthCarousel = ({
     [setFocus]
   );
 
+  const navigateByRef = useRef<(step: number) => void>(() => {});
+  useEffect(() => {
+    navigateByRef.current = navigateBy;
+  }, [navigateBy]);
+
   useEffect(() => {
     reducedRef.current =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!autoplay || reducedRef.current || count < 2) return;
+
     const root = rootRef.current;
     let hovered = false;
     let focused = false;
+
     const stop = () => {
       if (autoTimerRef.current) clearInterval(autoTimerRef.current);
       autoTimerRef.current = null;
     };
+
     const start = () => {
       stop();
-      autoTimerRef.current = setInterval(
-        () => {
-          if (!hovered && !focused) navigateBy(1);
-        },
-        Math.max(cfgRef.current.autoplayDelay, 600)
-      );
+      const delay = Math.max(cfgRef.current.autoplayDelay || 2500, 1000);
+      autoTimerRef.current = setInterval(() => {
+        if (!hovered && !focused && !dragRef.current?.moved) {
+          navigateByRef.current(1);
+        }
+      }, delay);
     };
+
     const onEnter = () => {
       hovered = true;
     };
@@ -457,11 +473,13 @@ const DepthCarousel = ({
     const onFocusOut = () => {
       focused = false;
     };
+
     root?.addEventListener('mouseenter', onEnter);
     root?.addEventListener('mouseleave', onLeave);
     root?.addEventListener('focusin', onFocusIn);
     root?.addEventListener('focusout', onFocusOut);
     start();
+
     return () => {
       stop();
       root?.removeEventListener('mouseenter', onEnter);
@@ -469,7 +487,7 @@ const DepthCarousel = ({
       root?.removeEventListener('focusin', onFocusIn);
       root?.removeEventListener('focusout', onFocusOut);
     };
-  }, [autoplay, autoplayDelay, count, navigateBy]);
+  }, [autoplay, autoplayDelay, count]);
 
   useEffect(() => {
     layout(posRef.current);
@@ -537,27 +555,27 @@ const DepthCarousel = ({
             {(item.title || item.subtitle || item.badge) && (
               <>
                 <div
-                  className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-300 ${
-                    active === i ? 'opacity-95' : 'opacity-60'
+                  className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent transition-opacity duration-300 ${
+                    active === i ? 'opacity-95' : 'opacity-65'
                   }`}
                 />
                 <div
-                  className={`pointer-events-none absolute right-0 bottom-0 left-0 p-6 transition-all duration-300 ${
+                  className={`pointer-events-none absolute right-0 bottom-0 left-0 p-6 sm:p-7 transition-all duration-300 ${
                     active === i ? 'translate-y-0 opacity-100' : 'translate-y-0 opacity-70'
                   }`}
                 >
                   {item.badge && active === i && (
-                    <span className="inline-block rounded-full border border-white/20 bg-black/65 px-3 py-1 text-[11px] font-medium tracking-wide text-white/95 shadow-lg backdrop-blur-md">
+                    <span className="inline-block rounded-full border border-white/20 bg-black/80 px-3.5 py-1 text-xs font-semibold tracking-wide text-white shadow-lg backdrop-blur-md">
                       {item.badge}
                     </span>
                   )}
                   {item.title && (
-                    <h3 className="mt-2 font-display text-xl font-bold tracking-tight text-white drop-shadow-sm">
+                    <h3 className="mt-2.5 font-display text-2xl font-bold tracking-tight text-white drop-shadow-md sm:text-[26px]">
                       {item.title}
                     </h3>
                   )}
                   {item.subtitle && (
-                    <p className="mt-0.5 text-xs font-medium text-gray-300/85 drop-shadow">
+                    <p className="mt-1 text-xs font-medium text-gray-300/90 drop-shadow sm:text-sm">
                       {item.subtitle}
                     </p>
                   )}

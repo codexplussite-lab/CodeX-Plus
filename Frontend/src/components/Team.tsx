@@ -11,9 +11,9 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
 
   const members = cms.team && cms.team.length > 0 ? cms.team : ALL_TEAM_MEMBERS;
 
-  // Liam Chen active lead matching flagship display
-  const liamIndex = members.findIndex((m) => m.id === 'liam-chen');
-  const initialLeadIndex = liamIndex >= 0 ? liamIndex : 0;
+  // Amara Okafor flagship lead matching user's design reference
+  const amaraIndex = members.findIndex((m) => m.id === 'amara-okafor');
+  const initialLeadIndex = amaraIndex >= 0 ? amaraIndex : 0;
 
   const carouselItems: DepthCarouselItemObject[] = members.map((member) => ({
     image: member.image,
@@ -70,27 +70,27 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
           </div>
 
           {/* Right Column: 3D DepthCarousel Stage with 6 Cards shown & smooth scrolling animation */}
-          <div className="relative h-[480px] w-full flex-1 overflow-visible sm:h-[520px]">
+          <div className="relative h-[500px] w-full flex-1 overflow-visible sm:h-[540px]">
             <DepthCarousel
               items={carouselItems}
               align="left"
               cardWidth={310}
-              cardHeight={380}
-              radius={20}
+              cardHeight={400}
+              radius={22}
               tint="#0a0612"
-              depth={48}
-              spread={44}
-              tilt={10}
+              depth={65}
+              spread={115}
+              tilt={12}
               tiltDirection="right"
-              perspective={1500}
+              perspective={1400}
               visibleCards={5}
               falloff={0.14}
               blur={2}
-              duration={800}
+              duration={850}
               ease="power2.out"
               initialIndex={initialLeadIndex}
               autoplay={true}
-              autoplayDelay={2600}
+              autoplayDelay={2400}
               loop={true}
               showControls={false}
               showIndicators={true}
