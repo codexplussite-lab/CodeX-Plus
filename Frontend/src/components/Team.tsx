@@ -11,9 +11,9 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
 
   const members = cms.team && cms.team.length > 0 ? cms.team : ALL_TEAM_MEMBERS;
 
-  // Marcus Thorne active lead matching flagship display
-  const marcusIndex = members.findIndex((m) => m.id === 'marcus-thorne');
-  const initialLeadIndex = marcusIndex >= 0 ? marcusIndex : 0;
+  // Liam Chen active lead matching flagship display
+  const liamIndex = members.findIndex((m) => m.id === 'liam-chen');
+  const initialLeadIndex = liamIndex >= 0 ? liamIndex : 0;
 
   const carouselItems: DepthCarouselItemObject[] = members.map((member) => ({
     image: member.image,
@@ -69,7 +69,7 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
             </div>
           </div>
 
-          {/* Right Column: 3D DepthCarousel Stage starting right next to text and flowing to the right edge */}
+          {/* Right Column: 3D DepthCarousel Stage with 6 Cards shown & smooth scrolling animation */}
           <div className="relative h-[480px] w-full flex-1 overflow-visible sm:h-[520px]">
             <DepthCarousel
               items={carouselItems}
@@ -78,19 +78,19 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
               cardHeight={380}
               radius={20}
               tint="#0a0612"
-              depth={55}
-              spread={52}
-              tilt={12}
+              depth={48}
+              spread={44}
+              tilt={10}
               tiltDirection="right"
               perspective={1500}
-              visibleCards={7}
-              falloff={0.12}
-              blur={3}
-              duration={700}
-              ease="power3.out"
+              visibleCards={5}
+              falloff={0.14}
+              blur={2}
+              duration={800}
+              ease="power2.out"
               initialIndex={initialLeadIndex}
               autoplay={true}
-              autoplayDelay={3500}
+              autoplayDelay={2600}
               loop={true}
               showControls={false}
               showIndicators={true}
