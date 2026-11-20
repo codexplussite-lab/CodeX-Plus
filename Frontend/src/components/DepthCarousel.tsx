@@ -43,6 +43,7 @@ export interface DepthCarouselProps {
   loop?: boolean;
   showControls?: boolean;
   showIndicators?: boolean;
+  initialIndex?: number;
   onChange?: (index: number, item: DepthCarouselItemObject) => void;
   className?: string;
 }
@@ -107,6 +108,7 @@ const DepthCarousel = ({
   loop = true,
   showControls = true,
   showIndicators = true,
+  initialIndex = 0,
   onChange,
   className = '',
 }: DepthCarouselProps) => {
@@ -118,10 +120,12 @@ const DepthCarousel = ({
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const overlayRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
-  const posRef = useRef(0);
-  const focusRef = useRef(0);
+  const validInitial = initialIndex !== undefined && initialIndex >= 0 && initialIndex < count ? initialIndex : 0;
+  const posRef = useRef(validInitial);
+  const focusRef = useRef(validInitial);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
   const scaleRef = useRef(1);
+  const [active, setActive] = useState(validInitial);
   const cfgRef = useRef<CarouselConfig>({
     count,
     depth,
@@ -144,7 +148,13 @@ const DepthCarousel = ({
   const autoTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const reducedRef = useRef(false);
 
-  const [active, setActive] = useState(0);
+  useEffect(() => {
+    if (initialIndex !== undefined && initialIndex >= 0 && initialIndex < count && focusRef.current !== initialIndex) {
+      focusRef.current = initialIndex;
+      posRef.current = initialIndex;
+      setActive(initialIndex);
+    }
+  }, [initialIndex, count]);
 
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -503,27 +513,27 @@ const DepthCarousel = ({
             {(item.title || item.subtitle || item.badge) && (
               <>
                 <div
-                  className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent transition-opacity duration-300 ${
-                    active === i ? 'opacity-90' : 'opacity-60'
+                  className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-300 ${
+                    active === i ? 'opacity-95' : 'opacity-60'
                   }`}
                 />
                 <div
-                  className={`pointer-events-none absolute right-0 bottom-0 left-0 p-5 transition-all duration-300 ${
+                  className={`pointer-events-none absolute right-0 bottom-0 left-0 p-6 transition-all duration-300 ${
                     active === i ? 'translate-y-0 opacity-100' : 'translate-y-0 opacity-70'
                   }`}
                 >
                   {item.badge && active === i && (
-                    <span className="inline-block rounded-full border border-white/20 bg-black/60 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-white/90 backdrop-blur-md">
+                    <span className="inline-block rounded-full border border-white/20 bg-black/65 px-3 py-1 text-[11px] font-medium tracking-wide text-white/95 shadow-lg backdrop-blur-md">
                       {item.badge}
                     </span>
                   )}
                   {item.title && (
-                    <h3 className="mt-1 font-display text-base font-bold tracking-tight text-white drop-shadow">
+                    <h3 className="mt-2 font-display text-xl font-bold tracking-tight text-white drop-shadow-sm">
                       {item.title}
                     </h3>
                   )}
                   {item.subtitle && (
-                    <p className="mt-0.5 text-xs font-medium text-gray-300 drop-shadow">
+                    <p className="mt-0.5 text-xs font-medium text-gray-300/85 drop-shadow">
                       {item.subtitle}
                     </p>
                   )}

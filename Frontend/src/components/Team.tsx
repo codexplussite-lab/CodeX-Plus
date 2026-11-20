@@ -11,14 +11,11 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
 
   const members = cms.team && cms.team.length > 0 ? cms.team : ALL_TEAM_MEMBERS;
 
-  // Position Liam Chen as active initial lead
-  const liamIndex = members.findIndex((m) => m.id === 'liam-chen');
-  const orderedMembers =
-    liamIndex > 0
-      ? [...members.slice(liamIndex), ...members.slice(0, liamIndex)]
-      : members;
+  // Marcus Thorne active lead matching flagship display
+  const marcusIndex = members.findIndex((m) => m.id === 'marcus-thorne');
+  const initialLeadIndex = marcusIndex >= 0 ? marcusIndex : 0;
 
-  const carouselItems: DepthCarouselItemObject[] = orderedMembers.map((member) => ({
+  const carouselItems: DepthCarouselItemObject[] = members.map((member) => ({
     image: member.image,
     alt: `Portrait of ${member.name}, ${member.role}`,
     title: member.name,
@@ -72,26 +69,27 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
             </div>
           </div>
 
-          {/* Right Column: 3D DepthCarousel Stage */}
+          {/* Right Column: 3D DepthCarousel Stage with 7 Stacked Cards */}
           <div className="relative flex h-[480px] w-full items-center justify-center overflow-visible sm:h-[520px] lg:col-span-7">
             <DepthCarousel
               items={carouselItems}
-              cardWidth={300}
+              cardWidth={320}
               cardHeight={380}
-              radius={18}
+              radius={20}
               tint="#0a0612"
-              depth={220}
-              spread={90}
-              tilt={22}
+              depth={55}
+              spread={48}
+              tilt={12}
               tiltDirection="right"
-              perspective={1400}
-              visibleCards={4}
-              falloff={0.2}
-              blur={6}
+              perspective={1500}
+              visibleCards={7}
+              falloff={0.12}
+              blur={3}
               duration={700}
               ease="power3.out"
+              initialIndex={initialLeadIndex}
               autoplay={true}
-              autoplayDelay={3200}
+              autoplayDelay={3500}
               loop={true}
               showControls={false}
               showIndicators={true}

@@ -146,4 +146,37 @@ export const ALL_TEAM_MEMBERS: FullTeamMember[] = [
     location: 'San Francisco',
     socials: { linkedin: '#', github: '#' },
   },
+  {
+    id: 'julian-croft',
+    name: 'Julian Croft',
+    role: 'VP of Autonomous Systems',
+    specialty: 'Agentic Workflows & Multi-Agent Swarms',
+    image:
+      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=900&q=80',
+    bio: 'Oversees distributed autonomous orchestration, fault-tolerant consensus, and edge inference loops.',
+    location: 'Zurich Hub',
+    socials: { linkedin: '#', github: '#' },
+  },
+  {
+    id: 'helena-rostova',
+    name: 'Helena Rostova',
+    role: 'Lead Spatial Computing Architect',
+    specialty: 'Spatial UI & Neural Radiance Fields',
+    image:
+      'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80',
+    bio: 'Specializes in realtime spatial interfaces, NeRF volumetric rendering, and immersive canvas ecosystems.',
+    location: 'London Hub',
+    socials: { linkedin: '#', twitter: '#' },
+  },
+  {
+    id: 'nicolette-dubois',
+    name: 'Nicolette Dubois',
+    role: 'Principal Cryptographic Engineer',
+    specialty: 'Zero-Knowledge Proofs & Determinism',
+    image:
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80',
+    bio: 'Researches zero-knowledge rollups, verifiable state machines, and post-quantum encryption protocols.',
+    location: 'San Francisco',
+    socials: { linkedin: '#', github: '#' },
+  },
 ];
