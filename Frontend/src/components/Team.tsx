@@ -35,11 +35,11 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
       <div className="pointer-events-none absolute top-1/2 left-0 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-violet-900/10 blur-[160px]" />
       <div className="pointer-events-none absolute top-1/2 right-0 h-[450px] w-[450px] -translate-y-1/2 rounded-full bg-fuchsia-900/10 blur-[160px]" />
 
-      <div className="relative z-10 mx-auto max-w-[1600px]">
-        {/* Split 2-Column Section Layout */}
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+      <div className="relative z-10 mx-auto max-w-[1700px]">
+        {/* Split Flex Layout: Left Text & Right Scrolling Depth Deck */}
+        <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:gap-10 xl:gap-14">
           {/* Left Column: Heading, Subtitle & See More CTA */}
-          <div className="flex flex-col items-start justify-center text-left lg:col-span-5">
+          <div className="flex w-full shrink-0 flex-col items-start justify-center text-left lg:w-[350px] xl:w-[390px]">
             <span className="text-xs font-semibold tracking-[0.25em] text-gray-400 uppercase">
               STUDIO ARCHITECTS &amp; LEADS
             </span>
@@ -69,16 +69,17 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
             </div>
           </div>
 
-          {/* Right Column: 3D DepthCarousel Stage with 7 Stacked Cards */}
-          <div className="relative flex h-[480px] w-full items-center justify-center overflow-visible sm:h-[520px] lg:col-span-7">
+          {/* Right Column: 3D DepthCarousel Stage starting right next to text and flowing to the right edge */}
+          <div className="relative h-[480px] w-full flex-1 overflow-visible sm:h-[520px]">
             <DepthCarousel
               items={carouselItems}
-              cardWidth={320}
+              align="left"
+              cardWidth={310}
               cardHeight={380}
               radius={20}
               tint="#0a0612"
               depth={55}
-              spread={48}
+              spread={52}
               tilt={12}
               tiltDirection="right"
               perspective={1500}

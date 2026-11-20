@@ -44,6 +44,8 @@ export interface DepthCarouselProps {
   showControls?: boolean;
   showIndicators?: boolean;
   initialIndex?: number;
+  align?: 'center' | 'left';
+  centerOffset?: number;
   onChange?: (index: number, item: DepthCarouselItemObject) => void;
   className?: string;
 }
@@ -62,6 +64,8 @@ interface CarouselConfig {
   loop: boolean;
   cardWidth: number;
   autoplayDelay: number;
+  align: 'center' | 'left';
+  centerOffset: number;
 }
 
 interface DragState {
@@ -109,6 +113,8 @@ const DepthCarousel = ({
   showControls = true,
   showIndicators = true,
   initialIndex = 0,
+  align = 'center',
+  centerOffset = 0,
   onChange,
   className = '',
 }: DepthCarouselProps) => {
@@ -119,6 +125,7 @@ const DepthCarousel = ({
   const stageRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const overlayRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const stageWidthRef = useRef(800);
 
   const validInitial = initialIndex !== undefined && initialIndex >= 0 && initialIndex < count ? initialIndex : 0;
   const posRef = useRef(validInitial);
@@ -140,6 +147,8 @@ const DepthCarousel = ({
     loop,
     cardWidth,
     autoplayDelay,
+    align,
+    centerOffset,
   });
   const onChangeRef = useRef(onChange);
 
@@ -175,6 +184,8 @@ const DepthCarousel = ({
       loop,
       cardWidth,
       autoplayDelay,
+      align,
+      centerOffset,
     };
   }, [
     count,
@@ -190,6 +201,8 @@ const DepthCarousel = ({
     loop,
     cardWidth,
     autoplayDelay,
+    align,
+    centerOffset,
   ]);
 
   const layout = useCallback((pos: number) => {
@@ -198,6 +211,16 @@ const DepthCarousel = ({
     if (!n) return;
     const dir = cfg.tiltDirection === 'left' ? -1 : 1;
     const sc = scaleRef.current;
+    const w = stageWidthRef.current || 800;
+    const isDesktop = w >= 768;
+
+    let baseShift = 0;
+    if (cfg.align === 'left' && isDesktop) {
+      const leftPadding = 20;
+      const cardHalf = (cfg.cardWidth * sc) / 2;
+      baseShift = (cardHalf + leftPadding) - (w / 2);
+    }
+    baseShift += (cfg.centerOffset || 0);
 
     for (let i = 0; i < n; i++) {
       const el = cardRefs.current[i];
@@ -214,7 +237,7 @@ const DepthCarousel = ({
       const shown = az <= cfg.visibleCards + 0.5;
 
       const tz = -cfg.depth * d;
-      const tx = dir * cfg.spread * d;
+      const tx = baseShift + dir * cfg.spread * d;
       const ry = dir * cfg.tilt * clamp(d, 0, 1);
 
       let opacity = d < 0 ? Math.max(0, 1 + d) : 1;
@@ -298,6 +321,7 @@ const DepthCarousel = ({
     if (!root) return;
     const ro = new ResizeObserver((entries) => {
       const w = entries[0].contentRect.width;
+      stageWidthRef.current = w;
       const cfg = cfgRef.current;
       const needed = cfg.cardWidth + Math.abs(cfg.spread) * 2 + 120;
       scaleRef.current = clamp(w / needed, 0.4, 1);
@@ -593,7 +617,9 @@ const DepthCarousel = ({
 
       {showIndicators && count > 1 && (
         <div
-          className="absolute bottom-4 left-1/2 z-[3000] flex -translate-x-1/2 gap-2 rounded-full bg-[rgba(14,16,22,0.4)] px-3 py-2 backdrop-blur-sm"
+          className={`absolute bottom-4 z-[3000] flex gap-2 rounded-full bg-[rgba(14,16,22,0.4)] px-3 py-2 backdrop-blur-sm ${
+            align === 'left' ? 'left-6 sm:left-8' : 'left-1/2 -translate-x-1/2'
+          }`}
           role="tablist"
           aria-label="Slides"
         >
