@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useCms } from '../context/useCms';
 
 export type AppPage = 'home' | 'about' | 'services' | 'team' | 'contact' | 'admin';
 
@@ -24,12 +25,16 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export function CodexxLogo({ onClick }: { onClick?: () => void }) {
+  const { cms } = useCms();
+  const siteName = cms.brand?.siteName || 'CODEXX';
+  const brandAccent = cms.brand?.brandAccent || 'PLUS';
+
   return (
     <button
       type="button"
       onClick={onClick}
       className="group inline-flex cursor-pointer items-center gap-3 focus:outline-none"
-      aria-label="CODEXX PLUS Home"
+      aria-label={`${siteName} ${brandAccent} Home`}
     >
       <div className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-violet-400/30 bg-gradient-to-br from-violet-600/30 via-[#1a0d30] to-fuchsia-600/20 shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-transform duration-300 group-hover:scale-105">
         <svg
@@ -69,7 +74,7 @@ export function CodexxLogo({ onClick }: { onClick?: () => void }) {
         </svg>
       </div>
       <span className="font-display text-sm font-bold tracking-[0.18em] text-white sm:text-base">
-        CODEXX <span className="text-violet-300">PLUS</span>
+        {siteName} <span className="text-violet-300">{brandAccent}</span>
       </span>
     </button>
   );
@@ -98,29 +103,27 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'border-b border-white/10 bg-[#0a0612]/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.45)]'
+          ? 'border-b border-white/10 bg-[#0a0612]/80 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
           : 'bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-20 max-w-[1600px] items-center justify-between px-6">
+        {/* Brand Logo */}
         <CodexxLogo onClick={() => onNavigate('home', '#home')} />
 
-        <nav
-          aria-label="Primary Navigation"
-          className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1.5 backdrop-blur-md lg:flex"
-        >
+        {/* Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center gap-1 rounded-full border border-white/10 bg-[#120820]/60 px-4 py-1.5 backdrop-blur-md">
           {NAV_ITEMS.map((item) => {
-            const isActive = item.page === currentPage;
-
+            const isActive = currentPage === item.page;
             return (
               <button
                 key={item.label}
                 type="button"
                 onClick={() => handleLinkClick(item)}
-                className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
+                className={`cursor-pointer rounded-full px-4 py-2 text-xs font-medium tracking-wide transition-all ${
                   isActive
-                    ? 'border border-violet-400/40 bg-violet-500/20 text-white shadow-[0_0_12px_rgba(168,85,247,0.3)]'
-                    : 'text-gray-300 hover:bg-white/[0.08] hover:text-white'
+                    ? 'bg-white/10 text-white shadow-sm'
+                    : 'text-gray-400 hover:text-white'
                 }`}
               >
                 {item.label}
@@ -129,58 +132,60 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        {/* CTA Button */}
+        <div className="hidden sm:flex items-center gap-4">
           <button
             type="button"
             onClick={onOpenModal}
-            className="hidden cursor-pointer rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.35)] transition-all duration-200 hover:bg-violet-100 hover:shadow-[0_0_32px_rgba(168,85,247,0.6)] sm:inline-flex"
+            className="group relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-full border border-violet-400/40 bg-gradient-to-r from-violet-600/30 to-fuchsia-600/20 px-5 py-2.5 text-xs font-semibold tracking-wider text-white uppercase shadow-[0_0_20px_rgba(139,92,246,0.25)] transition-all duration-300 hover:scale-105 hover:border-violet-400/80 hover:shadow-[0_0_30px_rgba(139,92,246,0.5)]"
           >
-            Get Started
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setMobileOpen((prev) => !prev)}
-            className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/5 text-white lg:hidden"
-            aria-label="Toggle navigation menu"
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <span className="relative z-10">Schedule Call</span>
+            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-violet-500/0 via-violet-300/20 to-violet-500/0 transition-transform duration-700 group-hover:translate-x-full" />
           </button>
         </div>
+
+        {/* Mobile Hamburger Toggle */}
+        <button
+          type="button"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition-colors md:hidden hover:text-white"
+          aria-label="Toggle navigation menu"
+        >
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
 
+      {/* Mobile Drawer Menu */}
       {mobileOpen && (
-        <div className="border-b border-white/10 bg-[#0d0718]/95 px-6 pb-6 pt-3 backdrop-blur-xl lg:hidden">
-          <div className="mx-auto flex max-w-[1600px] flex-col gap-2">
-            {NAV_ITEMS.map((item) => {
-              const isActive = item.page === currentPage;
-              return (
-                <button
-                  key={item.label}
-                  type="button"
-                  onClick={() => handleLinkClick(item)}
-                  className={`cursor-pointer rounded-xl px-4 py-3 text-left text-base font-medium transition-colors ${
-                    isActive
-                      ? 'border border-violet-400/40 bg-violet-500/20 text-white'
-                      : 'text-gray-200 hover:bg-white/10 hover:text-white'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-            <button
-              type="button"
-              onClick={() => {
-                setMobileOpen(false);
-                onOpenModal();
-              }}
-              className="mt-2 w-full cursor-pointer rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0a0612]"
-            >
-              Get Started
-            </button>
-          </div>
+        <div className="border-b border-white/10 bg-[#0a0612]/95 px-6 pt-4 pb-8 backdrop-blur-2xl md:hidden">
+          <nav className="flex flex-col space-y-3">
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => handleLinkClick(item)}
+                className={`cursor-pointer rounded-2xl px-4 py-3 text-left text-sm font-medium transition-colors ${
+                  currentPage === item.page
+                    ? 'border border-violet-400/40 bg-violet-500/15 text-white'
+                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+            <div className="pt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  onOpenModal();
+                }}
+                className="w-full cursor-pointer rounded-2xl bg-white py-3.5 text-center text-xs font-semibold tracking-wider text-[#0a0612] uppercase shadow-lg hover:bg-violet-100"
+              >
+                Schedule 15-Min Discovery
+              </button>
+            </div>
+          </nav>
         </div>
       )}
     </header>

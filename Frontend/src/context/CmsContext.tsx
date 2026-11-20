@@ -1,124 +1,36 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
-import {
-  SERVICES as DEFAULT_SERVICES,
-  CLIENT_LOGOS as DEFAULT_LOGOS,
-  TESTIMONIALS as DEFAULT_TESTIMONIALS,
-  type ServiceItem,
-  type ClientLogo,
-  type TestimonialItem,
+import React, { useState, useEffect, useCallback } from 'react';
+import type {
+  ServiceItem,
+  ClientLogo,
+  TestimonialItem,
 } from '../data/siteData';
-import { ALL_TEAM_MEMBERS, type FullTeamMember } from '../data/teamData';
-
-export interface CmsHeroContent {
-  eyebrow: string;
-  headline: string;
-  subtitle: string;
-  ctaPrimary: string;
-  ctaSecondary: string;
-  badgeText: string;
-}
-
-export interface CmsAboutContent {
-  statement: string;
-  paragraph1: string;
-  paragraph2: string;
-  stats: Array<{ value: string; label: string; sub: string }>;
-}
-
-export interface CmsContactInfo {
-  email: string;
-  phoneAmericas: string;
-  phoneEurope: string;
-  sfAddress: string;
-  zurichAddress: string;
-  londonAddress: string;
-  dubaiAddress: string;
-}
-
-export interface CmsData {
-  hero: CmsHeroContent;
-  about: CmsAboutContent;
-  services: ServiceItem[];
-  team: FullTeamMember[];
-  testimonials: TestimonialItem[];
-  clientLogos: ClientLogo[];
-  contact: CmsContactInfo;
-}
-
-const DEFAULT_CMS_DATA: CmsData = {
-  hero: {
-    eyebrow: 'High-Performance Engineering & Digital Products',
-    headline: 'Architecting Autonomous Intelligence & Digital Luxury.',
-    subtitle:
-      'We craft resilient multi-agent platforms, bespoke WebGL spatial interfaces, and enterprise design systems for visionary companies redefining their categories.',
-    ctaPrimary: 'Schedule Discovery Call',
-    ctaSecondary: 'Explore Capabilities',
-    badgeText: 'Accepting Q1/Q2 Engagements',
-  },
-  about: {
-    statement:
-      '— We architect next-generation digital products, high-throughput AI pipelines, and bespoke luxury interfaces for industry leaders redefining the modern web.',
-    paragraph1:
-      "With unwavering dedication, we've completed over a hundred remarkable projects across digital platforms, enterprise AI ecosystems, and luxury architectural spaces—blending timeless precision with intelligent engineering.",
-    paragraph2:
-      'Every solution is crafted around measurable performance, refined human experience, and future-proof scalability—empowering modern enterprises and forward-thinking brands to operate effortlessly.',
-    stats: [
-      { value: '120+', label: 'Projects Shipped', sub: 'Across 18 Global Verticals' },
-      { value: '98%', label: 'Client Retention', sub: 'Long-term Partnerships' },
-      { value: '24/7', label: 'Global Support', sub: 'Active Engineering Teams' },
-      { value: '99.98%', label: 'Uptime SLA', sub: 'Zero-Downtime Reliability' },
-    ],
-  },
-  services: DEFAULT_SERVICES,
-  team: ALL_TEAM_MEMBERS,
-  testimonials: DEFAULT_TESTIMONIALS,
-  clientLogos: DEFAULT_LOGOS,
-  contact: {
-    email: 'Info@codexplus.site',
-    phoneAmericas: '+1 (555) 839-2041',
-    phoneEurope: '+41 44 211 4890',
-    sfAddress: '500 Howard St, Financial District, CA',
-    zurichAddress: 'Bahnhofstrasse 45, Tech Core, Switzerland',
-    londonAddress: '10 Berkeley Square, Mayfair, London',
-    dubaiAddress: 'DIFC Gate Tower, Level 14, Dubai',
-  },
-};
-
-interface CmsContextValue {
-  cms: CmsData;
-  updateHero: (hero: Partial<CmsHeroContent>) => void;
-  updateAbout: (about: Partial<CmsAboutContent>) => void;
-  updateContact: (contact: Partial<CmsContactInfo>) => void;
-  // Services CRUD
-  addService: (service: Omit<ServiceItem, 'id'>) => void;
-  updateService: (id: string, service: Partial<ServiceItem>) => void;
-  deleteService: (id: string) => void;
-  // Team CRUD
-  addTeamMember: (member: Omit<FullTeamMember, 'id'>) => void;
-  updateTeamMember: (id: string, member: Partial<FullTeamMember>) => void;
-  deleteTeamMember: (id: string) => void;
-  // Testimonials CRUD
-  addTestimonial: (item: Omit<TestimonialItem, 'id'>) => void;
-  updateTestimonial: (id: string, item: Partial<TestimonialItem>) => void;
-  deleteTestimonial: (id: string) => void;
-  // Brand Logos
-  addClientLogo: (logo: Omit<ClientLogo, 'id'>) => void;
-  updateClientLogo: (id: string, logo: Partial<ClientLogo>) => void;
-  deleteClientLogo: (id: string) => void;
-  // Master Save & Reset
-  saveAndPublish: () => Promise<boolean>;
-  resetToDefaults: () => void;
-  isSaving: boolean;
-  lastPublished: string | null;
-}
-
-const CmsContext = createContext<CmsContextValue | null>(null);
+import type { FullTeamMember } from '../data/teamData';
+import {
+  CmsContext,
+  DEFAULT_CMS_DATA,
+  type CmsData,
+  type CmsBrand,
+  type CmsHeroContent,
+  type CmsAboutContent,
+  type CmsContactInfo,
+  type CmsFaq,
+} from './cmsStore';
 
 export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cms, setCms] = useState<CmsData>(() => {
     try {
       const saved = localStorage.getItem('codex_cms_content');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          ...DEFAULT_CMS_DATA,
+          ...parsed,
+          brand: { ...DEFAULT_CMS_DATA.brand, ...(parsed.brand || {}) },
+          hero: { ...DEFAULT_CMS_DATA.hero, ...(parsed.hero || {}) },
+          about: { ...DEFAULT_CMS_DATA.about, ...(parsed.about || {}) },
+          contact: { ...DEFAULT_CMS_DATA.contact, ...(parsed.contact || {}) },
+        };
+      }
     } catch {
       // fallback
     }
@@ -136,161 +48,198 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Initial fetch from backend if available
   useEffect(() => {
     let active = true;
-    void (async () => {
+
+    async function fetchBackendCms() {
       try {
-        const res = await fetch('http://localhost:5000/api/cms').catch(() => null);
-        if (active && res && res.ok) {
+        const res = await fetch('/api/cms');
+        if (res.ok && active) {
           const json = await res.json();
-          if (json.data && typeof json.data === 'object') {
-            setCms((prev) => ({ ...prev, ...json.data }));
-            setLastPublished(new Date().toLocaleTimeString());
+          if (json.data && Object.keys(json.data).length > 0) {
+            setCms((prev) => ({
+              ...prev,
+              ...json.data,
+              brand: { ...prev.brand, ...(json.data.brand || {}) },
+              hero: { ...prev.hero, ...(json.data.hero || {}) },
+              about: { ...prev.about, ...(json.data.about || {}) },
+              contact: { ...prev.contact, ...(json.data.contact || {}) },
+            }));
+            if (json.updatedAt) setLastPublished(json.updatedAt);
           }
         }
       } catch {
-        // local storage fallback
+        // Local mode fallback
       }
-    })();
+    }
+
+    void fetchBackendCms();
+
     return () => {
       active = false;
     };
   }, []);
 
-  const updateHero = useCallback((data: Partial<CmsHeroContent>) => {
-    setCms((prev) => ({ ...prev, hero: { ...prev.hero, ...data } }));
+  const updateBrand = useCallback((brand: Partial<CmsBrand>) => {
+    setCms((prev) => ({ ...prev, brand: { ...prev.brand, ...brand } }));
   }, []);
 
-  const updateAbout = useCallback((data: Partial<CmsAboutContent>) => {
-    setCms((prev) => ({ ...prev, about: { ...prev.about, ...data } }));
+  const updateHero = useCallback((hero: Partial<CmsHeroContent>) => {
+    setCms((prev) => ({ ...prev, hero: { ...prev.hero, ...hero } }));
   }, []);
 
-  const updateContact = useCallback((data: Partial<CmsContactInfo>) => {
-    setCms((prev) => ({ ...prev, contact: { ...prev.contact, ...data } }));
+  const updateAbout = useCallback((about: Partial<CmsAboutContent>) => {
+    setCms((prev) => ({ ...prev, about: { ...prev.about, ...about } }));
   }, []);
 
-  // Services
+  const updateContact = useCallback((contact: Partial<CmsContactInfo>) => {
+    setCms((prev) => ({ ...prev, contact: { ...prev.contact, ...contact } }));
+  }, []);
+
+  // Services CRUD
   const addService = useCallback((service: Omit<ServiceItem, 'id'>) => {
     const newService: ServiceItem = {
       ...service,
-      id: `svc_${Date.now()}`,
+      id: `svc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     };
-    setCms((prev) => ({ ...prev, services: [newService, ...prev.services] }));
+    setCms((prev) => ({ ...prev, services: [...prev.services, newService] }));
   }, []);
 
   const updateService = useCallback((id: string, updated: Partial<ServiceItem>) => {
     setCms((prev) => ({
       ...prev,
-      services: prev.services.map((s) => (s.id === id ? { ...s, ...updated } : s)),
+      services: prev.services.map((item) => (item.id === id ? { ...item, ...updated } : item)),
     }));
   }, []);
 
   const deleteService = useCallback((id: string) => {
     setCms((prev) => ({
       ...prev,
-      services: prev.services.filter((s) => s.id !== id),
+      services: prev.services.filter((item) => item.id !== id),
     }));
   }, []);
 
-  // Team
+  // Team CRUD
   const addTeamMember = useCallback((member: Omit<FullTeamMember, 'id'>) => {
-    const created: FullTeamMember = {
+    const newMember: FullTeamMember = {
       ...member,
-      id: `member_${Date.now()}`,
+      id: `team-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     };
-    setCms((prev) => ({ ...prev, team: [created, ...prev.team] }));
+    setCms((prev) => ({ ...prev, team: [...prev.team, newMember] }));
   }, []);
 
   const updateTeamMember = useCallback((id: string, updated: Partial<FullTeamMember>) => {
     setCms((prev) => ({
       ...prev,
-      team: prev.team.map((m) => (m.id === id ? { ...m, ...updated } : m)),
+      team: prev.team.map((item) => (item.id === id ? { ...item, ...updated } : item)),
     }));
   }, []);
 
   const deleteTeamMember = useCallback((id: string) => {
     setCms((prev) => ({
       ...prev,
-      team: prev.team.filter((m) => m.id !== id),
+      team: prev.team.filter((item) => item.id !== id),
     }));
   }, []);
 
-  // Testimonials
+  // Testimonials CRUD
   const addTestimonial = useCallback((item: Omit<TestimonialItem, 'id'>) => {
-    const created: TestimonialItem = {
+    const newItem: TestimonialItem = {
       ...item,
-      id: `t_${Date.now()}`,
+      id: `test-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     };
-    setCms((prev) => ({ ...prev, testimonials: [created, ...prev.testimonials] }));
+    setCms((prev) => ({ ...prev, testimonials: [...prev.testimonials, newItem] }));
   }, []);
 
   const updateTestimonial = useCallback((id: string, updated: Partial<TestimonialItem>) => {
     setCms((prev) => ({
       ...prev,
-      testimonials: prev.testimonials.map((t) => (t.id === id ? { ...t, ...updated } : t)),
+      testimonials: prev.testimonials.map((item) =>
+        item.id === id ? { ...item, ...updated } : item
+      ),
     }));
   }, []);
 
   const deleteTestimonial = useCallback((id: string) => {
     setCms((prev) => ({
       ...prev,
-      testimonials: prev.testimonials.filter((t) => t.id !== id),
+      testimonials: prev.testimonials.filter((item) => item.id !== id),
     }));
   }, []);
 
-  // Client Logos
+  // Logos CRUD
   const addClientLogo = useCallback((logo: Omit<ClientLogo, 'id'>) => {
-    const created: ClientLogo = {
+    const newLogo: ClientLogo = {
       ...logo,
-      id: `logo_${Date.now()}`,
+      id: `logo-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     };
-    setCms((prev) => ({ ...prev, clientLogos: [...prev.clientLogos, created] }));
-  }, []);
-
-  const updateClientLogo = useCallback((id: string, updated: Partial<ClientLogo>) => {
-    setCms((prev) => ({
-      ...prev,
-      clientLogos: prev.clientLogos.map((l) => (l.id === id ? { ...l, ...updated } : l)),
-    }));
+    setCms((prev) => ({ ...prev, clientLogos: [...prev.clientLogos, newLogo] }));
   }, []);
 
   const deleteClientLogo = useCallback((id: string) => {
     setCms((prev) => ({
       ...prev,
-      clientLogos: prev.clientLogos.filter((l) => l.id !== id),
+      clientLogos: prev.clientLogos.filter((item) => item.id !== id),
     }));
   }, []);
 
-  // Save & Publish
+  // FAQs CRUD
+  const addFaq = useCallback((faq: CmsFaq) => {
+    setCms((prev) => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        faqs: [...(prev.contact.faqs || []), faq],
+      },
+    }));
+  }, []);
+
+  const deleteFaq = useCallback((index: number) => {
+    setCms((prev) => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        faqs: (prev.contact.faqs || []).filter((_, i) => i !== index),
+      },
+    }));
+  }, []);
+
+  // Master Save & Publish
   const saveAndPublish = useCallback(async (): Promise<boolean> => {
     setIsSaving(true);
-    localStorage.setItem('codex_cms_content', JSON.stringify(cms));
     try {
-      await fetch('http://localhost:5000/api/cms', {
+      localStorage.setItem('codex_cms_content', JSON.stringify(cms));
+
+      const res = await fetch('/api/cms', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cms),
       });
-      setLastPublished(new Date().toLocaleTimeString());
-      return true;
-    } catch {
-      setLastPublished(new Date().toLocaleTimeString());
-      return true; // Local storage publish succeeded
-    } finally {
+
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setLastPublished(now);
+
+      if (res.ok) {
+        setIsSaving(false);
+        return true;
+      }
       setIsSaving(false);
+      return true; // Still persisted to localStorage
+    } catch {
+      setIsSaving(false);
+      return true;
     }
   }, [cms]);
 
+  // Reset to Defaults
   const resetToDefaults = useCallback(() => {
-    if (window.confirm('Reset all website content back to factory default presets?')) {
-      setCms(DEFAULT_CMS_DATA);
-      localStorage.removeItem('codex_cms_content');
-      setLastPublished(new Date().toLocaleTimeString());
-    }
+    localStorage.removeItem('codex_cms_content');
+    setCms(DEFAULT_CMS_DATA);
   }, []);
 
   return (
     <CmsContext.Provider
       value={{
         cms,
+        updateBrand,
         updateHero,
         updateAbout,
         updateContact,
@@ -304,8 +253,9 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateTestimonial,
         deleteTestimonial,
         addClientLogo,
-        updateClientLogo,
         deleteClientLogo,
+        addFaq,
+        deleteFaq,
         saveAndPublish,
         resetToDefaults,
         isSaving,
@@ -316,6 +266,3 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     </CmsContext.Provider>
   );
 };
-
-
-

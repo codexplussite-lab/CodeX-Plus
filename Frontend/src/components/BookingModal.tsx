@@ -1,7 +1,5 @@
 import { useState, type FormEvent } from 'react';
 import { X, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
-import { useCms } from '../context/useCms';
-import { SERVICES as DEFAULT_SERVICES } from '../data/siteData';
 
 interface BookingModalProps {
   open: boolean;
@@ -9,17 +7,11 @@ interface BookingModalProps {
 }
 
 export function BookingModal({ open, onClose }: BookingModalProps) {
-  const { cms } = useCms();
-  const servicesList =
-    cms.services && cms.services.length > 0 ? cms.services : DEFAULT_SERVICES;
-
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [service, setService] = useState(
-    () => servicesList[0]?.title || 'AI Innovation & Development'
-  );
+  const [service, setService] = useState('AI Innovation & Development');
 
   if (!open) return null;
 
@@ -27,7 +19,7 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await fetch('/api/bookings', {
+      const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -36,6 +28,19 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
           service,
         }),
       });
+
+      if (!res.ok) {
+        // Fallback if running directly without proxy
+        await fetch('http://localhost:5000/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            email,
+            service,
+          }),
+        }).catch(() => {});
+      }
       setSubmitted(true);
     } catch {
       // Graceful offline fallback
@@ -106,69 +111,81 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
             </div>
             <h3
               id="booking-modal-title"
-              className="mt-4 font-display text-2xl font-bold tracking-tight text-white"
+              className="mt-4 font-display text-2xl font-semibold text-white"
             >
-              Direct Architecture Discovery
+              Schedule a Discovery Call
             </h3>
-            <p className="mt-2 text-sm text-gray-400">
-              Brief our senior architects on your next platform, brand milestone,
-              or autonomous AI workflow.
+            <p className="mt-2 text-sm leading-relaxed text-gray-400">
+              Pick a preliminary topic and leave your contact. We&apos;ll reach
+              out with private calendar availability.
             </p>
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <div>
-                <label className="mb-1.5 block text-xs font-medium text-gray-300">
-                  Your Name
+                <label className="block text-xs font-medium text-gray-300">
+                  Full Name
                 </label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ashley Cole"
-                  className="w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-violet-400 focus:outline-none"
+                  placeholder="e.g. Elena Rostova"
+                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-gray-500 transition-colors focus:border-violet-400/60 focus:bg-white/10 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-medium text-gray-300">
-                  Work Email
+                <label className="block text-xs font-medium text-gray-300">
+                  Email Address
                 </label>
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  className="w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-violet-400 focus:outline-none"
+                  placeholder="name@company.com"
+                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-gray-500 transition-colors focus:border-violet-400/60 focus:bg-white/10 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-medium text-gray-300">
-                  Area of Interest
+                <label className="block text-xs font-medium text-gray-300">
+                  Topic of Discussion
                 </label>
                 <select
                   value={service}
                   onChange={(e) => setService(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-[#190e2b] px-4 py-3 text-sm text-white focus:border-violet-400 focus:outline-none"
+                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-[#170c2a] px-3.5 py-2.5 text-sm text-white transition-colors focus:border-violet-400/60 focus:outline-none"
                 >
-                  {servicesList.map((svc) => (
-                    <option key={svc.id} value={svc.title}>
-                      {svc.title} ({svc.tag})
-                    </option>
-                  ))}
+                  <option value="AI Innovation & Development">
+                    AI Innovation &amp; Development
+                  </option>
+                  <option value="Enterprise Web Platforms">
+                    Enterprise Web Platforms
+                  </option>
+                  <option value="Bespoke Dark Luxury Design">
+                    Bespoke Dark Luxury Design
+                  </option>
+                  <option value="3D Motion & WebGL Graphics">
+                    3D Motion &amp; WebGL Graphics
+                  </option>
+                  <option value="General Strategic Advisory">
+                    General Strategic Advisory
+                  </option>
                 </select>
               </div>
 
-              <button
-                type="submit"
-                disabled={submitting}
-                className="mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-white py-3.5 text-sm font-semibold text-[#0a0612] shadow-[0_0_25px_rgba(168,85,247,0.4)] transition-all hover:bg-violet-100 disabled:opacity-75"
-              >
-                <span>{submitting ? 'Confirming...' : 'Confirm 15-Min Call'}</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="group inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-semibold text-[#0a0612] shadow-[0_0_28px_rgba(168,85,247,0.4)] transition-all hover:bg-violet-100 disabled:opacity-50"
+                >
+                  <span>{submitting ? 'Confirming...' : 'Confirm Call Request'}</span>
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </button>
+              </div>
             </form>
           </>
         )}

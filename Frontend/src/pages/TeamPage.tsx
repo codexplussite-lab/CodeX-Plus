@@ -1,13 +1,14 @@
 import {
   Sparkles,
   ArrowRight,
-  ArrowUpRight,
   Terminal,
   Shield,
   Layers,
   HeartHandshake,
   Briefcase,
 } from 'lucide-react';
+import { useCms } from '../context/useCms';
+import { ALL_TEAM_MEMBERS } from '../data/teamData';
 
 function LinkedinIcon({ className }: { className?: string }) {
   return (
@@ -37,45 +38,39 @@ function GithubIcon({ className }: { className?: string }) {
   );
 }
 
-import { ALL_TEAM_MEMBERS } from '../data/teamData';
-import { useCms } from '../context/useCms';
-
 interface TeamPageProps {
   onOpenModal: () => void;
   onNavigateContact: () => void;
   onNavigateHome: () => void;
 }
 
-const STUDIO_PRINCIPLES = [
-  {
-    icon: Terminal,
-    title: 'Deep Asynchronous Focus',
-    description:
-      'We eliminate excessive meetings and middle-management bureaucracy. Our architects work in deep, uninterrupted blocks to produce pristine digital craft.',
-  },
-  {
-    icon: Shield,
-    title: 'Direct Principal Access',
-    description:
-      'Clients communicate directly with the senior engineers and design leads who actually author their systems—not account managers or junior proxies.',
-  },
-  {
-    icon: Layers,
-    title: 'Zero-Bloat Architectural Rigor',
-    description:
-      'We reject heavy dependencies and fragile boilerplate. Every component and API route is constructed with strict typed discipline for longevity.',
-  },
-  {
-    icon: HeartHandshake,
-    title: 'High-Touch Partnership',
-    description:
-      'We only take on 3 to 4 flagship enterprise engagements simultaneously to ensure undivided attention and unmatched standard of execution.',
-  },
-];
+const PRINCIPLE_ICONS = [Terminal, Shield, Layers, HeartHandshake];
 
 export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: TeamPageProps) {
   const { cms } = useCms();
-  const teamList = cms.team && cms.team.length > 0 ? cms.team : ALL_TEAM_MEMBERS;
+  const teamMembers = cms.team && cms.team.length > 0 ? cms.team : ALL_TEAM_MEMBERS;
+  const principles = cms.teamPrinciples && cms.teamPrinciples.length > 0 ? cms.teamPrinciples : [
+    {
+      title: 'Deep Asynchronous Focus',
+      description:
+        'We eliminate excessive meetings and middle-management bureaucracy. Our architects work in deep, uninterrupted blocks to produce pristine digital craft.',
+    },
+    {
+      title: 'Direct Principal Access',
+      description:
+        'Clients communicate directly with the senior engineers and design leads who actually author their systems—not account managers or junior proxies.',
+    },
+    {
+      title: 'Zero-Bloat Architectural Rigor',
+      description:
+        'We reject heavy dependencies and fragile boilerplate. Every component and API route is constructed with strict typed discipline for longevity.',
+    },
+    {
+      title: 'High-Touch Partnership',
+      description:
+        'We only take on 3 to 4 flagship enterprise engagements simultaneously to ensure undivided attention and unmatched standard of execution.',
+    },
+  ];
 
   return (
     <div className="relative min-h-screen pt-28 pb-20">
@@ -124,12 +119,12 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
               href="#directory"
               className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-violet-300 hover:bg-white/10"
             >
-              Browse 12-Member Directory
+              Browse {teamMembers.length}-Member Directory
             </a>
           </div>
         </div>
 
-        {/* Complete 12-Member Directory Grid */}
+        {/* Complete Dynamic Directory Grid */}
         <div id="directory" className="mt-20">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
@@ -137,7 +132,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                 Studio Directory
               </span>
               <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
-                All 12 Studio Principals
+                All {teamMembers.length} Studio Principals
               </h2>
             </div>
             <p className="max-w-md text-sm leading-relaxed text-gray-400">
@@ -147,7 +142,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
           </div>
 
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {teamList.map((member) => (
+            {teamMembers.map((member) => (
               <article
                 key={member.id}
                 className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-[#10081c]/80 p-5 shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-400/40 hover:shadow-[0_20px_50px_rgba(139,92,246,0.2)]"
@@ -163,9 +158,11 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
                     {/* Location Badge */}
-                    <div className="absolute top-3 right-3 rounded-full border border-white/15 bg-black/60 px-3 py-1 text-[11px] font-medium text-white/90 backdrop-blur-md">
-                      {member.location}
-                    </div>
+                    {member.location && (
+                      <div className="absolute top-3 right-3 rounded-full border border-white/15 bg-black/60 px-3 py-1 text-[11px] font-medium text-white/90 backdrop-blur-md">
+                        {member.location}
+                      </div>
+                    )}
 
                     {/* Bottom Title on Image */}
                     <div className="absolute right-0 bottom-0 left-0 p-4">
@@ -178,9 +175,11 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
 
                   {/* Specialty Tag & Bio */}
                   <div className="mt-4">
-                    <span className="inline-block rounded-lg border border-violet-400/25 bg-violet-500/10 px-2.5 py-1 text-[11px] font-medium text-violet-200">
-                      {member.specialty}
-                    </span>
+                    {member.specialty && (
+                      <span className="inline-block rounded-lg border border-violet-400/25 bg-violet-500/10 px-2.5 py-1 text-[11px] font-medium text-violet-200">
+                        {member.specialty}
+                      </span>
+                    )}
                     <p className="mt-3 text-xs leading-relaxed text-gray-400">
                       {member.bio}
                     </p>
@@ -191,7 +190,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                 <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
                   <span className="text-[11px] font-medium text-gray-400">Verified Principal</span>
                   <div className="flex items-center gap-2">
-                    {member.socials.linkedin && (
+                    {member.socials?.linkedin && (
                       <a
                         href={member.socials.linkedin}
                         aria-label={`${member.name} LinkedIn`}
@@ -200,7 +199,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                         <LinkedinIcon className="h-3.5 w-3.5" />
                       </a>
                     )}
-                    {member.socials.twitter && (
+                    {member.socials?.twitter && (
                       <a
                         href={member.socials.twitter}
                         aria-label={`${member.name} Twitter`}
@@ -209,7 +208,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
                         <TwitterIcon className="h-3.5 w-3.5" />
                       </a>
                     )}
-                    {member.socials.github && (
+                    {member.socials?.github && (
                       <a
                         href={member.socials.github}
                         aria-label={`${member.name} GitHub`}
@@ -225,36 +224,35 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
           </div>
         </div>
 
-        {/* Studio Culture & Architectural Principles */}
-        <div className="mt-28 rounded-3xl border border-white/10 bg-[#0d0718]/80 p-8 sm:p-12 lg:p-14">
-          <div className="max-w-2xl">
+        {/* Studio Culture & Principles */}
+        <div className="mt-28">
+          <div className="text-center">
             <span className="text-xs font-semibold tracking-[0.22em] text-violet-300 uppercase">
-              How We Work
+              How We Operate
             </span>
-            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Architectural Principles &amp; Studio Culture
+            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
+              Studio Operating Principles
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-gray-400 sm:text-base">
-              We reject corporate bloat, unnecessary syncs, and superficial design in favor of pure,
-              disciplined engineering execution.
+            <p className="mx-auto mt-4 max-w-xl text-base text-gray-400">
+              The foundational cultural pillars that allow our distributed teams to ship at velocity.
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {STUDIO_PRINCIPLES.map((principle) => {
-              const Icon = principle.icon;
+          <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {principles.map((principle, idx) => {
+              const Icon = PRINCIPLE_ICONS[idx % PRINCIPLE_ICONS.length];
               return (
                 <div
-                  key={principle.title}
-                  className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-all duration-300 hover:border-violet-400/40 hover:bg-white/[0.04]"
+                  key={idx}
+                  className="rounded-3xl border border-white/10 bg-[#120820]/75 p-7 shadow-lg backdrop-blur-md transition-all duration-300 hover:border-violet-400/40"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-400/30 bg-violet-500/15 text-violet-300">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-400/30 bg-violet-500/10 text-violet-300">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h4 className="mt-5 font-display text-base font-bold text-white">
+                  <h3 className="mt-5 font-display text-lg font-bold text-white">
                     {principle.title}
-                  </h4>
-                  <p className="mt-2 text-xs leading-relaxed text-gray-400">
+                  </h3>
+                  <p className="mt-3 text-xs leading-relaxed text-gray-400">
                     {principle.description}
                   </p>
                 </div>
@@ -263,63 +261,27 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
           </div>
         </div>
 
-        {/* Join the Studio / Open Positions Card */}
-        <div className="mt-24 rounded-3xl border border-white/10 bg-gradient-to-r from-[#140a25] via-[#10071e] to-[#0a0514] p-8 sm:p-12 lg:p-14">
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
-            <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs font-semibold tracking-wider text-violet-300 uppercase">
+        {/* Join The Collective Card */}
+        <div className="mt-28 rounded-3xl border border-violet-400/30 bg-gradient-to-r from-[#170a2c] via-[#1c0e35] to-[#120820] p-10 shadow-[0_20px_80px_rgba(139,92,246,0.25)] md:p-16">
+          <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
+            <div className="max-w-xl">
+              <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3.5 py-1 text-xs font-semibold text-violet-300 uppercase">
                 <Briefcase className="h-3.5 w-3.5" />
-                Careers &amp; Residencies
+                Join The Collective
               </span>
-              <h3 className="mt-4 font-display text-2xl font-bold text-white sm:text-3xl">
-                Always looking for extraordinary engineering and design talent.
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-gray-300 sm:text-base">
-                If you write typed, zero-bloat code, master GPU shaders, or sculpt dark-luxury interfaces that
-                defy industry conventions, we would love to see your GitHub and portfolio.
+              <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                Always looking for top 1% engineers &amp; designers.
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-gray-300">
+                We hire senior architects worldwide. If you obsess over WebGL shaders, zero-latency multi-agent systems, or bespoke luxury typography, let&apos;s talk.
               </p>
             </div>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <button
-                type="button"
-                onClick={onNavigateContact}
-                className="group inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.35)] transition-all hover:bg-violet-100 hover:shadow-[0_0_36px_rgba(168,85,247,0.55)]"
-              >
-                <span>Send Portfolio / GitHub</span>
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom CTA Block */}
-        <div className="mt-24 flex flex-col items-center justify-between gap-8 rounded-3xl border border-violet-400/25 bg-gradient-to-r from-violet-900/30 via-[#180d2c] to-fuchsia-900/20 p-8 sm:p-12 lg:flex-row lg:p-14">
-          <div className="max-w-xl text-center lg:text-left">
-            <h3 className="font-display text-2xl font-bold text-white sm:text-3xl">
-              Partner directly with our principal architects.
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-gray-300 sm:text-base">
-              Ready to elevate your digital flagship? Reserve a 15-minute consultation to discuss your
-              technical roadmap.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <button
-              type="button"
-              onClick={onOpenModal}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.35)] transition-all hover:bg-violet-100 hover:shadow-[0_0_36px_rgba(168,85,247,0.55)]"
-            >
-              <span>Schedule Discovery Call</span>
-              <ArrowRight className="h-4 w-4" />
-            </button>
             <button
               type="button"
               onClick={onNavigateContact}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3 text-sm font-semibold text-white transition-all hover:border-violet-300 hover:bg-white/10"
+              className="cursor-pointer shrink-0 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#0a0612] shadow-lg transition-colors hover:bg-violet-100"
             >
-              Contact Our Studio
+              Apply as Principal Lead
             </button>
           </div>
         </div>
@@ -327,5 +289,3 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
     </div>
   );
 }
-
-export default TeamPage;

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   LayoutDashboard,
   Layers,
@@ -20,6 +20,7 @@ import {
   MapPin,
   X,
   Menu,
+  RefreshCw,
 } from 'lucide-react';
 import { useCms } from '../context/useCms';
 
@@ -33,7 +34,6 @@ type CmsSection =
   | 'services'
   | 'team'
   | 'testimonials'
-  | 'logos'
   | 'about'
   | 'contact'
   | 'inquiries'
@@ -43,6 +43,7 @@ type CmsSection =
 export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const {
     cms,
+    updateBrand,
     updateHero,
     updateAbout,
     updateContact,
@@ -55,9 +56,8 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     addTestimonial,
     updateTestimonial,
     deleteTestimonial,
-    addClientLogo,
-    updateClientLogo,
-    deleteClientLogo,
+    addFaq,
+    deleteFaq,
     saveAndPublish,
     resetToDefaults,
     isSaving,
@@ -73,13 +73,11 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
   const [editingTeamMemberId, setEditingTeamMemberId] = useState<string | null>(null);
   const [editingTestimonialId, setEditingTestimonialId] = useState<string | null>(null);
-  const [editingLogoId, setEditingLogoId] = useState<string | null>(null);
 
   // New Item Modals
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false);
   const [isAddTeamOpen, setIsAddTeamOpen] = useState(false);
   const [isAddTestimonialOpen, setIsAddTestimonialOpen] = useState(false);
-  const [isAddLogoOpen, setIsAddLogoOpen] = useState(false);
 
   // Form buffers for new items
   const [newServiceForm, setNewServiceForm] = useState({
@@ -106,11 +104,134 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     quote: '',
   });
 
-  const [newLogoForm, setNewLogoForm] = useState({
-    name: '',
-    subtitle: 'Enterprise Partner',
-    src: '/images/logos/figma.svg',
-  });
+  // Live Inbox & Booking Feeds
+  interface ContactInquiryItem {
+    id: string;
+    name: string;
+    email: string;
+    company?: string;
+    service: string;
+    budget: string;
+    message: string;
+    status: 'new' | 'in_review' | 'contacted' | 'closed';
+    createdAt: string;
+  }
+
+  interface BookingRequestItem {
+    id: string;
+    name: string;
+    email: string;
+    service: string;
+    preferredDate?: string;
+    notes?: string;
+    status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+    createdAt: string;
+  }
+
+  const [inquiriesList, setInquiriesList] = useState<ContactInquiryItem[]>([]);
+  const [bookingsList, setBookingsList] = useState<BookingRequestItem[]>([]);
+  const [loadingFeed, setLoadingFeed] = useState(false);
+  const [newFaqForm, setNewFaqForm] = useState({ q: '', a: '' });
+
+  const fetchFeeds = useCallback(async () => {
+    setLoadingFeed(true);
+    try {
+      const [resContact, resBookings] = await Promise.all([
+        fetch('/api/contact').then((r) => (r.ok ? r.json() : { data: [] })),
+        fetch('/api/bookings').then((r) => (r.ok ? r.json() : { data: [] })),
+      ]);
+      if (resContact && Array.isArray(resContact.data)) {
+        setInquiriesList(resContact.data);
+      }
+      if (resBookings && Array.isArray(resBookings.data)) {
+        setBookingsList(resBookings.data);
+      }
+    } catch {
+      // offline / mock fallback
+    } finally {
+      setLoadingFeed(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (activeSection === 'inquiries' || activeSection === 'bookings' || activeSection === 'overview') {
+      const load = async () => {
+        try {
+          const [resContact, resBookings] = await Promise.all([
+            fetch('/api/contact').then((r) => (r.ok ? r.json() : { data: [] })),
+            fetch('/api/bookings').then((r) => (r.ok ? r.json() : { data: [] })),
+          ]);
+          if (isMounted) {
+            if (resContact && Array.isArray(resContact.data)) {
+              setInquiriesList(resContact.data);
+            }
+            if (resBookings && Array.isArray(resBookings.data)) {
+              setBookingsList(resBookings.data);
+            }
+          }
+        } catch {
+          // offline
+        }
+      };
+      void load();
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [activeSection]);
+
+  const handleUpdateInquiryStatus = async (id: string, status: string) => {
+    try {
+      await fetch(`/api/contact/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      setInquiriesList((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, status: status as ContactInquiryItem['status'] } : item))
+      );
+    } catch {
+      setInquiriesList((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, status: status as ContactInquiryItem['status'] } : item))
+      );
+    }
+  };
+
+  const handleDeleteInquiry = async (id: string) => {
+    try {
+      await fetch(`/api/contact/${id}`, { method: 'DELETE' });
+      setInquiriesList((prev) => prev.filter((item) => item.id !== id));
+    } catch {
+      setInquiriesList((prev) => prev.filter((item) => item.id !== id));
+    }
+  };
+
+  const handleUpdateBookingStatus = async (id: string, status: string) => {
+    try {
+      await fetch(`/api/bookings/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      setBookingsList((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, status: status as BookingRequestItem['status'] } : item))
+      );
+    } catch {
+      setBookingsList((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, status: status as BookingRequestItem['status'] } : item))
+      );
+    }
+  };
+
+  const handleDeleteBooking = async (id: string) => {
+    try {
+      await fetch(`/api/bookings/${id}`, { method: 'DELETE' });
+      setBookingsList((prev) => prev.filter((item) => item.id !== id));
+    } catch {
+      setBookingsList((prev) => prev.filter((item) => item.id !== id));
+    }
+  };
 
   // Handle master publish
   const handlePublish = async () => {
@@ -146,15 +267,6 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
         t.role.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [cms.testimonials, searchQuery]);
-
-  // Filtered Client Logos
-  const filteredLogos = useMemo(() => {
-    return (cms.clientLogos || []).filter(
-      (l) =>
-        l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (l.subtitle && l.subtitle.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-  }, [cms.clientLogos, searchQuery]);
 
   return (
     <div className="flex min-h-screen bg-[#07040d] text-white selection:bg-violet-600/40">
@@ -204,7 +316,6 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                 { id: 'services', label: 'Services & Disciplines', icon: Layers, count: cms.services.length },
                 { id: 'team', label: 'Team Directory', icon: Users, count: cms.team.length },
                 { id: 'testimonials', label: 'Client Testimonials', icon: MessageSquare, count: cms.testimonials.length },
-                { id: 'logos', label: 'Partner Logos', icon: Star, count: cms.clientLogos.length },
                 { id: 'about', label: 'About Studio & Stats', icon: Building2 },
                 { id: 'contact', label: 'Global Hubs & Contact', icon: MapPin },
               ].map((item) => {
@@ -329,8 +440,6 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                   ? 'Team Directory CMS'
                   : activeSection === 'testimonials'
                   ? 'Client Testimonials CMS'
-                  : activeSection === 'logos'
-                  ? 'Client Partner Logos CMS'
                   : activeSection === 'about'
                   ? 'About Studio & Pillars'
                   : activeSection === 'contact'
@@ -505,6 +614,64 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
               {/* Form Controls */}
               <div className="space-y-6 lg:col-span-7">
+                {/* Global Brand Identity */}
+                <div className="rounded-3xl border border-white/10 bg-[#0d0718]/90 p-6 sm:p-8">
+                  <h3 className="font-display text-lg font-bold text-white">
+                    Global Brand Identity &amp; Studio Name
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Controls site-wide brand name, accents, and legal footer metadata.
+                  </p>
+                  <div className="mt-6 space-y-4 text-xs">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <div>
+                        <label className="block font-semibold uppercase tracking-wider text-gray-300">
+                          Brand Base Name
+                        </label>
+                        <input
+                          type="text"
+                          value={cms.brand.siteName}
+                          onChange={(e) => updateBrand({ siteName: e.target.value })}
+                          className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white outline-none focus:border-violet-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-semibold uppercase tracking-wider text-gray-300">
+                          Brand Accent / Suffix
+                        </label>
+                        <input
+                          type="text"
+                          value={cms.brand.brandAccent}
+                          onChange={(e) => updateBrand({ brandAccent: e.target.value })}
+                          className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white outline-none focus:border-violet-400"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block font-semibold uppercase tracking-wider text-gray-300">
+                        Brand Tagline
+                      </label>
+                      <input
+                        type="text"
+                        value={cms.brand.tagline}
+                        onChange={(e) => updateBrand({ tagline: e.target.value })}
+                        className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white outline-none focus:border-violet-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-semibold uppercase tracking-wider text-gray-300">
+                        Footer Description
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={cms.brand.footerDescription}
+                        onChange={(e) => updateBrand({ footerDescription: e.target.value })}
+                        className="mt-1.5 w-full resize-none rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white outline-none focus:border-violet-400"
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div className="rounded-3xl border border-white/10 bg-[#0d0718]/90 p-6 sm:p-8">
                   <h3 className="font-display text-lg font-bold text-white">
                     Hero Section Copy &amp; CTAs
@@ -984,110 +1151,6 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           )}
 
           {/* ==================================================== */}
-          {/* SECTION: CLIENT PARTNER LOGOS CMS */}
-          {/* ==================================================== */}
-          {activeSection === 'logos' && (
-            <div className="space-y-6">
-              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                <div>
-                  <h3 className="font-display text-lg font-bold text-white">
-                    Client &amp; Partner Logos ({(cms.clientLogos || []).length})
-                  </h3>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    Brand partners presented in the dynamic interactive liquid carousel on the Home &amp; Services pages.
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsAddLogoOpen(true)}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-[#0a0612] hover:bg-violet-100"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  <span>Add Partner Logo</span>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredLogos.map((item) => {
-                  const isEditing = editingLogoId === item.id;
-                  return (
-                    <div
-                      key={item.id}
-                      className="rounded-3xl border border-white/10 bg-[#0d0718]/90 p-6 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 p-2">
-                            <img
-                              src={item.src || '/images/logos/figma.svg'}
-                              alt={item.name}
-                              className="max-h-8 max-w-8 object-contain"
-                            />
-                          </div>
-                          <div>
-                            <h4 className="font-display text-sm font-bold text-white">{item.name}</h4>
-                            <p className="text-xs text-violet-300">{item.subtitle || 'Enterprise Partner'}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setEditingLogoId(isEditing ? null : item.id)}
-                            className="cursor-pointer text-xs text-gray-300 hover:text-white"
-                          >
-                            {isEditing ? 'Done' : 'Edit'}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => deleteClientLogo(item.id)}
-                            className="cursor-pointer text-gray-500 hover:text-rose-400"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </div>
-
-                      {isEditing && (
-                        <div className="mt-5 space-y-3 border-t border-white/10 pt-4 text-xs">
-                          <div>
-                            <label className="text-gray-400">Brand / Company Name</label>
-                            <input
-                              type="text"
-                              value={item.name}
-                              onChange={(e) => updateClientLogo(item.id, { name: e.target.value })}
-                              className="mt-1 w-full rounded-lg border border-white/10 bg-white/[0.04] p-2 text-white font-semibold"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-gray-400">Subtitle / Category</label>
-                            <input
-                              type="text"
-                              value={item.subtitle || ''}
-                              onChange={(e) => updateClientLogo(item.id, { subtitle: e.target.value })}
-                              className="mt-1 w-full rounded-lg border border-white/10 bg-white/[0.04] p-2 text-gray-300"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-gray-400">Logo SVG / Image Path</label>
-                            <input
-                              type="text"
-                              value={item.src || ''}
-                              onChange={(e) => updateClientLogo(item.id, { src: e.target.value })}
-                              className="mt-1 w-full rounded-lg border border-white/10 bg-white/[0.04] p-2 text-gray-300 font-mono text-[11px]"
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* ==================================================== */}
           {/* SECTION: ABOUT & PILLARS CMS */}
           {/* ==================================================== */}
           {activeSection === 'about' && (
@@ -1250,6 +1313,74 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                   </div>
                 </div>
               </div>
+
+              {/* FAQ Management Card */}
+              <div className="rounded-3xl border border-white/10 bg-[#0d0718]/90 p-6 sm:p-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-white">
+                      Frequently Asked Questions (FAQs)
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      Configure questions and answers displayed on the Contact page.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 space-y-4">
+                  {cms.contact.faqs && cms.contact.faqs.map((faq, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4"
+                    >
+                      <div className="space-y-1 text-xs">
+                        <div className="font-semibold text-white">{faq.q}</div>
+                        <div className="text-gray-400 leading-relaxed">{faq.a}</div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => deleteFaq(idx)}
+                        className="rounded-lg p-1.5 text-gray-400 hover:bg-rose-500/20 hover:text-rose-300 transition-colors"
+                        title="Delete FAQ"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Add New FAQ Form */}
+                  <div className="rounded-2xl border border-dashed border-violet-400/30 bg-violet-900/10 p-4 space-y-3">
+                    <span className="text-xs font-semibold text-violet-300">Add New FAQ</span>
+                    <input
+                      type="text"
+                      placeholder="Question..."
+                      value={newFaqForm.q}
+                      onChange={(e) => setNewFaqForm((prev) => ({ ...prev, q: e.target.value }))}
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2.5 text-xs text-white outline-none focus:border-violet-400"
+                    />
+                    <textarea
+                      rows={2}
+                      placeholder="Answer..."
+                      value={newFaqForm.a}
+                      onChange={(e) => setNewFaqForm((prev) => ({ ...prev, a: e.target.value }))}
+                      className="w-full resize-none rounded-xl border border-white/10 bg-white/[0.04] p-2.5 text-xs text-white outline-none focus:border-violet-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (newFaqForm.q.trim() && newFaqForm.a.trim()) {
+                          addFaq(newFaqForm);
+                          setNewFaqForm({ q: '', a: '' });
+                        }
+                      }}
+                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-violet-600 px-4 py-2 text-xs font-semibold text-white hover:bg-violet-500"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>Save Question</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -1257,16 +1388,182 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           {/* SECTION: INQUIRIES & BOOKINGS */}
           {/* ==================================================== */}
           {(activeSection === 'inquiries' || activeSection === 'bookings') && (
-            <div className="rounded-3xl border border-white/10 bg-[#0d0718]/90 p-6 sm:p-8">
-              <h3 className="font-display text-lg font-bold text-white capitalize">
-                {activeSection} Feed
-              </h3>
-              <p className="text-xs text-gray-400 mt-1">
-                Client submissions stored in the backend and local storage.
-              </p>
-              <div className="mt-6 text-xs text-gray-400">
-                Connected to active database pipeline &bull; Stored locally in JSON storage engine.
+            <div className="space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-white/10 bg-[#0d0718]/90 p-6 sm:p-8">
+                <div>
+                  <h3 className="font-display text-lg font-bold text-white capitalize">
+                    {activeSection === 'inquiries' ? 'Client Inquiries Feed' : 'Discovery Call Bookings'}
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {activeSection === 'inquiries'
+                      ? 'Live inbound messages submitted via Contact page & APIs.'
+                      : 'Scheduled discovery consultation requests received from clients.'}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs font-semibold text-violet-300">
+                    {activeSection === 'inquiries' ? inquiriesList.length : bookingsList.length} Total Records
+                  </span>
+                  <button
+                    type="button"
+                    onClick={fetchFeeds}
+                    className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-semibold text-gray-300 hover:border-violet-400/40 hover:text-white"
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${loadingFeed ? 'animate-spin' : ''}`} />
+                    <span>Refresh</span>
+                  </button>
+                </div>
               </div>
+
+              {/* Feed Items Container */}
+              {activeSection === 'inquiries' && (
+                <div className="space-y-4">
+                  {inquiriesList.length === 0 ? (
+                    <div className="rounded-3xl border border-white/10 bg-[#0d0718]/60 p-12 text-center text-xs text-gray-400">
+                      No client inquiries recorded yet. When prospective partners submit inquiries via the contact page, they will appear here in real time.
+                    </div>
+                  ) : (
+                    inquiriesList.map((item) => (
+                      <div
+                        key={item.id}
+                        className="rounded-3xl border border-white/10 bg-[#0d0718]/90 p-6 shadow-lg transition-all hover:border-violet-400/30"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-4">
+                          <div>
+                            <span className="font-display text-base font-bold text-white">{item.name}</span>
+                            <span className="ml-2 text-xs text-gray-400">&bull; {item.email}</span>
+                            {item.company && (
+                              <span className="ml-2 text-xs text-violet-300 font-medium">({item.company})</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] text-gray-400">
+                              {new Date(item.createdAt).toLocaleDateString()}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteInquiry(item.id)}
+                              className="rounded-lg p-1 text-gray-400 hover:bg-rose-500/20 hover:text-rose-300"
+                              title="Delete record"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
+                          <div>
+                            <span className="text-gray-400">Target Discipline: </span>
+                            <span className="font-semibold text-white">{item.service}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Capital Tier: </span>
+                            <span className="font-semibold text-emerald-400">{item.budget}</span>
+                          </div>
+                        </div>
+
+                        <div className="mt-3 rounded-2xl border border-white/5 bg-white/[0.02] p-4 text-xs text-gray-300 leading-relaxed">
+                          &ldquo;{item.message}&rdquo;
+                        </div>
+
+                        <div className="mt-4 flex items-center justify-between">
+                          <span className="text-[11px] text-gray-400">Status Workflow:</span>
+                          <div className="flex items-center gap-1.5">
+                            {(['new', 'in_review', 'contacted', 'closed'] as const).map((st) => (
+                              <button
+                                key={st}
+                                type="button"
+                                onClick={() => handleUpdateInquiryStatus(item.id, st)}
+                                className={`cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase transition-all ${
+                                  item.status === st
+                                    ? 'bg-violet-600 text-white shadow-[0_0_12px_rgba(139,92,246,0.5)]'
+                                    : 'border border-white/10 bg-white/[0.03] text-gray-400 hover:text-white'
+                                }`}
+                              >
+                                {st.replace('_', ' ')}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+
+              {activeSection === 'bookings' && (
+                <div className="space-y-4">
+                  {bookingsList.length === 0 ? (
+                    <div className="rounded-3xl border border-white/10 bg-[#0d0718]/60 p-12 text-center text-xs text-gray-400">
+                      No consultation bookings scheduled yet. When clients book a discovery call, reservations will appear here in real time.
+                    </div>
+                  ) : (
+                    bookingsList.map((item) => (
+                      <div
+                        key={item.id}
+                        className="rounded-3xl border border-white/10 bg-[#0d0718]/90 p-6 shadow-lg transition-all hover:border-violet-400/30"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-4">
+                          <div>
+                            <span className="font-display text-base font-bold text-white">{item.name}</span>
+                            <span className="ml-2 text-xs text-gray-400">&bull; {item.email}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] text-gray-400">
+                              {new Date(item.createdAt).toLocaleDateString()}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteBooking(item.id)}
+                              className="rounded-lg p-1 text-gray-400 hover:bg-rose-500/20 hover:text-rose-300"
+                              title="Delete booking"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
+                          <div>
+                            <span className="text-gray-400">Requested Service: </span>
+                            <span className="font-semibold text-white">{item.service}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Preferred Date: </span>
+                            <span className="font-semibold text-violet-300">{item.preferredDate || 'Earliest available'}</span>
+                          </div>
+                        </div>
+
+                        {item.notes && (
+                          <div className="mt-3 rounded-2xl border border-white/5 bg-white/[0.02] p-4 text-xs text-gray-300 leading-relaxed">
+                            {item.notes}
+                          </div>
+                        )}
+
+                        <div className="mt-4 flex items-center justify-between">
+                          <span className="text-[11px] text-gray-400">Booking Status:</span>
+                          <div className="flex items-center gap-1.5">
+                            {(['pending', 'confirmed', 'completed', 'cancelled'] as const).map((st) => (
+                              <button
+                                key={st}
+                                type="button"
+                                onClick={() => handleUpdateBookingStatus(item.id, st)}
+                                className={`cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase transition-all ${
+                                  item.status === st
+                                    ? 'bg-violet-600 text-white shadow-[0_0_12px_rgba(139,92,246,0.5)]'
+                                    : 'border border-white/10 bg-white/[0.03] text-gray-400 hover:text-white'
+                                }`}
+                              >
+                                {st}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -1565,92 +1862,6 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                 className="w-full rounded-full bg-white py-3 font-semibold text-[#0a0612] hover:bg-violet-100"
               >
                 Add Testimonial
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* -------------------------------------------------------- */}
-      {/* MODAL: ADD CLIENT LOGO */}
-      {/* -------------------------------------------------------- */}
-      {isAddLogoOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
-          onClick={() => setIsAddLogoOpen(false)}
-        >
-          <div
-            className="relative w-full max-w-md rounded-3xl border border-violet-400/30 bg-[#120822] p-8 shadow-[0_24px_90px_rgba(124,58,237,0.35)]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setIsAddLogoOpen(false)}
-              className="absolute top-5 right-5 text-gray-400 hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </button>
-            <h3 className="font-display text-xl font-bold text-white">Add Partner Brand Logo</h3>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (!newLogoForm.name) return;
-                addClientLogo(newLogoForm);
-                setIsAddLogoOpen(false);
-                setNewLogoForm({
-                  name: '',
-                  subtitle: 'Enterprise Partner',
-                  src: '/images/logos/figma.svg',
-                });
-              }}
-              className="mt-5 space-y-4 text-xs"
-            >
-              <div>
-                <label className="text-gray-300 font-medium">Brand / Company Name</label>
-                <input
-                  type="text"
-                  required
-                  value={newLogoForm.name}
-                  onChange={(e) =>
-                    setNewLogoForm((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  placeholder="e.g. OpenAI"
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white"
-                />
-              </div>
-              <div>
-                <label className="text-gray-300 font-medium">Subtitle / Category</label>
-                <input
-                  type="text"
-                  required
-                  value={newLogoForm.subtitle}
-                  onChange={(e) =>
-                    setNewLogoForm((prev) => ({ ...prev, subtitle: e.target.value }))
-                  }
-                  placeholder="e.g. Frontier AI Systems"
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white"
-                />
-              </div>
-              <div>
-                <label className="text-gray-300 font-medium">Logo SVG / Image Path</label>
-                <input
-                  type="text"
-                  required
-                  value={newLogoForm.src}
-                  onChange={(e) =>
-                    setNewLogoForm((prev) => ({ ...prev, src: e.target.value }))
-                  }
-                  placeholder="/images/logos/stripe.svg"
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-white font-mono text-[11px]"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full rounded-full bg-white py-3 font-semibold text-[#0a0612] hover:bg-violet-100"
-              >
-                Add Partner Logo
               </button>
             </form>
           </div>

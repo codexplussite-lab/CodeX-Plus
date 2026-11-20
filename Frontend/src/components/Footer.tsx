@@ -48,10 +48,21 @@ const SOCIAL_LINKS = [
   },
 ];
 
-const CURRENT_YEAR = new Date().getFullYear();
+const FALLBACK_YEAR = '2026';
 
 export function Footer({ onOpenModal, onNavigate }: FooterProps) {
   const { cms } = useCms();
+  const brand = cms.brand;
+  const contact = cms.contact;
+  const services = cms.services || [];
+
+  const siteName = brand?.siteName || 'CODEXX';
+  const brandAccent = brand?.brandAccent || 'PLUS';
+  const email = contact?.email || 'Info@codexplus.site';
+  const footerDesc =
+    brand?.footerDescription ||
+    'We explore every idea with curiosity and care, crafting purposeful AI-powered digital products, distinctive brands, and immersive web experiences built to endure.';
+  const currentYear = brand?.copyrightYear || FALLBACK_YEAR;
 
   const handleNav = (page: AppPage, hash?: string) => {
     if (onNavigate) {
@@ -59,22 +70,10 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
     }
   };
 
-  const email = cms.contact.email || 'Info@codexplus.site';
-  const phoneAmericas = cms.contact.phoneAmericas || '+1 (555) 839-2041';
-  const phoneEurope = cms.contact.phoneEurope || '+41 44 211 4890';
-  const sfAddress = cms.contact.sfAddress || '500 Howard St, Financial District, CA';
-  const zurichAddress = cms.contact.zurichAddress || 'Bahnhofstrasse 45, Tech Core, Switzerland';
-
-  const disciplines =
-    cms.services && cms.services.length > 0
-      ? cms.services.slice(0, 5)
-      : [
-          { id: '1', title: 'Full-Stack Development' },
-          { id: '2', title: 'Enterprise AI & LLM Systems' },
-          { id: '3', title: 'Dark Luxury UI/UX' },
-          { id: '4', title: 'Motion & 3D WebGL' },
-          { id: '5', title: 'SEO / GEO Discovery' },
-        ];
+  const footerServices = services.slice(0, 4).map((s) => ({
+    label: s.title,
+    href: '#services',
+  }));
 
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-[#08040f] pt-24 pb-8">
@@ -120,12 +119,10 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
           {/* Column 1: Brand Description */}
           <div className="lg:col-span-4">
             <div className="font-display text-2xl font-bold tracking-tight text-white">
-              CODEXX <span className="text-violet-300">PLUS</span>
+              {siteName} <span className="text-violet-300">{brandAccent}</span>
             </div>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-gray-400">
-              We explore every idea with curiosity and care, crafting purposeful
-              AI-powered digital products, distinctive brands, and immersive web
-              experiences built to endure.
+              {footerDesc}
             </p>
             <div className="mt-7 flex items-center gap-3">
               {SOCIAL_LINKS.map((social) => (
@@ -197,27 +194,27 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
             </ul>
           </div>
 
-          {/* Column 3: Services (Dynamic from CMS) */}
+          {/* Column 3: Services */}
           <div className="lg:col-span-2">
             <h3 className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
               Disciplines
             </h3>
             <ul className="mt-5 space-y-3.5">
-              {disciplines.map((item) => (
-                <li key={item.id || item.title}>
+              {footerServices.map((item) => (
+                <li key={item.label}>
                   <button
                     type="button"
                     onClick={() => handleNav('services')}
                     className="cursor-pointer text-left text-sm text-gray-300 transition-colors hover:text-violet-300"
                   >
-                    {item.title}
+                    {item.label}
                   </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Column 4: Contact Details (Dynamic from CMS) */}
+          {/* Column 4: Contact Details */}
           <div className="lg:col-span-4">
             <h3 className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
               Global Hubs
@@ -227,16 +224,16 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-violet-400" />
                 <div className="space-y-1">
                   <a
-                    href={`tel:${phoneAmericas.replace(/\s+/g, '')}`}
+                    href={`tel:${contact?.phoneAmericas?.replace(/[^\d+]/g, '') || '+15558392041'}`}
                     className="block transition-colors hover:text-white"
                   >
-                    {phoneAmericas} (Americas)
+                    {contact?.phoneAmericas || '+1 (555) 839-2041'} (Americas)
                   </a>
                   <a
-                    href={`tel:${phoneEurope.replace(/\s+/g, '')}`}
+                    href={`tel:${contact?.phoneEurope?.replace(/[^\d+]/g, '') || '+41442114890'}`}
                     className="block transition-colors hover:text-white"
                   >
-                    {phoneEurope} (Europe Core)
+                    {contact?.phoneEurope || '+41 44 211 4890'} (Europe Core)
                   </a>
                 </div>
               </div>
@@ -248,13 +245,13 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
                     <span className="font-medium text-gray-200">
                       San Francisco:
                     </span>{' '}
-                    {sfAddress}
+                    {contact?.sfAddress || '500 Howard St, Financial District, CA'}
                   </p>
                   <p>
                     <span className="font-medium text-gray-200">
                       Zurich Hub:
                     </span>{' '}
-                    {zurichAddress}
+                    {contact?.zurichAddress || 'Bahnhofstrasse 45, Tech Core, Switzerland'}
                   </p>
                 </div>
               </div>
@@ -264,7 +261,7 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
 
         {/* Bottom Copyright & Policies */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-gray-400 sm:flex-row">
-          <p>All rights reserved &copy; {CURRENT_YEAR} CODEXX PLUS.</p>
+          <p>All rights reserved &copy; {currentYear} {siteName} {brandAccent}.</p>
           <div className="flex items-center gap-6">
             <a
               href="#payment-policy"
@@ -302,7 +299,7 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
           className="pointer-events-none mt-10 select-none overflow-hidden text-center"
         >
           <span className="codexplus-outline-text block font-display text-[15vw] leading-[0.85] font-extrabold tracking-[0.04em] uppercase xl:text-[215px]">
-            CODEXPLUS
+            {siteName}{brandAccent}
           </span>
         </div>
       </div>

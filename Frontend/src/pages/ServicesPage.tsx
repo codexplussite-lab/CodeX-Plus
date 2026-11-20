@@ -1,8 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import {
   Sparkles,
   ArrowRight,
-  ArrowUpRight,
   Code2,
   Palette,
   Film,
@@ -16,7 +15,7 @@ import {
   Check,
 } from 'lucide-react';
 import { useCms } from '../context/useCms';
-import { SERVICES as DEFAULT_SERVICES, CLIENT_LOGOS as DEFAULT_LOGOS } from '../data/siteData';
+import { SERVICES as DEFAULT_SERVICES, type ServiceItem } from '../data/siteData';
 
 interface ServicesPageProps {
   onOpenModal: () => void;
@@ -24,7 +23,7 @@ interface ServicesPageProps {
   onNavigateHome: () => void;
 }
 
-const ICONS = [Code2, Palette, Film, TrendingUp, Search, Cpu, Layers, ShieldCheck];
+const ICON_MAP = [Code2, Palette, Film, TrendingUp, Search, Cpu, Layers];
 
 const PROCESS_STEPS = [
   {
@@ -114,31 +113,11 @@ const ENGAGEMENT_TIERS = [
 
 export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }: ServicesPageProps) {
   const { cms } = useCms();
-
-  const services = cms.services && cms.services.length > 0 ? cms.services : DEFAULT_SERVICES;
-  const clientLogos = cms.clientLogos && cms.clientLogos.length > 0 ? cms.clientLogos : DEFAULT_LOGOS;
-
-  const disciplines = useMemo(() => {
-    return services.map((s, idx) => ({
-      id: s.id,
-      step: String(idx + 1).padStart(2, '0'),
-      title: s.title,
-      tag: s.tag,
-      icon: ICONS[idx % ICONS.length],
-      lead: s.lead || s.description.slice(0, 160) + '...',
-      description: s.description,
-      techStack: s.techStack || ['React 19 & Next.js', 'Node.js & Python', 'LangChain & Agentic Workflows', 'Cloudflare Edge'],
-      deliverables: s.deliverables || [
-        'Enterprise architecture & schema design',
-        'Zero-downtime CI/CD deployment infrastructure',
-        'Deterministic security & threat modeling',
-        '24/7 high-availability SLA monitoring',
-      ],
-    }));
-  }, [services]);
+  const servicesList: ServiceItem[] =
+    cms.services && cms.services.length > 0 ? cms.services : DEFAULT_SERVICES;
 
   const [activeDiscipline, setActiveDiscipline] = useState<string>(
-    () => disciplines[0]?.id || 'development'
+    servicesList[0]?.id || 'development'
   );
 
   return (
@@ -236,8 +215,9 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
 
           {/* Quick discipline switcher buttons */}
           <div className="mt-10 flex flex-wrap gap-2">
-            {disciplines.map((d) => {
+            {servicesList.map((d, idx) => {
               const active = activeDiscipline === d.id;
+              const stepLabel = d.step || String(idx + 1).padStart(2, '0');
               return (
                 <button
                   key={d.id}
@@ -249,7 +229,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                       : 'border border-white/10 bg-white/[0.03] text-gray-400 hover:border-white/20 hover:text-white'
                   }`}
                 >
-                  {d.step} &middot; {d.title}
+                  {stepLabel} &middot; {d.title}
                 </button>
               );
             })}
@@ -257,9 +237,22 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
 
           {/* Disciplines Grid */}
           <div className="mt-8 space-y-6">
-            {disciplines.map((item) => {
-              const Icon = item.icon;
+            {servicesList.map((item, idx) => {
+              const Icon = ICON_MAP[idx % ICON_MAP.length];
               const isSelected = activeDiscipline === item.id;
+              const stepLabel = item.step || String(idx + 1).padStart(2, '0');
+              const techStack =
+                item.techStack && item.techStack.length > 0
+                  ? item.techStack
+                  : ['React 19 & Next.js', 'Node.js & Python', 'Cloudflare Edge'];
+              const deliverables =
+                item.deliverables && item.deliverables.length > 0
+                  ? item.deliverables
+                  : [
+                      'High-throughput REST & GraphQL API services',
+                      'Zero-downtime CI/CD deployment infrastructure',
+                    ];
+
               return (
                 <article
                   key={item.id}
@@ -276,7 +269,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                     <div className="lg:col-span-7">
                       <div className="flex items-center gap-3">
                         <span className="font-mono text-sm font-semibold tracking-wider text-violet-400">
-                          {item.step}
+                          {stepLabel}
                         </span>
                         <span className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-0.5 text-xs font-medium text-violet-300">
                           {item.tag}
@@ -292,9 +285,11 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                         </h3>
                       </div>
 
-                      <p className="mt-4 text-base font-medium leading-relaxed text-gray-200">
-                        {item.lead}
-                      </p>
+                      {item.lead && (
+                        <p className="mt-4 text-base font-medium leading-relaxed text-gray-200">
+                          {item.lead}
+                        </p>
+                      )}
                       <p className="mt-3 text-sm leading-relaxed text-gray-400">
                         {item.description}
                       </p>
@@ -305,7 +300,7 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                           Technologies &amp; Frameworks
                         </span>
                         <div className="mt-2.5 flex flex-wrap gap-2">
-                          {item.techStack.map((tech) => (
+                          {techStack.map((tech: string) => (
                             <span
                               key={tech}
                               className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300"
@@ -317,36 +312,37 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                       </div>
                     </div>
 
-                    {/* Right Column: Deliverables Matrix & CTA */}
-                    <div className="flex flex-col justify-between rounded-2xl border border-white/10 bg-black/30 p-6 backdrop-blur-md lg:col-span-5">
+                    {/* Right Column: Key Deliverables Card */}
+                    <div className="flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0d0617] p-6 lg:col-span-5">
                       <div>
-                        <div className="flex items-center gap-2">
-                          <Layers className="h-4 w-4 text-violet-400" />
-                          <h4 className="font-display text-sm font-bold tracking-wide text-white uppercase">
-                            Key Sprint Deliverables
-                          </h4>
+                        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                          <span className="text-xs font-semibold tracking-wider text-violet-300 uppercase">
+                            Core Deliverables
+                          </span>
+                          <span className="text-xs text-gray-400">Included in Sprint</span>
                         </div>
-                        <ul className="mt-5 space-y-3">
-                          {item.deliverables.map((deliv) => (
-                            <li key={deliv} className="flex items-start gap-2.5 text-xs text-gray-300">
-                              <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-400" />
-                              <span className="leading-relaxed">{deliv}</span>
+
+                        <ul className="mt-5 space-y-3.5">
+                          {deliverables.map((deliv: string, dIdx: number) => (
+                            <li key={dIdx} className="flex items-start gap-3 text-xs leading-relaxed text-gray-300">
+                              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-violet-400" />
+                              <span>{deliv}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
 
-                      <div className="mt-8 pt-6 border-t border-white/10">
+                      <div className="mt-8 pt-4">
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             onOpenModal();
                           }}
-                          className="group/btn flex w-full cursor-pointer items-center justify-between rounded-xl border border-violet-400/30 bg-violet-500/10 px-5 py-3 text-xs font-semibold text-white transition-all hover:border-violet-300 hover:bg-violet-600/30"
+                          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-white/10 py-3 text-xs font-semibold text-white transition-colors hover:bg-violet-600 hover:text-white"
                         >
-                          <span>Request Architecture Spec</span>
-                          <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                          <span>Commission {item.title}</span>
+                          <ArrowRight className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     </div>
@@ -357,61 +353,63 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
           </div>
         </div>
 
-        {/* 4-Stage Delivery Engineering Process */}
-        <div className="mt-28 rounded-3xl border border-white/10 bg-gradient-to-b from-[#120822]/90 via-[#0d0619]/90 to-[#08040f] p-8 sm:p-12 lg:p-16">
-          <div className="max-w-2xl">
+        {/* 4-Step Engineering Process */}
+        <div className="mt-28">
+          <div className="text-center">
             <span className="text-xs font-semibold tracking-[0.22em] text-violet-300 uppercase">
-              How We Execute
+              How We Work
             </span>
-            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Our 4-Stage Delivery Framework
+            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
+              Deterministic 4-Phase Delivery Process
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-gray-400 sm:text-base">
-              Predictable, milestone-driven sprints designed to remove risk and guarantee on-time delivery
-              without scope creep or missed deadlines.
+            <p className="mx-auto mt-4 max-w-xl text-base text-gray-400">
+              Zero ambiguity. Every phase has clear deliverables, weekly staging previews, and direct access to your project leads.
             </p>
           </div>
 
-          <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {PROCESS_STEPS.map((step) => (
               <div
                 key={step.number}
-                className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-all duration-300 hover:border-violet-400/40 hover:bg-white/[0.04]"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-[#120820]/80 p-7 shadow-lg transition-all duration-300 hover:border-violet-400/40 hover:bg-[#170a29]"
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-3xl font-extrabold tracking-tight text-violet-400">
+                    <span className="font-mono text-2xl font-bold text-violet-400/70 group-hover:text-violet-300">
                       {step.number}
                     </span>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-500/10 px-2.5 py-0.5 text-[11px] font-medium text-violet-300">
-                      <Clock className="h-3 w-3" />
+                    <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-gray-300">
+                      <Clock className="h-3 w-3 text-violet-400" />
                       {step.time}
                     </span>
                   </div>
-                  <h4 className="mt-5 font-display text-base font-bold text-white">
+                  <h3 className="mt-6 font-display text-xl font-bold tracking-tight text-white">
                     {step.title}
-                  </h4>
-                  <p className="mt-2.5 text-xs leading-relaxed text-gray-400">
+                  </h3>
+                  <p className="mt-3 text-xs leading-relaxed text-gray-400">
                     {step.description}
                   </p>
+                </div>
+
+                <div className="mt-8 border-t border-white/10 pt-4 text-[11px] font-medium text-violet-300/80">
+                  Verified Phase Deliverables &rarr;
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Engagement Tiers & Investment Section */}
+        {/* Investment Tiers Section */}
         <div id="pricing" className="mt-28">
           <div className="text-center">
             <span className="text-xs font-semibold tracking-[0.22em] text-violet-300 uppercase">
-              Transparent Partnerships
+              Transparent Investment
             </span>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
-              Engagement Tiers &amp; Investment
+              Engagement Tiers &amp; Retainers
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-gray-400 sm:text-base">
-              Every partnership includes direct senior architect involvement, typed production code,
-              and our unwavering commitment to craftsmanship.
+            <p className="mx-auto mt-4 max-w-xl text-base text-gray-400">
+              Predictable pricing for venture-backed startups, high-growth scaleups, and global enterprises.
             </p>
           </div>
 
@@ -419,58 +417,60 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
             {ENGAGEMENT_TIERS.map((tier) => (
               <div
                 key={tier.name}
-                className={`relative flex flex-col justify-between overflow-hidden rounded-3xl border p-8 transition-all duration-300 ${
+                className={`relative flex flex-col justify-between rounded-3xl border p-8 transition-all duration-300 ${
                   tier.popular
-                    ? 'border-violet-400/70 bg-gradient-to-b from-[#1c0f35] via-[#120824] to-[#0a0514] shadow-[0_20px_60px_rgba(139,92,246,0.3)]'
-                    : 'border-white/10 bg-[#10081c]/80 hover:border-violet-400/35 hover:bg-[#140a24]'
+                    ? 'border-violet-400/80 bg-gradient-to-b from-[#1e0e38] via-[#140827] to-[#0d0519] shadow-[0_20px_70px_rgba(139,92,246,0.35)]'
+                    : 'border-white/10 bg-[#10081c]/90 hover:border-violet-400/30'
                 }`}
               >
                 {tier.popular && (
-                  <div className="absolute top-0 right-0 rounded-bl-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-1.5 text-[11px] font-bold text-white uppercase tracking-wider shadow-[0_0_15px_rgba(168,85,247,0.5)]">
-                    Recommended
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-violet-400/40 bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-1 text-[11px] font-bold tracking-wider text-white uppercase shadow-md">
+                    Most Popular
                   </div>
                 )}
 
                 <div>
-                  <span className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
-                    {tier.badge}
-                  </span>
-                  <h3 className="mt-4 font-display text-2xl font-bold text-white">
+                  <div className="flex items-center justify-between">
+                    <span className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+                      {tier.badge}
+                    </span>
+                    <span className="text-xs text-gray-400">{tier.timeline}</span>
+                  </div>
+
+                  <h3 className="mt-5 font-display text-2xl font-bold text-white">
                     {tier.name}
                   </h3>
-                  <p className="mt-2 text-xs leading-relaxed text-gray-400">
-                    {tier.description}
-                  </p>
-
-                  <div className="mt-6 flex items-baseline gap-2">
-                    <span className="font-display text-3xl font-extrabold text-white sm:text-4xl">
+                  <div className="mt-3 flex items-baseline gap-2">
+                    <span className="font-display text-4xl font-bold tracking-tight text-white">
                       {tier.price}
                     </span>
-                    <span className="text-xs text-gray-400 font-medium">{tier.timeline}</span>
                   </div>
+                  <p className="mt-4 text-xs leading-relaxed text-gray-300">
+                    {tier.description}
+                  </p>
 
                   <div className="mt-8 border-t border-white/10 pt-6">
                     <span className="text-[11px] font-semibold tracking-wider text-gray-400 uppercase">
                       What&apos;s Included
                     </span>
                     <ul className="mt-4 space-y-3">
-                      {tier.features.map((feat) => (
-                        <li key={feat} className="flex items-start gap-2.5 text-xs text-gray-300">
-                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-400" />
-                          <span className="leading-relaxed">{feat}</span>
+                      {tier.features.map((feat, fIdx) => (
+                        <li key={fIdx} className="flex items-start gap-2.5 text-xs text-gray-300">
+                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-400" />
+                          <span>{feat}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-white/10">
+                <div className="mt-10 pt-4">
                   <button
                     type="button"
                     onClick={onOpenModal}
-                    className={`w-full cursor-pointer rounded-full py-3 text-xs font-semibold transition-all ${
+                    className={`w-full cursor-pointer rounded-full py-3.5 text-center text-xs font-semibold transition-all ${
                       tier.popular
-                        ? 'bg-white text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.4)] hover:bg-violet-100 hover:shadow-[0_0_36px_rgba(168,85,247,0.6)]'
+                        ? 'bg-white text-[#0a0612] shadow-[0_0_24px_rgba(255,255,255,0.4)] hover:bg-violet-100'
                         : 'border border-white/20 bg-white/5 text-white hover:border-violet-300 hover:bg-white/10'
                     }`}
                   >
@@ -482,68 +482,37 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
           </div>
         </div>
 
-        {/* Client Logos / Trust Strip */}
-        <div className="mt-24 rounded-3xl border border-white/10 bg-[#0d0718]/80 p-8 sm:p-10">
-          <div className="text-center">
-            <span className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
-              Trusted By Innovative Technology Leaders
-            </span>
-          </div>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-8 sm:gap-14">
-            {clientLogos.map((client) => (
-              <div key={client.id} className="text-center">
-                <span className="font-display text-xl font-bold tracking-tight text-white/80 transition-colors hover:text-white sm:text-2xl">
-                  {client.name}
-                </span>
-                {client.subtitle && (
-                  <span className="block text-[11px] tracking-wider text-violet-400/80 uppercase">
-                    {client.subtitle}
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Bottom CTA Block */}
-        <div className="mt-24 flex flex-col items-center justify-between gap-8 rounded-3xl border border-violet-400/25 bg-gradient-to-r from-violet-900/30 via-[#180d2c] to-fuchsia-900/20 p-8 sm:p-12 lg:flex-row lg:p-14">
-          <div className="max-w-xl text-center lg:text-left">
-            <div className="flex items-center justify-center gap-2 lg:justify-start">
-              <Cpu className="h-4 w-4 text-violet-400" />
-              <span className="text-xs font-semibold tracking-wider text-violet-300 uppercase">
-                Let&apos;s Build Together
-              </span>
-            </div>
-            <h3 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">
-              Have a complex digital project or AI roadmap?
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-gray-300 sm:text-base">
-              Book a 15-minute introductory architecture call. We will review your challenges, discuss technical
-              feasibility, and formulate a concrete plan of action.
+        <div className="mt-28 rounded-3xl border border-violet-400/30 bg-gradient-to-r from-[#170a2c] via-[#1c0e35] to-[#120820] p-10 text-center shadow-[0_20px_80px_rgba(139,92,246,0.25)] md:p-16">
+          <div className="mx-auto max-w-2xl">
+            <span className="inline-block text-xs font-semibold tracking-widest text-violet-300 uppercase">
+              Custom Engineering Requirements
+            </span>
+            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
+              Have a bespoke enterprise system in mind?
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-gray-300 sm:text-base">
+              Talk directly with our solutions architects to structure a tailored engagement.
             </p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <button
-              type="button"
-              onClick={onOpenModal}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-[#0a0612] shadow-[0_0_24px_rgba(168,85,247,0.35)] transition-all hover:bg-violet-100 hover:shadow-[0_0_36px_rgba(168,85,247,0.55)]"
-            >
-              <span>Book 15-Min Discovery</span>
-              <ArrowRight className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={onNavigateContact}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3 text-sm font-semibold text-white transition-all hover:border-violet-300 hover:bg-white/10"
-            >
-              Contact Our Studio
-            </button>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={onOpenModal}
+                className="cursor-pointer rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#0a0612] shadow-lg transition-colors hover:bg-violet-100"
+              >
+                Schedule Technical Discovery
+              </button>
+              <button
+                type="button"
+                onClick={onNavigateContact}
+                className="cursor-pointer rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:border-violet-300 hover:bg-white/10"
+              >
+                Submit RFP / Architecture Spec
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default ServicesPage;

@@ -518,28 +518,32 @@ export default function DepthCarousel({
                 loading={i < 4 ? 'eager' : 'lazy'}
               />
 
-              {/* Front Card Title, Badge, and Subtitle Overlay */}
+              {/* Front and Stacked Card Title, Badge, and Subtitle Overlay */}
               {(item.title || item.subtitle || item.badge) && (
                 <>
                   <div
-                    className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-300 ${
-                      isActive ? 'opacity-100' : 'opacity-40'
+                    className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-300 ${
+                      isActive ? 'opacity-100' : 'opacity-75'
                     }`}
                   />
                   <div
                     className={`pointer-events-none absolute right-0 bottom-0 left-0 p-6 transition-all duration-300 ${
                       isActive
                         ? 'translate-y-0 opacity-100'
-                        : 'pointer-events-none translate-y-2 opacity-0'
+                        : 'translate-y-0 opacity-75'
                     }`}
                   >
-                    {item.badge && (
+                    {item.badge && isActive && (
                       <span className="inline-block rounded-full border border-white/20 bg-black/65 px-3 py-1 text-[11px] font-medium tracking-wide text-white/95 shadow-lg backdrop-blur-md">
                         {item.badge}
                       </span>
                     )}
                     {item.title && (
-                      <h3 className="mt-2.5 font-display text-xl font-bold tracking-tight text-white drop-shadow-sm">
+                      <h3
+                        className={`font-display font-bold tracking-tight text-white drop-shadow-sm ${
+                          isActive ? 'mt-2.5 text-xl' : 'mt-1 text-base opacity-90'
+                        }`}
+                      >
                         {item.title}
                       </h3>
                     )}
