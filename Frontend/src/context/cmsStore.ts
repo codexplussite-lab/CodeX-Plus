@@ -310,4 +310,45 @@ export interface CmsContextValue {
   lastPublished: string | null;
 }
 
+export const CMS_STORAGE_KEY = 'codex_cms_content';
+
+export function loadCmsData(): CmsData {
+  try {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem(CMS_STORAGE_KEY) : null;
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return {
+        ...DEFAULT_CMS_DATA,
+        ...parsed,
+        brand: { ...DEFAULT_CMS_DATA.brand, ...(parsed.brand || {}) },
+        hero: { ...DEFAULT_CMS_DATA.hero, ...(parsed.hero || {}) },
+        about: { ...DEFAULT_CMS_DATA.about, ...(parsed.about || {}) },
+        contact: { ...DEFAULT_CMS_DATA.contact, ...(parsed.contact || {}) },
+      };
+    }
+  } catch {
+    // fallback
+  }
+  return DEFAULT_CMS_DATA;
+}
+
+export function saveCmsData(data: Partial<CmsData>): CmsData {
+  const current = loadCmsData();
+  const updated: CmsData = {
+    ...current,
+    ...data,
+  };
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(updated));
+  }
+  return updated;
+}
+
+export function resetCmsData(): CmsData {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(CMS_STORAGE_KEY);
+  }
+  return DEFAULT_CMS_DATA;
+}
+
 export const CmsContext = createContext<CmsContextValue | null>(null);

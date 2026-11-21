@@ -8,6 +8,8 @@ import type { FullTeamMember } from '../data/teamData';
 import {
   CmsContext,
   DEFAULT_CMS_DATA,
+  CMS_STORAGE_KEY,
+  loadCmsData,
   type CmsData,
   type CmsBrand,
   type CmsHeroContent,
@@ -17,32 +19,14 @@ import {
 } from './cmsStore';
 
 export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cms, setCms] = useState<CmsData>(() => {
-    try {
-      const saved = localStorage.getItem('codex_cms_content');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return {
-          ...DEFAULT_CMS_DATA,
-          ...parsed,
-          brand: { ...DEFAULT_CMS_DATA.brand, ...(parsed.brand || {}) },
-          hero: { ...DEFAULT_CMS_DATA.hero, ...(parsed.hero || {}) },
-          about: { ...DEFAULT_CMS_DATA.about, ...(parsed.about || {}) },
-          contact: { ...DEFAULT_CMS_DATA.contact, ...(parsed.contact || {}) },
-        };
-      }
-    } catch {
-      // fallback
-    }
-    return DEFAULT_CMS_DATA;
-  });
+  const [cms, setCms] = useState<CmsData>(() => loadCmsData());
 
   const [isSaving, setIsSaving] = useState(false);
   const [lastPublished, setLastPublished] = useState<string | null>(null);
 
   // Sync to localStorage
   useEffect(() => {
-    localStorage.setItem('codex_cms_content', JSON.stringify(cms));
+    localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(cms));
   }, [cms]);
 
   // Initial fetch from backend if available

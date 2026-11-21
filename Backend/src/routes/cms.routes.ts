@@ -15,7 +15,7 @@ router.get('/', (_req: Request, res: Response) => {
 // PUT /api/cms - Update & publish CMS content
 router.put('/', (req: Request, res: Response) => {
   const content = req.body as Record<string, unknown>;
-  if (!content || typeof content !== 'object') {
+  if (!content || typeof content !== 'object' || Array.isArray(content) || Object.keys(content).length === 0) {
     res.status(400).json({
       success: false,
       message: 'Invalid CMS payload provided',
