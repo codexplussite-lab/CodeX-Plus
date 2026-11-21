@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import { X, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
 
 interface BookingModalProps {
@@ -12,6 +12,24 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [service, setService] = useState('AI Innovation & Development');
+
+  const resetAndClose = useCallback(() => {
+    setSubmitted(false);
+    setName('');
+    setEmail('');
+    onClose();
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        resetAndClose();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open, resetAndClose]);
 
   if (!open) return null;
 
@@ -50,13 +68,6 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
     }
   };
 
-  const resetAndClose = () => {
-    setSubmitted(false);
-    setName('');
-    setEmail('');
-    onClose();
-  };
-
   return (
     <div
       role="dialog"
@@ -73,9 +84,9 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
           type="button"
           onClick={resetAndClose}
           aria-label="Close dialog"
-          className="absolute top-5 right-5 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+          className="absolute top-5 right-5 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-violet-400"
         >
-          <X className="h-4 w-4" />
+          <X className="h-5 w-5" />
         </button>
 
         {submitted ? (

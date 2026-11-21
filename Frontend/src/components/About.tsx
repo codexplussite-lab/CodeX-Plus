@@ -69,6 +69,8 @@ export function About() {
                 <img
                   src="/images/office-interior.jpg"
                   alt="High-end modern corporate office interior with luxury dark architectural lighting"
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a0612]/80 via-transparent to-violet-950/20" />

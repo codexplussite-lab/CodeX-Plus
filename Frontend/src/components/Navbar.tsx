@@ -90,6 +90,18 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Close mobile drawer on Escape key press
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [mobileOpen]);
+
   const handleLinkClick = (item: NavItem) => {
     setMobileOpen(false);
     onNavigate(item.page, item.hash);
@@ -148,7 +160,7 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
         <button
           type="button"
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition-colors md:hidden hover:text-white"
+          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition-colors md:hidden hover:text-white focus-visible:outline-2 focus-visible:outline-violet-400"
           aria-label="Toggle navigation menu"
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
