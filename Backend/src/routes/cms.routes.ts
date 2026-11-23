@@ -4,8 +4,8 @@ import { storage } from '../db/storage';
 const router = Router();
 
 // GET /api/cms - Retrieve published CMS content
-router.get('/', (_req: Request, res: Response) => {
-  const content = storage.getCmsContent();
+router.get('/', async (_req: Request, res: Response) => {
+  const content = await storage.getCmsContent();
   res.status(200).json({
     success: true,
     data: content,
@@ -13,7 +13,7 @@ router.get('/', (_req: Request, res: Response) => {
 });
 
 // PUT /api/cms - Update & publish CMS content
-router.put('/', (req: Request, res: Response) => {
+router.put('/', async (req: Request, res: Response) => {
   const content = req.body as Record<string, unknown>;
   if (!content || typeof content !== 'object' || Array.isArray(content) || Object.keys(content).length === 0) {
     res.status(400).json({
@@ -23,8 +23,8 @@ router.put('/', (req: Request, res: Response) => {
     return;
   }
 
-  const updated = storage.updateCmsContent(content);
-  console.log('[CMS] Content updated and published to disk storage.');
+  const updated = await storage.updateCmsContent(content);
+  console.log(`[CMS] Content updated and published to ${storage.getEngineType()} storage.`);
 
   res.status(200).json({
     success: true,

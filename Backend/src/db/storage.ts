@@ -1,6 +1,20 @@
 import fs from 'fs';
 import path from 'path';
 import { ContactInquiry, BookingRequest, NewsletterSubscription } from '../types';
+import {
+  isPostgresConnected,
+  pgAddInquiry,
+  pgGetInquiries,
+  pgUpdateInquiryStatus,
+  pgDeleteInquiry,
+  pgAddBooking,
+  pgGetBookings,
+  pgUpdateBookingStatus,
+  pgDeleteBooking,
+  pgGetCmsContent,
+  pgUpdateCmsContent,
+  pgAddSubscription,
+} from './postgres';
 
 interface DatabaseSchema {
   inquiries: ContactInquiry[];
@@ -135,8 +149,22 @@ class StorageEngine {
     }
   }
 
+  public getEngineType(): 'postgresql' | 'json_file' {
+    return isPostgresConnected() ? 'postgresql' : 'json_file';
+  }
+
   // --- Inquiries ---
-  public addInquiry(inquiry: Omit<ContactInquiry, 'id' | 'createdAt' | 'status'>): ContactInquiry {
+  public async addInquiry(
+    inquiry: Omit<ContactInquiry, 'id' | 'createdAt' | 'status'>
+  ): Promise<ContactInquiry> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgAddInquiry(inquiry);
+      } catch (err) {
+        console.error('[PostgreSQL Error: addInquiry] falling back to disk:', err);
+      }
+    }
+
     const record: ContactInquiry = {
       ...inquiry,
       status: 'new',
@@ -148,11 +176,29 @@ class StorageEngine {
     return record;
   }
 
-  public getInquiries(): ContactInquiry[] {
+  public async getInquiries(): Promise<ContactInquiry[]> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgGetInquiries();
+      } catch (err) {
+        console.error('[PostgreSQL Error: getInquiries] falling back to disk:', err);
+      }
+    }
     return this.data.inquiries;
   }
 
-  public updateInquiryStatus(id: string, status: ContactInquiry['status']): ContactInquiry | null {
+  public async updateInquiryStatus(
+    id: string,
+    status: ContactInquiry['status']
+  ): Promise<ContactInquiry | null> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgUpdateInquiryStatus(id, status);
+      } catch (err) {
+        console.error('[PostgreSQL Error: updateInquiryStatus] falling back to disk:', err);
+      }
+    }
+
     const inquiry = this.data.inquiries.find((inq) => inq.id === id);
     if (!inquiry) return null;
     inquiry.status = status;
@@ -160,7 +206,15 @@ class StorageEngine {
     return inquiry;
   }
 
-  public deleteInquiry(id: string): boolean {
+  public async deleteInquiry(id: string): Promise<boolean> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgDeleteInquiry(id);
+      } catch (err) {
+        console.error('[PostgreSQL Error: deleteInquiry] falling back to disk:', err);
+      }
+    }
+
     const index = this.data.inquiries.findIndex((inq) => inq.id === id);
     if (index === -1) return false;
     this.data.inquiries.splice(index, 1);
@@ -169,7 +223,17 @@ class StorageEngine {
   }
 
   // --- Bookings ---
-  public addBooking(booking: Omit<BookingRequest, 'id' | 'createdAt' | 'status'>): BookingRequest {
+  public async addBooking(
+    booking: Omit<BookingRequest, 'id' | 'createdAt' | 'status'>
+  ): Promise<BookingRequest> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgAddBooking(booking);
+      } catch (err) {
+        console.error('[PostgreSQL Error: addBooking] falling back to disk:', err);
+      }
+    }
+
     const record: BookingRequest = {
       ...booking,
       status: 'pending',
@@ -181,22 +245,29 @@ class StorageEngine {
     return record;
   }
 
-  public getBookings(): BookingRequest[] {
+  public async getBookings(): Promise<BookingRequest[]> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgGetBookings();
+      } catch (err) {
+        console.error('[PostgreSQL Error: getBookings] falling back to disk:', err);
+      }
+    }
     return this.data.bookings;
   }
 
-  // --- CMS Content ---
-  public getCmsContent(): Record<string, unknown> | null {
-    return this.data.cmsContent || null;
-  }
+  public async updateBookingStatus(
+    id: string,
+    status: BookingRequest['status']
+  ): Promise<BookingRequest | null> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgUpdateBookingStatus(id, status);
+      } catch (err) {
+        console.error('[PostgreSQL Error: updateBookingStatus] falling back to disk:', err);
+      }
+    }
 
-  public updateCmsContent(content: Record<string, unknown>): Record<string, unknown> {
-    this.data.cmsContent = content;
-    this.flushToDisk();
-    return this.data.cmsContent;
-  }
-
-  public updateBookingStatus(id: string, status: BookingRequest['status']): BookingRequest | null {
     const booking = this.data.bookings.find((b) => b.id === id);
     if (!booking) return null;
     booking.status = status;
@@ -204,7 +275,15 @@ class StorageEngine {
     return booking;
   }
 
-  public deleteBooking(id: string): boolean {
+  public async deleteBooking(id: string): Promise<boolean> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgDeleteBooking(id);
+      } catch (err) {
+        console.error('[PostgreSQL Error: deleteBooking] falling back to disk:', err);
+      }
+    }
+
     const index = this.data.bookings.findIndex((b) => b.id === id);
     if (index === -1) return false;
     this.data.bookings.splice(index, 1);
@@ -212,8 +291,43 @@ class StorageEngine {
     return true;
   }
 
+  // --- CMS Content ---
+  public async getCmsContent(): Promise<Record<string, unknown> | null> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgGetCmsContent();
+      } catch (err) {
+        console.error('[PostgreSQL Error: getCmsContent] falling back to disk:', err);
+      }
+    }
+    return this.data.cmsContent || null;
+  }
+
+  public async updateCmsContent(content: Record<string, unknown>): Promise<Record<string, unknown>> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgUpdateCmsContent(content);
+      } catch (err) {
+        console.error('[PostgreSQL Error: updateCmsContent] falling back to disk:', err);
+      }
+    }
+    this.data.cmsContent = content;
+    this.flushToDisk();
+    return this.data.cmsContent;
+  }
+
   // --- Newsletter ---
-  public addSubscription(email: string): { subscription: NewsletterSubscription; isNew: boolean } {
+  public async addSubscription(
+    email: string
+  ): Promise<{ subscription: NewsletterSubscription; isNew: boolean }> {
+    if (isPostgresConnected()) {
+      try {
+        return await pgAddSubscription(email);
+      } catch (err) {
+        console.error('[PostgreSQL Error: addSubscription] falling back to disk:', err);
+      }
+    }
+
     const normalized = email.toLowerCase().trim();
     const existing = this.data.subscriptions.find((s) => s.email.toLowerCase() === normalized);
     if (existing) {

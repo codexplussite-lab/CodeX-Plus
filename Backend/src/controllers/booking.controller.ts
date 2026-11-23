@@ -15,7 +15,7 @@ export const handleBookingSubmit = async (req: Request, res: Response): Promise<
   const { name, email, service, preferredDate, notes } = req.body;
   const ipAddress = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || '';
 
-  const booking = storage.addBooking({
+  const booking = await storage.addBooking({
     name,
     email,
     service,
@@ -38,7 +38,7 @@ export const handleBookingSubmit = async (req: Request, res: Response): Promise<
 };
 
 export const getBookingsList = async (_req: Request, res: Response): Promise<void> => {
-  const list = storage.getBookings();
+  const list = await storage.getBookings();
   res.status(200).json({
     success: true,
     count: list.length,
@@ -58,7 +58,7 @@ export const updateBookingStatusHandler = async (req: Request, res: Response): P
     return;
   }
 
-  const updated = storage.updateBookingStatus(id, status);
+  const updated = await storage.updateBookingStatus(id, status);
   if (!updated) {
     res.status(404).json({
       success: false,
@@ -76,7 +76,7 @@ export const updateBookingStatusHandler = async (req: Request, res: Response): P
 
 export const deleteBookingHandler = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  const deleted = storage.deleteBooking(id);
+  const deleted = await storage.deleteBooking(id);
 
   if (!deleted) {
     res.status(404).json({

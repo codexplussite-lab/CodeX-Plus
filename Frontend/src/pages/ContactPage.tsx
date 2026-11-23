@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle2, ChevronDown, Sparkles, Copy, Check } from 'lucide-react';
 import { useCms } from '../context/useCms';
+import { apiUrl } from '../config/api';
 
 interface ContactPageProps {
   onOpenModal: () => void;
@@ -75,7 +76,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(apiUrl('/api/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -89,19 +90,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
       });
 
       if (!res.ok) {
-        // Fallback for direct backend port if running outside proxy
-        await fetch('http://localhost:5000/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name,
-            email,
-            company,
-            service: selectedService,
-            budget: selectedBudget,
-            message,
-          }),
-        }).catch(() => {});
+        console.warn('[ContactPage] Submission returned status:', res.status);
       }
       setSubmitted(true);
     } catch {

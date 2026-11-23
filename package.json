@@ -1,0 +1,17 @@
+{
+  "name": "codexplus-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CODEX PLUS Full-Stack Platform Monorepo",
+  "scripts": {
+    "install:all": "npm --prefix Backend install && npm --prefix Frontend install",
+    "dev:backend": "npm --prefix Backend run dev",
+    "dev:frontend": "npm --prefix Frontend run dev",
+    "build:frontend": "npm --prefix Frontend run build",
+    "build:backend": "npm --prefix Backend run build",
+    "build": "npm --prefix Frontend run build && npm --prefix Backend run build",
+    "start": "npm --prefix Backend start",
+    "test": "npm --prefix Backend test && npm --prefix Frontend test"
+  }
+}
+

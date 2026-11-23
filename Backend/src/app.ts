@@ -2,6 +2,8 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import path from 'path';
+import fs from 'fs';
 import { config } from './config/env';
 import healthRoutes from './routes/health.routes';
 import contactRoutes from './routes/contact.routes';
@@ -15,7 +17,11 @@ export const createApp = (): Application => {
   const app = express();
 
   // Security headers
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false, // Allow inline styles & scripts for WebGL/OGL frontend if served directly
+    })
+  );
 
   // CORS configuration
   app.use(
@@ -28,15 +34,15 @@ export const createApp = (): Application => {
         }
         return callback(null, true); // Dev-friendly fallback
       },
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
     })
   );
 
   // Request parsing
-  app.use(express.json({ limit: '1mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+  app.use(express.json({ limit: '5mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
   // HTTP Request logger
   if (config.nodeEnv !== 'test') {
@@ -44,17 +50,28 @@ export const createApp = (): Application => {
   }
 
   // Root welcome endpoint
-  app.get('/', (_req, res) => {
+  app.get('/', (req, res, next) => {
+    // In production/browser requests, serve SPA index.html when HTML is requested
+    const acceptsHtml = req.headers.accept && req.headers.accept.includes('text/html');
+    if (config.nodeEnv !== 'test' && acceptsHtml) {
+      const frontendDistPath = path.resolve(__dirname, '../../Frontend/dist');
+      if (fs.existsSync(frontendDistPath)) {
+        return res.sendFile(path.join(frontendDistPath, 'index.html'));
+      }
+    }
+
     res.json({
       name: 'CODEXX PLUS API',
       status: 'active',
       docs: '/api/health',
+      domain: 'codexplus.site',
       endpoints: {
         health: '/api/health',
         contact: '/api/contact',
         bookings: '/api/bookings',
         team: '/api/team',
         services: '/api/services',
+        cms: '/api/cms',
       },
     });
   });
@@ -66,6 +83,20 @@ export const createApp = (): Application => {
   app.use('/api/team', teamRoutes);
   app.use('/api/services', servicesRoutes);
   app.use('/api/cms', cmsRoutes);
+
+  // Serve static Frontend build in non-test environments if present
+  if (config.nodeEnv !== 'test') {
+    const frontendDistPath = path.resolve(__dirname, '../../Frontend/dist');
+    if (fs.existsSync(frontendDistPath)) {
+      app.use(express.static(frontendDistPath));
+      app.get('*', (req, res, next) => {
+        if (req.path.startsWith('/api')) {
+          return next();
+        }
+        res.sendFile(path.join(frontendDistPath, 'index.html'));
+      });
+    }
+  }
 
   // Fallback 404 & Error handlers
   app.use(notFoundHandler);

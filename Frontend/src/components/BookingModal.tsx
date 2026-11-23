@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import { X, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
+import { apiUrl } from '../config/api';
 
 interface BookingModalProps {
   open: boolean;
@@ -37,7 +38,7 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch('/api/bookings', {
+      const res = await fetch(apiUrl('/api/bookings'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -48,16 +49,7 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
       });
 
       if (!res.ok) {
-        // Fallback if running directly without proxy
-        await fetch('http://localhost:5000/api/bookings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name,
-            email,
-            service,
-          }),
-        }).catch(() => {});
+        console.warn('[BookingModal] Submission returned status:', res.status);
       }
       setSubmitted(true);
     } catch {

@@ -23,6 +23,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useCms } from '../context/useCms';
+import { apiUrl } from '../config/api';
 
 interface AdminPageProps {
   onNavigateHome: () => void;
@@ -137,8 +138,8 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     setLoadingFeed(true);
     try {
       const [resContact, resBookings] = await Promise.all([
-        fetch('/api/contact').then((r) => (r.ok ? r.json() : { data: [] })),
-        fetch('/api/bookings').then((r) => (r.ok ? r.json() : { data: [] })),
+        fetch(apiUrl('/api/contact')).then((r) => (r.ok ? r.json() : { data: [] })),
+        fetch(apiUrl('/api/bookings')).then((r) => (r.ok ? r.json() : { data: [] })),
       ]);
       if (resContact && Array.isArray(resContact.data)) {
         setInquiriesList(resContact.data);
@@ -159,8 +160,8 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
       const load = async () => {
         try {
           const [resContact, resBookings] = await Promise.all([
-            fetch('/api/contact').then((r) => (r.ok ? r.json() : { data: [] })),
-            fetch('/api/bookings').then((r) => (r.ok ? r.json() : { data: [] })),
+            fetch(apiUrl('/api/contact')).then((r) => (r.ok ? r.json() : { data: [] })),
+            fetch(apiUrl('/api/bookings')).then((r) => (r.ok ? r.json() : { data: [] })),
           ]);
           if (isMounted) {
             if (resContact && Array.isArray(resContact.data)) {
@@ -183,7 +184,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
 
   const handleUpdateInquiryStatus = async (id: string, status: string) => {
     try {
-      await fetch(`/api/contact/${id}`, {
+      await fetch(apiUrl(`/api/contact/${id}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -200,7 +201,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
 
   const handleDeleteInquiry = async (id: string) => {
     try {
-      await fetch(`/api/contact/${id}`, { method: 'DELETE' });
+      await fetch(apiUrl(`/api/contact/${id}`), { method: 'DELETE' });
       setInquiriesList((prev) => prev.filter((item) => item.id !== id));
     } catch {
       setInquiriesList((prev) => prev.filter((item) => item.id !== id));
@@ -209,7 +210,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
 
   const handleUpdateBookingStatus = async (id: string, status: string) => {
     try {
-      await fetch(`/api/bookings/${id}`, {
+      await fetch(apiUrl(`/api/bookings/${id}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -226,7 +227,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
 
   const handleDeleteBooking = async (id: string) => {
     try {
-      await fetch(`/api/bookings/${id}`, { method: 'DELETE' });
+      await fetch(apiUrl(`/api/bookings/${id}`), { method: 'DELETE' });
       setBookingsList((prev) => prev.filter((item) => item.id !== id));
     } catch {
       setBookingsList((prev) => prev.filter((item) => item.id !== id));

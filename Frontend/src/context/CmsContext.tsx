@@ -17,6 +17,7 @@ import {
   type CmsContactInfo,
   type CmsFaq,
 } from './cmsStore';
+import { apiUrl } from '../config/api';
 
 export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cms, setCms] = useState<CmsData>(() => loadCmsData());
@@ -35,7 +36,7 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     async function fetchBackendCms() {
       try {
-        const res = await fetch('/api/cms');
+        const res = await fetch(apiUrl('/api/cms'));
         if (res.ok && active) {
           const json = await res.json();
           if (json.data && Object.keys(json.data).length > 0) {
@@ -192,7 +193,7 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       localStorage.setItem('codex_cms_content', JSON.stringify(cms));
 
-      const res = await fetch('/api/cms', {
+      const res = await fetch(apiUrl('/api/cms'), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cms),

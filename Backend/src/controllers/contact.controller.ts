@@ -16,7 +16,7 @@ export const handleContactSubmit = async (req: Request, res: Response): Promise<
   const { name, email, company, service, budget, message } = req.body;
   const ipAddress = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || '';
 
-  const inquiry = storage.addInquiry({
+  const inquiry = await storage.addInquiry({
     name,
     email,
     company,
@@ -40,7 +40,7 @@ export const handleContactSubmit = async (req: Request, res: Response): Promise<
 };
 
 export const getInquiriesList = async (_req: Request, res: Response): Promise<void> => {
-  const list = storage.getInquiries();
+  const list = await storage.getInquiries();
   res.status(200).json({
     success: true,
     count: list.length,
@@ -60,7 +60,7 @@ export const updateInquiryStatusHandler = async (req: Request, res: Response): P
     return;
   }
 
-  const updated = storage.updateInquiryStatus(id, status);
+  const updated = await storage.updateInquiryStatus(id, status);
   if (!updated) {
     res.status(404).json({
       success: false,
@@ -78,7 +78,7 @@ export const updateInquiryStatusHandler = async (req: Request, res: Response): P
 
 export const deleteInquiryHandler = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  const deleted = storage.deleteInquiry(id);
+  const deleted = await storage.deleteInquiry(id);
 
   if (!deleted) {
     res.status(404).json({
