@@ -1,0 +1,39 @@
+name: CI Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify-code:
+    name: Build & Test (Backend + Frontend)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify Backend (Build & Tests)
+        working-directory: Backend
+        run: |
+          npm ci
+          npm run build
+          npm test
+
+      - name: Verify Frontend (Typecheck & Build)
+        working-directory: Frontend
+        env:
+          VITE_API_URL: https://codexplus.site
+          VITE_SITE_URL: https://codexplus.site
+          VITE_SITE_NAME: CODEX PLUS
+        run: |
+          npm ci
+          npx tsc -b
+          npm run build
