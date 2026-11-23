@@ -172,3 +172,4 @@ export function LegalModal({ type, onClose }: LegalModalProps) {
 }
 
 export default LegalModal;
+
