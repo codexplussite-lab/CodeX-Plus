@@ -44,7 +44,9 @@ jobs:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
         run: |
+          CLEAN_USER=$(printf "%s" "${VPS_USER:-root}" | tr -d '\r\n ')
+          CLEAN_HOST=$(printf "%s" "${VPS_HOST}" | tr -d '\r\n ')
           mkdir -p ~/.ssh
-          printf "%s\n" "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          printf "%s\n" "$VPS_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$(printf "%s" "${VPS_USER:-root}" | tr -d "\r\n ")@$(printf "%s" "${VPS_HOST}" | tr -d "\r\n ")" "bash /www/wwwroot/codexplus.site/deploy.sh"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${CLEAN_USER}@${CLEAN_HOST}" "bash /www/wwwroot/codexplus.site/deploy.sh"
