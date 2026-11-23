@@ -47,4 +47,4 @@ jobs:
           mkdir -p ~/.ssh
           printf "%s\n" "$VPS_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${VPS_USER:-root}@${VPS_HOST}" "bash /www/wwwroot/codexplus.site/deploy.sh"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$(printf "%s" "${VPS_USER:-root}" | tr -d "\r\n ")@$(printf "%s" "${VPS_HOST}" | tr -d "\r\n ")" "bash /www/wwwroot/codexplus.site/deploy.sh"
