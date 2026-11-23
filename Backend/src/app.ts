@@ -11,6 +11,7 @@ import bookingRoutes from './routes/booking.routes';
 import teamRoutes from './routes/team.routes';
 import servicesRoutes from './routes/services.routes';
 import cmsRoutes from './routes/cms.routes';
+import authRoutes from './routes/auth.routes';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 
 export const createApp = (): Application => {
@@ -83,6 +84,7 @@ export const createApp = (): Application => {
   app.use('/api/team', teamRoutes);
   app.use('/api/services', servicesRoutes);
   app.use('/api/cms', cmsRoutes);
+  app.use('/api/auth', authRoutes);
 
   // Serve static Frontend build in non-test environments if present
   if (config.nodeEnv !== 'test') {

@@ -21,9 +21,11 @@ import {
   X,
   Menu,
   RefreshCw,
+  LogOut,
 } from 'lucide-react';
 import { useCms } from '../context/useCms';
 import { apiUrl } from '../config/api';
+import { AdminLogin, type AdminSession } from '../components/AdminLogin';
 
 interface AdminPageProps {
   onNavigateHome: () => void;
@@ -69,6 +71,27 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [publishToast, setPublishToast] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Session Authentication State
+  const [authSession, setAuthSession] = useState<AdminSession | null>(() => {
+    try {
+      const stored =
+        localStorage.getItem('codex_admin_session') ||
+        sessionStorage.getItem('codex_admin_session');
+      if (stored) {
+        return JSON.parse(stored) as AdminSession;
+      }
+    } catch {
+      // ignore parse errors
+    }
+    return null;
+  });
+
+  const handleSignOut = () => {
+    localStorage.removeItem('codex_admin_session');
+    sessionStorage.removeItem('codex_admin_session');
+    setAuthSession(null);
+  };
 
   // Modals / Editing States
   const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
@@ -269,6 +292,15 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     );
   }, [cms.testimonials, searchQuery]);
 
+  if (!authSession) {
+    return (
+      <AdminLogin
+        onLoginSuccess={(session) => setAuthSession(session)}
+        onNavigateHome={onNavigateHome}
+      />
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-[#07040d] text-white selection:bg-violet-600/40">
       {/* -------------------------------------------------------- */}
@@ -387,6 +419,35 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           </div>
         </div>
 
+        {/* Active Administrator Identity Badge & Logout */}
+        <div className="border-t border-white/10 pt-4 pb-1">
+          <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] p-3">
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-violet-400/30 bg-violet-600/20 text-xs font-bold text-violet-300">
+                {authSession?.user?.name ? authSession.user.name.charAt(0).toUpperCase() : 'A'}
+              </div>
+              <div className="min-w-0">
+                <span className="block truncate text-xs font-semibold text-white">
+                  {authSession?.user?.name || 'Admin User'}
+                </span>
+                <span className="block truncate text-[10px] text-violet-400">
+                  {authSession?.user?.role || 'Super Administrator'}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleSignOut}
+              title="Lock Console / Sign Out"
+              aria-label="Lock Console and Sign Out"
+              className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-rose-500/30 text-rose-400 transition-colors hover:bg-rose-500/20 hover:text-rose-200"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
         {/* Sidebar Footer Actions */}
         <div className="border-t border-white/10 pt-5 space-y-3">
           <button
@@ -470,6 +531,16 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
             >
               <Save className={`h-3.5 w-3.5 ${isSaving ? 'animate-spin' : ''}`} />
               <span>{isSaving ? 'Publishing...' : 'Publish to Live Site'}</span>
+            </button>
+
+            {/* Quick Lock / Sign Out */}
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-semibold text-gray-300 transition-all hover:border-rose-400/50 hover:bg-rose-500/10 hover:text-rose-300"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Lock Console</span>
             </button>
           </div>
         </header>
