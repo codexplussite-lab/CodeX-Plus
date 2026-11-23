@@ -14,11 +14,13 @@ import { ServicesPage } from './pages/ServicesPage';
 import { TeamPage } from './pages/TeamPage';
 import { ContactPage } from './pages/ContactPage';
 import { AdminPage } from './pages/AdminPage';
+import { LoginPage } from './pages/LoginPage';
 
 function getInitialPage(): AppPage {
   const path = window.location.pathname.toLowerCase();
   const hash = window.location.hash.toLowerCase();
   if (path === '/admin' || hash === '#admin') return 'admin';
+  if (path === '/login' || hash === '#login' || path === '/signin' || hash === '#signin') return 'login';
   if (path === '/about' || hash === '#about') return 'about';
   if (path === '/services' || hash === '#services' || path === '/work' || hash === '#work') return 'services';
   if (path === '/team' || hash === '#team') return 'team';
@@ -36,6 +38,13 @@ export function App() {
     if (page === 'admin') {
       window.history.pushState(null, '', '/admin');
       window.location.hash = '#admin';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (page === 'login') {
+      if (window.location.pathname === '/admin') window.history.pushState(null, '', '/');
+      window.location.hash = '#login';
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -152,6 +161,13 @@ export function App() {
           <ContactPage
             onOpenModal={() => setModalOpen(true)}
             onNavigateHome={() => handleNavigate('home', '#home')}
+          />
+        )}
+
+        {currentPage === 'login' && (
+          <LoginPage
+            onNavigate={handleNavigate}
+            onOpenBookingModal={() => setModalOpen(true)}
           />
         )}
 

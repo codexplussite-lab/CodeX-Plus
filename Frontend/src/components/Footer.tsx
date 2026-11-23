@@ -194,6 +194,15 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
                   Contact Us
                 </button>
               </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => handleNav('login')}
+                  className="cursor-pointer text-sm text-gray-300 transition-colors hover:text-violet-300"
+                >
+                  Sign In / Portal
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -293,6 +302,13 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
               className="cursor-pointer transition-colors hover:text-white"
             >
               Payment Policy
+            </button>
+            <button
+              type="button"
+              onClick={() => handleNav('login')}
+              className="cursor-pointer text-gray-400 transition-colors hover:text-violet-300"
+            >
+              Sign In
             </button>
             <button
               type="button"

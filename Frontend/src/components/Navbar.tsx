@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogIn } from 'lucide-react';
 import { useCms } from '../context/useCms';
 
-export type AppPage = 'home' | 'about' | 'services' | 'team' | 'contact' | 'admin';
+export type AppPage = 'home' | 'about' | 'services' | 'team' | 'contact' | 'admin' | 'login';
 
 interface NavbarProps {
   onOpenModal: () => void;
@@ -122,6 +122,18 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
         <div className="hidden sm:flex items-center gap-3">
           <button
             type="button"
+            onClick={() => onNavigate('login')}
+            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold tracking-wider uppercase transition-all ${
+              currentPage === 'login'
+                ? 'border-violet-400 bg-violet-600/30 text-white shadow-[0_0_15px_rgba(139,92,246,0.35)]'
+                : 'border-white/15 bg-white/5 text-gray-300 hover:border-violet-400/50 hover:bg-violet-500/10 hover:text-white'
+            }`}
+          >
+            <LogIn className="h-3.5 w-3.5 text-violet-400" />
+            <span>Sign In</span>
+          </button>
+          <button
+            type="button"
             onClick={() => onNavigate('contact')}
             className="cursor-pointer rounded-full border border-white/20 px-4 py-2 text-xs font-semibold tracking-wider text-white uppercase transition-colors hover:border-violet-400 hover:text-violet-300"
           >
@@ -167,6 +179,17 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
               </button>
             ))}
             <div className="pt-4 flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  onNavigate('login');
+                }}
+                className="w-full cursor-pointer flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 py-3 text-center text-xs font-semibold tracking-wider text-white uppercase hover:bg-white/10"
+              >
+                <LogIn className="h-4 w-4 text-violet-400" />
+                <span>Sign In / Portal</span>
+              </button>
               <button
                 type="button"
                 onClick={() => {
