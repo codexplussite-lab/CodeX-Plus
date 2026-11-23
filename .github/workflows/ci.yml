@@ -1,4 +1,4 @@
-name: CI Check
+name: CI & Auto-Deploy
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       - name: Verify Backend
         working-directory: Backend
         run: |
-          npm ci
+          npm install
           npm run build
           npm test
       - name: Verify Frontend
@@ -28,6 +28,20 @@ jobs:
           VITE_SITE_URL: https://codexplus.site
           VITE_SITE_NAME: CODEX PLUS
         run: |
-          npm ci
+          npm install
           npx tsc -b
           npm run build
+
+  deploy-vps:
+    name: Deploy to codexplus.site VPS
+    needs: verify-code
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run deploy.sh on VPS via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: bash /www/wwwroot/codexplus.site/deploy.sh
