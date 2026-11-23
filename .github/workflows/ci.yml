@@ -10,24 +10,18 @@ jobs:
   verify-code:
     name: Build & Test (Backend + Frontend)
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
-
-      - name: Verify Backend (Build & Tests)
+      - name: Verify Backend
         working-directory: Backend
         run: |
           npm ci
           npm run build
           npm test
-
-      - name: Verify Frontend (Typecheck & Build)
+      - name: Verify Frontend
         working-directory: Frontend
         env:
           VITE_API_URL: https://codexplus.site
