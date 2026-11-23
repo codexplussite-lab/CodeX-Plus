@@ -90,7 +90,10 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const handleSignOut = () => {
     localStorage.removeItem('codex_admin_session');
     sessionStorage.removeItem('codex_admin_session');
+    localStorage.removeItem('codex_client_session');
+    sessionStorage.removeItem('codex_client_session');
     setAuthSession(null);
+    onNavigateHome();
   };
 
   // Modals / Editing States
@@ -307,38 +310,39 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
       {/* LEFT CMS SIDEBAR */}
       {/* -------------------------------------------------------- */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col justify-between border-r border-white/10 bg-[#090513] p-5 backdrop-blur-xl transition-transform duration-300 lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-white/10 bg-[#090513] p-5 backdrop-blur-xl transition-transform duration-300 lg:static lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div>
-          {/* Brand & CMS Wordmark */}
-          <div className="flex items-center justify-between border-b border-white/10 pb-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-400/40 bg-gradient-to-br from-violet-600/30 via-[#1a0d30] to-fuchsia-600/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
-                <Sparkles className="h-5 w-5 text-violet-300" />
-              </div>
-              <div>
-                <span className="font-display text-sm font-bold tracking-wider text-white uppercase">
-                  CODEXX <span className="text-violet-300">PLUS</span>
-                </span>
-                <span className="block text-[10px] font-semibold tracking-widest text-violet-400 uppercase">
-                  Content Management System
-                </span>
-              </div>
+        {/* Brand & CMS Wordmark */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-5 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-400/40 bg-gradient-to-br from-violet-600/30 via-[#1a0d30] to-fuchsia-600/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+              <Sparkles className="h-5 w-5 text-violet-300" />
             </div>
-
-            <button
-              type="button"
-              onClick={() => setSidebarOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-gray-400 hover:text-white lg:hidden"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div>
+              <span className="font-display text-sm font-bold tracking-wider text-white uppercase">
+                CODEXX <span className="text-violet-300">PLUS</span>
+              </span>
+              <span className="block text-[10px] font-semibold tracking-widest text-violet-400 uppercase">
+                Content Management System
+              </span>
+            </div>
           </div>
 
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(false)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-gray-400 hover:text-white lg:hidden"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Scrollable Nav Area */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 space-y-6 pr-1">
           {/* Navigation Category: Site CMS Content */}
-          <div className="mt-6">
+          <div>
             <span className="px-3 text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">
               Page Content Management
             </span>
@@ -384,7 +388,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           </div>
 
           {/* Navigation Category: Inbound Communications */}
-          <div className="mt-6 border-t border-white/10 pt-5">
+          <div className="border-t border-white/10 pt-5">
             <span className="px-3 text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">
               Inbox &amp; Gateway
             </span>
@@ -419,9 +423,10 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           </div>
         </div>
 
-        {/* Active Administrator Identity Badge & Logout */}
-        <div className="border-t border-white/10 pt-4 pb-1">
-          <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] p-3">
+        {/* Sidebar Footer Area (Always Fixed & Visible) */}
+        <div className="shrink-0 border-t border-white/10 pt-4 space-y-2.5">
+          {/* Active Administrator Identity Badge */}
+          <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] p-2.5">
             <div className="flex items-center gap-2.5 overflow-hidden">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-violet-400/30 bg-violet-600/20 text-xs font-bold text-violet-300">
                 {authSession?.user?.name ? authSession.user.name.charAt(0).toUpperCase() : 'A'}
@@ -439,21 +444,18 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
             <button
               type="button"
               onClick={handleSignOut}
-              title="Lock Console / Sign Out"
-              aria-label="Lock Console and Sign Out"
+              title="Sign Out of CMS"
+              aria-label="Sign Out of CMS"
               className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-rose-500/30 text-rose-400 transition-colors hover:bg-rose-500/20 hover:text-rose-200"
             >
               <LogOut className="h-4 w-4" />
             </button>
           </div>
-        </div>
 
-        {/* Sidebar Footer Actions */}
-        <div className="border-t border-white/10 pt-5 space-y-3">
           <button
             type="button"
             onClick={resetToDefaults}
-            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] py-2.5 text-[11px] font-semibold text-gray-400 hover:border-white/20 hover:text-rose-300"
+            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] py-2 text-[11px] font-semibold text-gray-400 hover:border-white/20 hover:text-rose-300 transition-colors"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span>Reset Content Defaults</span>
@@ -462,10 +464,20 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           <button
             type="button"
             onClick={onNavigateHome}
-            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] py-2.5 text-xs font-semibold text-gray-200 hover:border-violet-300 hover:bg-white/10 hover:text-white"
+            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] py-2 text-xs font-semibold text-gray-200 hover:border-violet-300 hover:bg-white/10 hover:text-white transition-colors"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             <span>Preview Live Website</span>
+          </button>
+
+          {/* Prominent Red Full-Width Logout Button */}
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-rose-500/50 bg-rose-500/15 py-2.5 text-xs font-bold text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.2)] transition-all hover:border-rose-400 hover:bg-rose-500/25 hover:text-white"
+          >
+            <LogOut className="h-4 w-4 text-rose-400" />
+            <span>Logout / Exit CMS</span>
           </button>
         </div>
       </aside>
@@ -533,14 +545,15 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
               <span>{isSaving ? 'Publishing...' : 'Publish to Live Site'}</span>
             </button>
 
-            {/* Quick Lock / Sign Out */}
+            {/* Prominent Red Header Logout Button */}
             <button
               type="button"
               onClick={handleSignOut}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-semibold text-gray-300 transition-all hover:border-rose-400/50 hover:bg-rose-500/10 hover:text-rose-300"
+              title="Logout from CMS Console"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-rose-500/50 bg-rose-500/20 px-4 py-2 text-xs font-bold text-rose-200 shadow-[0_0_20px_rgba(244,63,94,0.3)] transition-all hover:border-rose-400 hover:bg-rose-500/35 hover:text-white hover:scale-105 active:scale-95"
             >
-              <LogOut className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Lock Console</span>
+              <LogOut className="h-4 w-4 text-rose-300" />
+              <span>Logout</span>
             </button>
           </div>
         </header>
