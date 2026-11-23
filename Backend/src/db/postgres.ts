@@ -25,7 +25,7 @@ export const getPgPool = (): Pool => {
       max: 10,
     });
 
-    pool.on('error', (err) => {
+    pool.on('error', (err: Error) => {
       console.error('[PostgreSQL] Unexpected client pool error:', err.message);
     });
   }
