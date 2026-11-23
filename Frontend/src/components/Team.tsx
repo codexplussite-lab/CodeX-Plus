@@ -41,6 +41,10 @@ export function OurTeamSection({ onNavigateTeam }: OurTeamSectionProps) {
         <div className="flex flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-12 xl:gap-16">
           {/* Left Column: Eyebrow, Heading, Subtitle & Luxury Glass CTA */}
           <div className="flex w-full shrink-0 flex-col items-start justify-center text-left lg:w-[360px] xl:w-[400px]">
+            <span className="mb-2 inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3 py-1 text-[11px] font-semibold tracking-wider text-violet-300 uppercase shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+              Senior-Led Delivery <span className="text-violet-400/50 select-none" aria-hidden="true">&mdash;</span> Learn More
+            </span>
+
             <span className="mb-3 inline-block text-xs font-semibold tracking-[0.22em] text-violet-300 uppercase">
               Studio Architects &amp; Leads
             </span>

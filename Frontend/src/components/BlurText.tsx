@@ -269,18 +269,16 @@ const BlurText = ({
   const exitDuration = stepDuration * 1.3;
   const exitStagger = stagger * 0.4;
 
-  const words = useMemo(() => text.split(' '), [text]);
+  const words = useMemo(() => text.split(' ').filter(Boolean), [text]);
 
   const pieces = useMemo<Piece[]>(() => {
     const list: Piece[] = [];
     words.forEach((word, w) => {
-      const isLast = w === words.length - 1;
       if (animateBy === 'words') {
-        list.push({ word: w, content: isLast ? word : `${word}\u00A0`, key: `word-${w}` });
+        list.push({ word: w, content: word, key: `word-${w}` });
         return;
       }
       Array.from(word).forEach((char, c) => list.push({ word: w, content: char, key: `char-${w}-${c}` }));
-      if (!isLast) list.push({ word: w, content: '\u00A0', key: `space-${w}` });
     });
     return list;
   }, [words, animateBy]);
@@ -417,23 +415,26 @@ const BlurText = ({
     <MotionConfig reducedMotion="user">
       <Tag
         ref={ref as React.RefObject<HTMLParagraphElement>}
-        className={`blur-text flex flex-wrap ${trigger === 'click' ? 'cursor-pointer' : ''} ${className}`}
+        className={`blur-text flex flex-wrap items-baseline ${trigger === 'click' ? 'cursor-pointer' : ''} ${className}`}
         style={{ color }}
         onPointerEnter={trigger === 'hover' ? handleEnter : undefined}
         onClick={trigger === 'click' ? replay : undefined}
       >
-        <span className="sr-only select-none">{text}</span>
-        {groups.map((indices, w) => (
-          <span
-            key={`word-${w}`}
-            className="inline-flex"
-            style={wordStyle(w)}
-            onPointerEnter={focusOnHover ? () => setFocusWord(w) : undefined}
-            onPointerLeave={focusOnHover ? () => setFocusWord(-1) : undefined}
-          >
-            {indices.map(renderPiece)}
-          </span>
-        ))}
+        <span className="sr-only">{text}</span>
+        <span aria-hidden="true" className="contents">
+          {groups.map((indices, w) => (
+            <span
+              key={`word-${w}`}
+              className="inline-flex mr-[0.28em] last:mr-0"
+              style={wordStyle(w)}
+              onPointerEnter={focusOnHover ? () => setFocusWord(w) : undefined}
+              onPointerLeave={focusOnHover ? () => setFocusWord(-1) : undefined}
+            >
+              {indices.map(renderPiece)}
+              {w < groups.length - 1 && <span className="inline select-none">&nbsp;</span>}
+            </span>
+          ))}
+        </span>
       </Tag>
     </MotionConfig>
   );

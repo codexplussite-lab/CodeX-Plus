@@ -267,12 +267,17 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                   <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
                     {/* Left Column: Title, Lead & Description */}
                     <div className="lg:col-span-7">
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-wrap items-center gap-2.5">
                         <span className="font-mono text-sm font-semibold tracking-wider text-violet-400">
                           {stepLabel}
                         </span>
+                        <span className="text-violet-400/50 select-none text-xs" aria-hidden="true">//</span>
                         <span className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-0.5 text-xs font-medium text-violet-300">
                           {item.tag}
+                        </span>
+                        <span className="text-gray-500 select-none text-xs" aria-hidden="true">&mdash;</span>
+                        <span className="text-xs font-medium text-violet-300/90">
+                          Read spec
                         </span>
                       </div>
 
@@ -299,16 +304,16 @@ export function ServicesPage({ onOpenModal, onNavigateContact, onNavigateHome }:
                         <span className="text-[11px] font-semibold tracking-widest text-gray-400 uppercase">
                           Technologies &amp; Frameworks
                         </span>
-                        <div className="mt-2.5 flex flex-wrap gap-2">
+                        <ul className="mt-2.5 flex flex-wrap gap-2 list-none p-0 m-0" aria-label="Technology stack">
                           {techStack.map((tech: string) => (
-                            <span
+                            <li
                               key={tech}
                               className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300"
                             >
                               {tech}
-                            </span>
+                            </li>
                           ))}
-                        </div>
+                        </ul>
                       </div>
                     </div>
 

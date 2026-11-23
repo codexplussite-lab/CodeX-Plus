@@ -119,14 +119,26 @@ export function ClientFeedbackSection() {
             </h2>
           </div>
 
-          <div className="flex items-center gap-3 text-sm text-gray-400">
-            <span className="text-[#FACC15]" aria-hidden="true">
-              ★★★★★
-            </span>
-            <span>
-              <strong className="font-semibold text-white">4.9 / 5.0</strong> average rating across
-              500+ partners
-            </span>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+            <div className="flex items-center gap-3">
+              <span className="text-[#FACC15]" aria-hidden="true">
+                ★★★★★
+              </span>
+              <span>
+                <strong className="font-semibold text-white">4.9 / 5.0</strong> average rating across
+                500+ partners
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const el = document.getElementById('services');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="cursor-pointer rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-semibold text-violet-200 hover:bg-violet-500/20 hover:text-white transition-colors"
+            >
+              Explore Case Study &rarr;
+            </button>
           </div>
         </div>
 

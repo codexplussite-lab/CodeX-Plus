@@ -18,9 +18,11 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Home', page: 'home', hash: '#home' },
-  { label: 'About Us', page: 'about' },
   { label: 'Services', page: 'services' },
+  { label: 'Work', page: 'home', hash: '#services' },
+  { label: 'About Us', page: 'about' },
   { label: 'Our Team', page: 'team' },
+  { label: 'Journal', page: 'home', hash: '#clients' },
   { label: 'Contact', page: 'contact' },
 ];
 
@@ -37,41 +39,13 @@ export function CodexxLogo({ onClick }: { onClick?: () => void }) {
       aria-label={`${siteName} ${brandAccent} Home`}
     >
       <div className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-violet-400/30 bg-gradient-to-br from-violet-600/30 via-[#1a0d30] to-fuchsia-600/20 shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-transform duration-300 group-hover:scale-105">
-        <svg
+        <img
+          src="/favicon.svg"
+          alt="CodeXplus Logo"
           width="20"
           height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="text-white"
-        >
-          <path
-            d="M12 2L20 6.5V17.5L12 22L4 17.5V6.5L12 2Z"
-            stroke="url(#codexx-grad)"
-            strokeWidth="1.75"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M8.5 12H15.5M12 8.5V15.5"
-            stroke="#FFFFFF"
-            strokeWidth="1.75"
-            strokeLinecap="round"
-          />
-          <defs>
-            <linearGradient
-              id="codexx-grad"
-              x1="4"
-              y1="2"
-              x2="20"
-              y2="22"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#E9D5FF" />
-              <stop offset="0.5" stopColor="#A855F7" />
-              <stop offset="1" stopColor="#6366F1" />
-            </linearGradient>
-          </defs>
-        </svg>
+          className="h-5 w-5 object-contain"
+        />
       </div>
       <span className="font-display text-sm font-bold tracking-[0.18em] text-white sm:text-base">
         {siteName} <span className="text-violet-300">{brandAccent}</span>
@@ -144,8 +118,15 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
           })}
         </nav>
 
-        {/* CTA Button */}
-        <div className="hidden sm:flex items-center gap-4">
+        {/* CTA Buttons */}
+        <div className="hidden sm:flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => onNavigate('contact')}
+            className="cursor-pointer rounded-full border border-white/20 px-4 py-2 text-xs font-semibold tracking-wider text-white uppercase transition-colors hover:border-violet-400 hover:text-violet-300"
+          >
+            Start a Project
+          </button>
           <button
             type="button"
             onClick={onOpenModal}
@@ -185,7 +166,17 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
                 {item.label}
               </button>
             ))}
-            <div className="pt-4">
+            <div className="pt-4 flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  onNavigate('contact');
+                }}
+                className="w-full cursor-pointer rounded-2xl border border-violet-400/40 bg-violet-500/20 py-3 text-center text-xs font-semibold tracking-wider text-white uppercase hover:bg-violet-500/30"
+              >
+                Start a Project
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -194,7 +185,7 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
                 }}
                 className="w-full cursor-pointer rounded-2xl bg-white py-3.5 text-center text-xs font-semibold tracking-wider text-[#0a0612] uppercase shadow-lg hover:bg-violet-100"
               >
-                Schedule 15-Min Discovery
+                Schedule Call
               </button>
             </div>
           </nav>

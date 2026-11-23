@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Navbar, type AppPage } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { TechStackMarquee } from './components/TechStackMarquee';
 import { About } from './components/About';
 import { Services } from './components/Services';
 import { TrustedClients } from './components/TrustedClients';
@@ -19,7 +20,7 @@ function getInitialPage(): AppPage {
   const hash = window.location.hash.toLowerCase();
   if (path === '/admin' || hash === '#admin') return 'admin';
   if (path === '/about' || hash === '#about') return 'about';
-  if (path === '/services' || hash === '#services') return 'services';
+  if (path === '/services' || hash === '#services' || path === '/work' || hash === '#work') return 'services';
   if (path === '/team' || hash === '#team') return 'team';
   if (path === '/contact' || hash === '#contact') return 'contact';
   return 'home';
@@ -114,6 +115,7 @@ export function App() {
         {currentPage === 'home' && (
           <>
             <Hero onOpenModal={() => setModalOpen(true)} />
+            <TechStackMarquee />
             <About />
             <Services onOpenModal={() => setModalOpen(true)} />
             <TrustedClients />

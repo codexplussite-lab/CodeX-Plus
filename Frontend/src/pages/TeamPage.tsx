@@ -96,7 +96,7 @@ export function TeamPage({ onOpenModal, onNavigateContact, onNavigateHome }: Tea
         <div className="mt-8 max-w-4xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3.5 py-1 text-xs font-semibold tracking-[0.2em] text-violet-300 uppercase shadow-[0_0_20px_rgba(139,92,246,0.2)]">
             <Sparkles className="h-3.5 w-3.5" />
-            Studio Leadership &amp; Architects
+            Senior-Led Delivery <span className="text-violet-400/50 select-none" aria-hidden="true">&mdash;</span> Learn More
           </span>
           <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
             The Creative Minds &amp; Technical Experts Behind CODEXX PLUS.

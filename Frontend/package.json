@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
-    "prepare": "cd .. && git config core.hooksPath .githooks && chmod +x .githooks/pre-push || true"
+    "prepare": "git config core.hooksPath .githooks || echo ok"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.5",
@@ -20,7 +20,8 @@
     "ogl": "^1.0.11",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "tailwindcss": "^4.3.5"
+    "tailwindcss": "^4.3.5",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

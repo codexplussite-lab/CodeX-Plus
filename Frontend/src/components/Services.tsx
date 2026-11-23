@@ -76,10 +76,11 @@ export function Services({ onOpenModal }: ServicesProps) {
 
                 {/* Top row: Number/Tag + Circular Arrow */}
                 <div className="relative z-10 flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-xs font-semibold tracking-wider text-violet-400">
                       {String(idx + 1).padStart(2, '0')}
                     </span>
+                    <span className="text-violet-400/50 select-none text-xs" aria-hidden="true">//</span>
                     <span
                       className={`rounded-full border px-3.5 py-1 text-xs font-medium tracking-wide transition-colors ${
                         isActive
@@ -88,6 +89,10 @@ export function Services({ onOpenModal }: ServicesProps) {
                       }`}
                     >
                       {service.tag}
+                    </span>
+                    <span className="text-gray-500 select-none text-xs" aria-hidden="true">&mdash;</span>
+                    <span className="text-xs font-medium text-violet-300/90 transition-colors group-hover:text-white">
+                      Read spec
                     </span>
                   </div>
 
@@ -112,18 +117,18 @@ export function Services({ onOpenModal }: ServicesProps) {
                   </p>
 
                   {isLarge && (
-                    <div className="mt-8 flex flex-wrap gap-2 border-t border-white/10 pt-6">
+                    <ul className="mt-8 flex flex-wrap gap-2 border-t border-white/10 pt-6 list-none p-0 m-0" aria-label="Core stack tags">
                       {['AI Agents', 'Next.js & React', 'Cloud APIs', 'Automation'].map(
                         (pill) => (
-                          <span
+                          <li
                             key={pill}
                             className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-gray-300"
                           >
                             {pill}
-                          </span>
+                          </li>
                         ),
                       )}
-                    </div>
+                    </ul>
                   )}
                 </div>
               </article>

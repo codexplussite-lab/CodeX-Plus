@@ -109,7 +109,7 @@ export function Hero({ onOpenModal }: HeroProps) {
             onClick={onOpenModal}
             className="group relative inline-flex cursor-pointer items-center gap-3 overflow-hidden rounded-full bg-white px-8 py-4 text-sm font-semibold text-[#0a0612] shadow-[0_0_36px_rgba(168,85,247,0.45)] transition-all duration-300 hover:bg-violet-100 hover:shadow-[0_0_50px_rgba(168,85,247,0.7)]"
           >
-            <span>{ctaPrimary}</span>
+            <span>{ctaPrimary} / Start a Project</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </button>
 
@@ -119,6 +119,13 @@ export function Hero({ onOpenModal }: HeroProps) {
           >
             <span>{ctaSecondary}</span>
             <ArrowDownRight className="h-4 w-4 text-violet-300" />
+          </a>
+
+          <a
+            href="#clients"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-6 py-4 text-sm font-medium text-gray-300 backdrop-blur-md transition-all duration-300 hover:border-violet-400/40 hover:text-white"
+          >
+            <span>Explore Case Studies</span>
           </a>
         </div>
 
@@ -136,7 +143,7 @@ export function Hero({ onOpenModal }: HeroProps) {
           <div className="flex items-center justify-center gap-3 sm:justify-start">
             <span className="h-px w-8 bg-gradient-to-r from-violet-400 to-transparent" />
             <span className="text-sm font-medium tracking-wide text-gray-300">
-              Driven By Smart Innovation &amp; Deep Craft
+              Smart Web Experiences, Built From Every Angle
             </span>
           </div>
 

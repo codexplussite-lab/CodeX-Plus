@@ -10,7 +10,7 @@
     "test": "vitest run",
     "start": "node dist/server.js",
     "clean": "rimraf dist",
-    "prepare": "cd .. && git config core.hooksPath .githooks && chmod +x .githooks/pre-push || true"
+    "prepare": "git config core.hooksPath .githooks || echo ok"
   },
   "keywords": [
     "codexplus",

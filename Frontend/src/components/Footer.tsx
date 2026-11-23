@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { ArrowUpRight, MapPin, Phone } from 'lucide-react';
 import type { AppPage } from './Navbar';
 import { useCms } from '../context/useCms';
+import { LegalModal, type LegalModalType } from './LegalModal';
 
 interface FooterProps {
   onOpenModal: () => void;
@@ -52,6 +54,7 @@ const FALLBACK_YEAR = '2026';
 
 export function Footer({ onOpenModal, onNavigate }: FooterProps) {
   const { cms } = useCms();
+  const [legalModal, setLegalModal] = useState<LegalModalType | null>(null);
   const brand = cms.brand;
   const contact = cms.contact;
   const services = cms.services || [];
@@ -261,28 +264,36 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
 
         {/* Bottom Copyright & Policies */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-gray-400 sm:flex-row">
-          <p>All rights reserved &copy; {currentYear} {siteName} {brandAccent}.</p>
-          <div className="flex items-center gap-6">
-            <a
-              href="#payment-policy"
-              onClick={(e) => {
-                e.preventDefault();
-                onOpenModal();
-              }}
-              className="transition-colors hover:text-white"
+          <p>All rights reserved. &copy; {currentYear} {siteName} {brandAccent}.</p>
+          <div className="flex flex-wrap items-center gap-6">
+            <button
+              type="button"
+              onClick={() => setLegalModal('privacy')}
+              className="cursor-pointer transition-colors hover:text-white"
+            >
+              Privacy Policy
+            </button>
+            <button
+              type="button"
+              onClick={() => setLegalModal('terms')}
+              className="cursor-pointer transition-colors hover:text-white"
+            >
+              Terms of Service
+            </button>
+            <button
+              type="button"
+              onClick={() => setLegalModal('security')}
+              className="cursor-pointer transition-colors hover:text-white"
+            >
+              Security Inquiries
+            </button>
+            <button
+              type="button"
+              onClick={() => setLegalModal('payment')}
+              className="cursor-pointer transition-colors hover:text-white"
             >
               Payment Policy
-            </a>
-            <a
-              href="#privacy-policy"
-              onClick={(e) => {
-                e.preventDefault();
-                onOpenModal();
-              }}
-              className="transition-colors hover:text-white"
-            >
-              T&amp;C and Privacy Policies
-            </a>
+            </button>
             <button
               type="button"
               onClick={() => handleNav('admin')}
@@ -292,6 +303,9 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
             </button>
           </div>
         </div>
+
+        {/* Legal Modal Dialog */}
+        <LegalModal type={legalModal} onClose={() => setLegalModal(null)} />
 
         {/* Massive Glowing Outline Wordmark */}
         <div

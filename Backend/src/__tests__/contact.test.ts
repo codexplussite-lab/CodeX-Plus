@@ -39,4 +39,21 @@ describe('Contact Inquiries API', () => {
     expect(res.body.success).toBe(true);
     expect(res.body.data.id).toBeDefined();
   });
+
+  it('POST /api/contact should silently drop bot inquiry when honeypot is populated', async () => {
+    const botPayload = {
+      name: 'Spam Bot',
+      email: 'bot@spam.io',
+      company: 'Bot Corp',
+      service: 'Development',
+      budget: '$25k – $50k',
+      message: 'Cheap crypto links here',
+      honeypot: 'http://spam.ru',
+    };
+
+    const res = await request(app).post('/api/contact').send(botPayload);
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toBeUndefined();
+  });
 });

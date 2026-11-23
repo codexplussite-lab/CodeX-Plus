@@ -223,10 +223,13 @@ export function AboutPage({ onOpenModal, onNavigateContact, onNavigateHome }: Ab
                   className="relative rounded-3xl border border-white/10 bg-[#120820]/70 p-6 shadow-lg backdrop-blur-md transition-all hover:border-violet-400/40"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-sm font-bold text-violet-300">{m.year}</span>
-                    <span className="rounded-full border border-violet-400/25 bg-violet-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-violet-200 uppercase">
-                      {m.badge}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-full border border-violet-400/25 bg-violet-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-violet-200 uppercase">
+                        {m.badge}
+                      </span>
+                      <span className="text-gray-500 select-none text-xs" aria-hidden="true">&bull;</span>
+                      <span className="font-mono text-sm font-bold text-violet-300">{m.year}</span>
+                    </div>
                   </div>
                   <h3 className="mt-4 font-display text-lg font-bold text-white">{m.title}</h3>
                   <p className="mt-2 text-xs leading-relaxed text-gray-400">{m.desc}</p>
@@ -243,7 +246,7 @@ export function AboutPage({ onOpenModal, onNavigateContact, onNavigateHome }: Ab
               Immediate Engagement
             </span>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
-              Ready to elevate your digital posture?
+              Ready to Elevate Your Digital Architecture?
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-gray-300 sm:text-base">
               Direct access to our senior architects and designers. Zero intermediaries.

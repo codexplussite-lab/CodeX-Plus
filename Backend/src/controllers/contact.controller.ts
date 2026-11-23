@@ -7,21 +7,33 @@ export const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
   email: z.string().email('Please enter a valid email address'),
   company: z.string().max(100).optional().default(''),
-  service: z.string().min(2, 'Please select a discipline/service'),
-  budget: z.string().min(2, 'Please select an estimated budget tier'),
+  service: z.string().min(2, 'Please select a discipline/service').optional().default('Full-Stack Platform'),
+  budget: z.string().min(2, 'Please select an estimated budget tier').optional().default('$50k – $100k'),
   message: z.string().min(5, 'Message must be at least 5 characters').max(3000),
+  privacyPolicy: z.boolean().optional().default(true),
+  honeypot: z.string().optional(),
 });
 
 export const handleContactSubmit = async (req: Request, res: Response): Promise<void> => {
-  const { name, email, company, service, budget, message } = req.body;
+  const { name, email, company, service, budget, message, honeypot } = req.body;
+
+  // Bot honeypot protection: silently drop if filled
+  if (honeypot && typeof honeypot === 'string' && honeypot.trim().length > 0) {
+    res.status(200).json({
+      success: true,
+      message: 'Your inquiry has been received. Our team will follow up within 24 hours.',
+    });
+    return;
+  }
+
   const ipAddress = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || '';
 
   const inquiry = await storage.addInquiry({
     name,
     email,
-    company,
-    service,
-    budget,
+    company: company || '',
+    service: service || 'Full-Stack Platform',
+    budget: budget || '$50k – $100k',
     message,
     ipAddress,
   });
