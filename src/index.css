@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --primary-light: #c084fc;
+    --bg-dark: #0a0612;
+    --bg-card: #120822;
+    --bg-card-hover: #170c2c;
+    --border-subtle: rgba(168, 85, 247, 0.15);
+    --border-highlight: rgba(139, 92, 246, 0.4);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0a0612;
+    color: #c4b4ffcc;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Mona Sans', sans-serif;
+    color: #ffffff;
+  }
+
+  .font-mono {
+    font-family: 'Geist Mono', monospace;
+  }
+
+  /* Universal smooth interaction transitions & accessibility */
+  button, a {
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Accessible WCAG AAA Focus Ring Indicator */
+  :focus-visible {
+    outline: 2px solid #a855f7 !important;
+    outline-offset: 3px !important;
+    border-radius: 8px;
+  }
+
+  /* Selection Highlighting */
+  ::selection {
+    background: #8b5cf6;
+    color: #ffffff;
+  }
+}
+
+/* Accessible Reduced Motion Query */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Luxury Card Hover Lift Effect */
+.hover-lift {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px -4px rgba(139, 92, 246, 0.25), 0 0 20px rgba(168, 85, 247, 0.15);
+}
+
+/* Card Glow on Hover */
+.card-glow {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-glow:hover {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 12px 40px rgba(112, 26, 245, 0.22), 0 0 25px rgba(192, 132, 252, 0.15);
+}
+
+/* Button Pulse Glow */
+.btn-pulse {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-pulse:hover {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.7);
+  transform: translateY(-2px) scale(1.02);
+}
+.btn-pulse:active {
+  transform: scale(0.98);
+}
+
+/* CodexPlus Signature Gradients & Outlines */
+.text-gradient-violet {
+  color: transparent;
+  background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 40%, #a855f7 75%, #818cf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.text-gradient-purple {
+  color: transparent;
+  background: linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.codexplus-outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(168, 85, 247, 0.35);
+  filter: drop-shadow(0 0 28px rgba(139, 92, 246, 0.28));
+  background: linear-gradient(rgba(192, 132, 252, 0.16) 0%, rgba(139, 92, 246, 0.04) 65%, transparent 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.bg-radial-codexplus {
+  background-image: radial-gradient(80% 65% at 50% 40%, rgba(44, 21, 140, 0.38), rgba(18, 9, 31, 0.8) 60%, #0a0612 100%);
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marqueeReverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 18s linear infinite;
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marqueeReverse 30s linear infinite;
+}
+
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
+}
+
+.animate-float {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+/* Custom Luxury Scrollbar in CodexPlus Violet */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #07030d;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3b186b 0%, #200c3b 100%);
+  border-radius: 9999px;
+  border: 2px solid #07030d;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.6);
+}
