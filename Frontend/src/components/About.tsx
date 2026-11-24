@@ -1,90 +1,138 @@
+import { ArrowUpRight, Layers, Sparkles, Target } from 'lucide-react';
 import { useCms } from '../context/useCms';
 
-export function About() {
+interface AboutProps {
+  onOpenModal?: () => void;
+}
+
+export function About({ onOpenModal }: AboutProps) {
   const { cms } = useCms();
   const about = cms.about;
 
-  const statement =
-    about?.statement ||
-    '— We architect next-generation digital products, high-throughput AI pipelines, and bespoke luxury interfaces for industry leaders redefining the modern web.';
-  const paragraph1 =
+  const quoteText =
     about?.paragraph1 ||
-    "With unwavering dedication, we've completed over a hundred remarkable projects across digital platforms, enterprise AI ecosystems, and luxury architectural spaces—blending timeless precision with intelligent engineering.";
-  const paragraph2 =
-    about?.paragraph2 ||
-    'Every solution is crafted around measurable performance, refined human experience, and future-proof scalability—empowering modern enterprises and forward-thinking brands to operate effortlessly.';
+    'CODEXX PLUS was built on a simple belief that great design, digital innovation, and autonomous AI systems can transform the way businesses connect with people. From day one, our mission has been to blend strategy with engineering, helping brands not just look better, but perform better.';
 
-  const stats =
-    about?.stats && about.stats.length > 0
-      ? about.stats.slice(0, 3)
-      : [
-          { value: '120+', label: 'Projects Shipped', sub: '' },
-          { value: '98%', label: 'Client Retention', sub: '' },
-          { value: '24/7', label: 'Global Support', sub: '' },
-        ];
+  const kineticHeadline =
+    about?.statement ||
+    'We architect next-generation digital products, high-throughput AI pipelines, and bespoke luxury interfaces for industry leaders redefining the modern web.';
 
   return (
-    <section id="about" className="relative py-24 lg:py-32">
-      <div className="pointer-events-none absolute top-1/3 left-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-violet-700/12 blur-[140px]" />
+    <section id="about" aria-label="About the Studio" className="relative w-full overflow-hidden py-24 lg:py-32">
+      {/* Background ambient lighting */}
+      <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-violet-700/10 blur-[160px]" />
+      <div className="pointer-events-none absolute bottom-1/4 right-0 h-[450px] w-[450px] rounded-full bg-purple-700/10 blur-[150px]" />
 
-      <div className="mx-auto max-w-[1600px] px-6">
-        {/* Top Statement */}
-        <div className="max-w-5xl">
-          <p className="font-display text-2xl leading-[1.35] font-medium tracking-tight text-white sm:text-4xl lg:text-[42px]">
-            {statement}
-          </p>
+      <div className="relative z-10 mx-auto max-w-[1600px] px-6">
+        {/* Avista Component 1: Founder Quote Block */}
+        <div className="flex flex-col justify-between gap-8 border-b border-white/10 pb-16 lg:flex-row lg:items-start">
+          <div className="max-w-xs">
+            <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3.5 py-1 text-xs font-semibold tracking-[0.2em] text-violet-300 uppercase shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+              <Sparkles className="h-3 w-3 text-violet-400" />
+              Who we are?
+            </span>
+          </div>
+
+          <div className="max-w-4xl">
+            <blockquote className="font-display text-xl leading-relaxed font-medium text-gray-200 sm:text-2xl lg:text-[28px] lg:leading-[1.4]">
+              &ldquo;{quoteText}&rdquo;
+            </blockquote>
+
+            {/* Author Meta */}
+            <div className="mt-8 flex items-center gap-4">
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+                alt="Aiden Mercer, Founder & Principal Architect"
+                className="h-12 w-12 rounded-full border border-violet-400/40 object-cover shadow-[0_0_15px_rgba(139,92,246,0.3)]"
+              />
+              <div>
+                <p className="font-display text-sm font-bold text-white">
+                  Aiden Mercer
+                </p>
+                <p className="text-xs text-gray-400">
+                  Founder &bull; Principal Architect at CODEXX PLUS
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Two-Column Overview */}
-        <div className="mt-14 grid grid-cols-1 items-center gap-10 lg:mt-20 lg:grid-cols-12 lg:gap-16">
-          {/* Left Description & Stats */}
-          <div className="flex flex-col justify-between space-y-8 lg:col-span-5">
-            <div className="space-y-6">
-              <p className="text-base leading-relaxed text-gray-300 sm:text-lg">
-                {paragraph1}
-              </p>
-              <p className="text-sm leading-relaxed text-gray-400 sm:text-base">
-                {paragraph2}
-              </p>
+        {/* Avista Component 2: Kinetic Statement Headline with Inline Action Pill */}
+        <div className="relative py-20 lg:py-28">
+          <div className="max-w-5xl">
+            <p className="font-display text-3xl font-extrabold leading-[1.25] tracking-tight text-white transition-colors sm:text-5xl lg:text-[56px] lg:leading-[1.18]">
+              {kineticHeadline}
+            </p>
+          </div>
+
+          {/* Floating Rotating "LET'S GET STARTED ↗" Badge */}
+          <div className="mt-10 sm:mt-12">
+            <button
+              type="button"
+              onClick={onOpenModal}
+              className="group inline-flex min-h-[44px] cursor-pointer items-center gap-3 rounded-full border border-violet-400/50 bg-[#120820] px-7 py-3.5 text-xs font-bold tracking-wider text-white uppercase shadow-[0_0_25px_rgba(139,92,246,0.25)] transition-all duration-300 hover:border-violet-400 hover:bg-white hover:text-[#0a0612] hover:shadow-[0_0_35px_rgba(168,85,247,0.5)] focus-visible:outline-2 focus-visible:outline-violet-400"
+            >
+              <span>Let&apos;s Get Started</span>
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Avista Component 3: 2-Card Feature Grid (Our Story & Target Goal) */}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
+          {/* Card 1: Our Story */}
+          <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#120820]/90 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-500 hover:border-violet-400/40 sm:p-12">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-violet-400/30 bg-violet-500/10 text-violet-300 shadow-[0_0_20px_rgba(139,92,246,0.25)]">
+              <Layers className="h-7 w-7" />
             </div>
 
-            <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-8">
-              {stats.map((stat, idx) => (
-                <div key={idx}>
-                  <div className="text-gradient-luxury font-display text-2xl font-bold sm:text-3xl">
-                    {stat.value}
-                  </div>
-                  <div className="mt-1 text-xs tracking-wide text-gray-400 uppercase">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
+            <h3 className="mt-8 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              CODEXX PLUS &bull; Our Story
+            </h3>
+
+            <p className="mt-4 text-sm leading-relaxed text-gray-300 sm:text-base">
+              Founded at the convergence of algorithmic computing and luxury design, our studio emerged to reject cookie-cutter templates. We craft digital architectures where code execution speed matches visual prestige.
+            </p>
+
+            <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/10 pt-6 sm:grid-cols-3">
+              <div className="flex flex-col">
+                <span className="font-display text-2xl font-black text-white sm:text-3xl">120+</span>
+                <span className="text-xs text-gray-400">Shipped Engagements</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-display text-2xl font-black text-white sm:text-3xl">99.98%</span>
+                <span className="text-xs text-gray-400">SLA Reliability</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-display text-2xl font-black text-white sm:text-3xl">18</span>
+                <span className="text-xs text-gray-400">Global Verticals</span>
+              </div>
             </div>
           </div>
 
-          {/* Right Office Interior Card */}
-          <div className="lg:col-span-7">
-            <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#12091f] p-2 shadow-[0_24px_80px_rgba(0,0,0,0.65)] transition-all duration-500 hover:border-violet-400/35">
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl">
-                <img
-                  src="/images/office-interior.jpg"
-                  alt="High-end modern corporate office interior with luxury dark architectural lighting"
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a0612]/80 via-transparent to-violet-950/20" />
-                <div className="absolute right-5 bottom-5 left-5 flex items-end justify-between gap-4">
-                  <div className="rounded-2xl border border-white/15 bg-[#0a0612]/70 px-4 py-3 backdrop-blur-md">
-                    <p className="text-xs font-medium tracking-wider text-violet-300 uppercase">
-                      Studio &amp; Headquarters
-                    </p>
-                    <p className="mt-0.5 text-sm font-medium text-white">
-                      Designed for Deep Focus &amp; Architectural Precision
-                    </p>
-                  </div>
-                </div>
-              </div>
+          {/* Card 2: Target Goal */}
+          <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#120820]/90 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-500 hover:border-violet-400/40 sm:p-12">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-violet-400/30 bg-violet-500/10 text-violet-300 shadow-[0_0_20px_rgba(139,92,246,0.25)]">
+              <Target className="h-7 w-7" />
+            </div>
+
+            <h3 className="mt-8 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              CODEXX PLUS &bull; Target Goal
+            </h3>
+
+            <p className="mt-4 text-sm leading-relaxed text-gray-300 sm:text-base">
+              Deliver deterministic enterprise platforms that remove latency and technical debt, empowering executive teams to automate operations, dominate generative search discovery, and captivate top-tier clients.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3 border-t border-white/10 pt-6">
+              {['Autonomous Workflows', 'Zero-Bloat Next.js 15', 'Custom WebGL GLSL'].map((pill) => (
+                <span
+                  key={pill}
+                  className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1 text-xs text-gray-300"
+                >
+                  {pill}
+                </span>
+              ))}
             </div>
           </div>
         </div>

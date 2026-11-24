@@ -1,13 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Navbar, type AppPage } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { TechStackMarquee } from './components/TechStackMarquee';
 import { About } from './components/About';
 import { Services } from './components/Services';
-import { TrustedClients } from './components/TrustedClients';
-import { ClientFeedbackSection } from './components/ClientFeedbackSection';
+import { FaqConsultationSection } from './components/FaqConsultationSection';
+import { KineticMarquee } from './components/KineticMarquee';
+import { RecentProjectsSection } from './components/RecentProjectsSection';
 import { Team } from './components/Team';
+import { ClientFeedbackSection } from './components/ClientFeedbackSection';
+import { LatestBlogsSection } from './components/LatestBlogsSection';
+import { CtaBanner } from './components/CtaBanner';
 import { Footer } from './components/Footer';
+import { FloatingDock } from './components/FloatingDock';
 import { BookingModal } from './components/BookingModal';
 import { AboutPage } from './pages/AboutPage';
 import { ServicesPage } from './pages/ServicesPage';
@@ -19,11 +23,19 @@ import { LoginPage } from './pages/LoginPage';
 function getInitialPage(): AppPage {
   const path = window.location.pathname.toLowerCase();
   const hash = window.location.hash.toLowerCase();
-  if (path === '/admin' || hash === '#admin' || path === '/login' || hash === '#login' || path === '/signin' || hash === '#signin') {
+  if (
+    path === '/admin' ||
+    hash === '#admin' ||
+    path === '/login' ||
+    hash === '#login' ||
+    path === '/signin' ||
+    hash === '#signin'
+  ) {
     return 'admin';
   }
   if (path === '/about' || hash === '#about') return 'about';
-  if (path === '/services' || hash === '#services' || path === '/work' || hash === '#work') return 'services';
+  if (path === '/services' || hash === '#services' || path === '/work' || hash === '#work')
+    return 'services';
   if (path === '/team' || hash === '#team') return 'team';
   if (path === '/contact' || hash === '#contact') return 'contact';
   return 'home';
@@ -118,12 +130,18 @@ export function App() {
         {currentPage === 'home' && (
           <>
             <Hero onOpenModal={() => setModalOpen(true)} />
-            <TechStackMarquee />
-            <About />
+            <About onOpenModal={() => setModalOpen(true)} />
             <Services onOpenModal={() => setModalOpen(true)} />
-            <TrustedClients />
-            <ClientFeedbackSection />
+            <FaqConsultationSection onOpenModal={() => setModalOpen(true)} />
+            <KineticMarquee />
+            <RecentProjectsSection onOpenModal={() => setModalOpen(true)} />
             <Team onNavigateTeam={() => handleNavigate('team')} />
+            <ClientFeedbackSection />
+            <LatestBlogsSection onOpenModal={() => setModalOpen(true)} />
+            <CtaBanner
+              onOpenModal={() => setModalOpen(true)}
+              onNavigateContact={() => handleNavigate('contact')}
+            />
           </>
         )}
 
@@ -166,17 +184,21 @@ export function App() {
         )}
 
         {currentPage === 'admin' && (
-          <AdminPage
-            onNavigateHome={() => handleNavigate('home', '#home')}
-          />
+          <AdminPage onNavigateHome={() => handleNavigate('home', '#home')} />
         )}
       </main>
 
       {currentPage !== 'admin' && (
-        <Footer
-          onOpenModal={() => setModalOpen(true)}
-          onNavigate={handleNavigate}
-        />
+        <>
+          <Footer
+            onOpenModal={() => setModalOpen(true)}
+            onNavigate={handleNavigate}
+          />
+          <FloatingDock
+            onOpenModal={() => setModalOpen(true)}
+            onNavigate={handleNavigate}
+          />
+        </>
       )}
 
       <BookingModal open={modalOpen} onClose={() => setModalOpen(false)} />

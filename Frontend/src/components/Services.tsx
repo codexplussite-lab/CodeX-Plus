@@ -1,147 +1,201 @@
 import { useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
-import { useCms } from '../context/useCms';
-import { SERVICES as DEFAULT_SERVICES } from '../data/siteData';
+import { ArrowUpRight, Plus, X, Sparkles, Check } from 'lucide-react';
 
 interface ServicesProps {
   onOpenModal: () => void;
 }
 
+interface ServiceAccordionItem {
+  id: string;
+  number: string;
+  title: string;
+  tag: string;
+  description: string;
+  pills: string[];
+  mockupImage: string;
+  previewTitle: string;
+  previewSubtitle: string;
+}
+
+const ACCORDION_SERVICES: ServiceAccordionItem[] = [
+  {
+    id: 'ai-innovation',
+    number: '{01}',
+    title: 'AI Innovation & Autonomous Systems',
+    tag: 'Multi-Agent & LLMs',
+    description:
+      'We engineer deterministic multi-agent pipelines, private enterprise LLM orchestrations, and automated reasoning workflows. From intelligent customer intelligence to internal operations copilots, every system is designed for verifiable zero-loss execution.',
+    pills: ['Multi-Agent Workflows', 'Private LLM Fine-Tuning', 'Deterministic Output Schema', 'SOC2 Cryptographic Guardrails'],
+    mockupImage: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+    previewTitle: 'CodexAgent Orchestrator',
+    previewSubtitle: 'Enterprise Multi-Agent Pipeline &bull; Active',
+  },
+  {
+    id: 'enterprise-web',
+    number: '{02}',
+    title: 'Enterprise Web Platforms',
+    tag: 'Development',
+    description:
+      'Zero-bloat modular platforms built on React 19, Next.js, and high-throughput TypeScript REST/GraphQL gateways. Engineered for sub-second First Contentful Paint, global edge caching, and scalable multi-region uptime.',
+    pills: ['Development & React 19', 'Tailwind CSS v4 Engine', 'High-Throughput API Gateway', 'PostgreSQL & Edge KV'],
+    mockupImage: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
+    previewTitle: 'Core Web Platform',
+    previewSubtitle: 'Edge Cache Hit Rate 99.4% &bull; Sub-100ms TTFB',
+  },
+  {
+    id: 'dark-luxury-ui',
+    number: '{03}',
+    title: 'Bespoke Dark Luxury UI/UX',
+    tag: 'Design Systems & Tokens',
+    description:
+      'Cinematic digital experiences with obsidian backgrounds, subtle specular reflections, and rhythmic 8pt typography. Every screen adheres to WCAG 2.2 AAA visible focus appearance and responsive touch compliance.',
+    pills: ['Obsidian & Void Palettes', 'W3C DTCG Token Standards', '44px Touch Target Strict', 'Fluid Micro-Interactions'],
+    mockupImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
+    previewTitle: 'Specular Design Token Kit',
+    previewSubtitle: 'WCAG 2.2 AAA &bull; Fluid Spatial Typography',
+  },
+  {
+    id: '3d-motion-webgl',
+    number: '{04}',
+    title: '3D Motion & WebGL Graphics',
+    tag: 'GLSL & OGL Shaders',
+    description:
+      'GPU-accelerated interactive canvas scenes, custom fragment shaders, and GSAP timeline choreography. Designed to captivate visitors without thermal throttling or layout thrashing.',
+    pills: ['GPU-Accelerated Shaders', 'OGL Interactive Geometry', 'GSAP Kinetic Choreography', 'Reduced-Motion Safe Fallbacks'],
+    mockupImage: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
+    previewTitle: 'MoltenMetal Shader Runtime',
+    previewSubtitle: '60fps Mobile Optimized &bull; Hardware Accelerated',
+  },
+];
+
 export function Services({ onOpenModal }: ServicesProps) {
-  const { cms } = useCms();
-  const servicesList =
-    cms.services && cms.services.length > 0 ? cms.services : DEFAULT_SERVICES;
-  const [activeId, setActiveId] = useState<string>(
-    servicesList[0]?.id || 'video-editing'
-  );
+  const [activeAccordion, setActiveAccordion] = useState<string>(ACCORDION_SERVICES[0].id);
 
   return (
-    <section id="services" className="relative py-24 lg:py-32">
-      {/* Ambient right glow */}
-      <div className="pointer-events-none absolute top-1/2 right-0 h-[480px] w-[480px] translate-x-1/3 -translate-y-1/2 rounded-full bg-purple-600/15 blur-[150px]" />
+    <section
+      id="services"
+      aria-label="Studio Capabilities & Services"
+      className="relative w-full overflow-hidden bg-[#07040d] py-24 lg:py-32"
+    >
+      {/* Background ambient lighting */}
+      <div className="pointer-events-none absolute top-1/3 right-0 h-[500px] w-[500px] rounded-full bg-violet-600/10 blur-[160px]" />
+      <div className="pointer-events-none absolute bottom-1/3 left-0 h-[450px] w-[450px] rounded-full bg-purple-700/10 blur-[150px]" />
 
-      <div className="mx-auto max-w-[1600px] px-6">
-        {/* Section Header */}
+      <div className="relative z-10 mx-auto max-w-[1600px] px-6">
+        {/* Avista-style Section Header */}
         <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-          <div className="max-w-2xl">
-            <span className="mb-3 inline-block text-xs font-semibold tracking-[0.22em] text-violet-300 uppercase">
-              Our Capabilities
+          <div className="max-w-3xl">
+            <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-semibold tracking-[0.22em] text-violet-300 uppercase shadow-[0_0_20px_rgba(139,92,246,0.2)]">
+              <Sparkles className="h-3.5 w-3.5 text-violet-400" />
+              Our Services &amp; Capabilities
             </span>
-            <h2 className="font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            <h2 className="font-display text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
               What We Offer
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-gray-400 sm:text-lg">
-              End-to-end digital solutions designed to elevate your brand, scale
-              your business, and drive real results.
+            <p className="mt-5 text-base leading-relaxed text-gray-300 sm:text-lg">
+              End-to-end digital solutions designed to elevate enterprise prestige, automate complex workflows, and drive measurable revenue.
             </p>
           </div>
 
           <button
             type="button"
             onClick={onOpenModal}
-            className="group inline-flex cursor-pointer items-center gap-2.5 self-start rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition-all duration-300 hover:border-violet-400/50 hover:bg-violet-500/20 hover:shadow-[0_0_28px_rgba(139,92,246,0.3)] md:self-auto"
+            className="group inline-flex min-h-[44px] cursor-pointer items-center gap-2.5 self-start rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-xs font-semibold tracking-wider text-white uppercase backdrop-blur-md transition-all duration-300 hover:border-violet-400/70 hover:bg-violet-500/20 md:self-auto focus-visible:outline-2 focus-visible:outline-violet-400"
           >
             <span>Explore More</span>
-            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </button>
         </div>
 
-        {/* Bento Grid: 1 large vertical card on the left + 4 cards in 2x2 on the right */}
-        <div className="mt-14 grid grid-cols-1 gap-5 lg:grid-cols-3 lg:grid-rows-2">
-          {servicesList.map((service, idx) => {
-            const isActive = activeId === service.id;
-            const isLarge = Boolean(service.isLarge || idx === 0);
+        {/* Avista Interactive Multi-Item Accordion */}
+        <div className="mt-16 divide-y divide-white/10 border-y border-white/10">
+          {ACCORDION_SERVICES.map((item) => {
+            const isExpanded = activeAccordion === item.id;
 
             return (
-              <article
-                key={service.id}
-                tabIndex={0}
-                role="button"
-                aria-pressed={isActive}
-                aria-label={`Service: ${service.title}`}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setActiveId(service.id);
-                  }
-                }}
-                onMouseEnter={() => setActiveId(service.id)}
-                onClick={() => setActiveId(service.id)}
-                className={`specular-card group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border p-8 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-violet-400 ${
-                  isLarge ? 'min-h-[340px] lg:row-span-2 lg:min-h-[460px]' : 'min-h-[220px]'
-                } ${
-                  isActive
-                    ? 'border-violet-400/80 bg-gradient-to-br from-[#1f1037] via-[#140a24] to-[#0d0618] shadow-[0_12px_45px_rgba(139,92,246,0.3)]'
-                    : 'border-white/10 bg-[#10081c]/90 hover:border-violet-400/40 hover:bg-[#150b26]'
+              <div
+                key={item.id}
+                className={`transition-colors duration-300 ${
+                  isExpanded ? 'bg-[#10081d]/90' : 'bg-transparent hover:bg-white/[0.02]'
                 }`}
               >
-                {/* Ambient glow inside active card */}
-                <div
-                  className={`pointer-events-none absolute -top-20 -right-20 h-56 w-56 rounded-full blur-[70px] transition-opacity duration-500 ${
-                    isActive
-                      ? 'bg-violet-500/30 opacity-100'
-                      : 'bg-violet-600/15 opacity-0 group-hover:opacity-100'
-                  }`}
-                />
-
-                {/* Top row: Number/Tag + Circular Arrow */}
-                <div className="relative z-10 flex items-start justify-between gap-4">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-xs font-semibold tracking-wider text-violet-400">
-                      {String(idx + 1).padStart(2, '0')}
+                {/* Accordion Row Header */}
+                <button
+                  type="button"
+                  onClick={() => setActiveAccordion(isExpanded ? '' : item.id)}
+                  aria-expanded={isExpanded}
+                  className="flex w-full cursor-pointer items-center justify-between py-8 text-left transition-all focus-visible:outline-2 focus-visible:outline-violet-400 sm:py-10"
+                >
+                  <div className="flex flex-wrap items-center gap-4 sm:gap-8">
+                    <span className="font-mono text-sm font-bold text-violet-400 sm:text-base">
+                      {item.number}
                     </span>
-                    <span className="text-violet-400/50 select-none text-xs" aria-hidden="true">//</span>
-                    <span
-                      className={`rounded-full border px-3.5 py-1 text-xs font-medium tracking-wide transition-colors ${
-                        isActive
-                          ? 'border-violet-400/40 bg-violet-500/20 text-violet-200 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
-                          : 'border-white/10 bg-white/[0.04] text-gray-400'
-                      }`}
-                    >
-                      {service.tag}
-                    </span>
-                    <span className="text-gray-500 select-none text-xs" aria-hidden="true">&mdash;</span>
-                    <span className="text-xs font-medium text-violet-300/90 transition-colors group-hover:text-white">
-                      Read spec
+                    <h3 className="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                      {item.title}
+                    </h3>
+                    <span className="hidden rounded-full border border-violet-400/30 bg-violet-500/10 px-3.5 py-1 font-mono text-xs text-violet-300 sm:inline-block">
+                      {item.tag}
                     </span>
                   </div>
 
-                  <span
-                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
-                      isActive
-                        ? 'border-violet-300 bg-white text-[#0a0612] shadow-[0_0_20px_rgba(196,181,253,0.45)]'
-                        : 'border-white/15 bg-white/[0.04] text-white group-hover:border-violet-400/50 group-hover:bg-violet-500/20'
-                    }`}
-                  >
-                    <ArrowUpRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </span>
-                </div>
+                  <div className="ml-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white transition-transform duration-300">
+                    {isExpanded ? (
+                      <X className="h-5 w-5 text-violet-300" />
+                    ) : (
+                      <Plus className="h-5 w-5 text-gray-300" />
+                    )}
+                  </div>
+                </button>
 
-                {/* Bottom content */}
-                <div className={`relative z-10 ${isLarge ? 'mt-auto pt-16' : 'mt-10'}`}>
-                  <h3 className="font-display text-2xl font-semibold tracking-tight text-white sm:text-[28px]">
-                    {service.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-400 sm:text-base">
-                    {service.description}
-                  </p>
+                {/* Expanded Accordion Body (Split copy & visual mockup) */}
+                {isExpanded && (
+                  <div className="grid grid-cols-1 gap-8 pb-10 animate-in fade-in duration-300 lg:grid-cols-12 lg:gap-12">
+                    {/* Left Copy & Pill Badges */}
+                    <div className="space-y-6 lg:col-span-7">
+                      <p className="text-base leading-relaxed text-gray-300 sm:text-lg">
+                        {item.description}
+                      </p>
 
-                  {isLarge && (
-                    <ul className="mt-8 flex flex-wrap gap-2 border-t border-white/10 pt-6 list-none p-0 m-0" aria-label="Core stack tags">
-                      {['AI Agents', 'Next.js & React', 'Cloud APIs', 'Automation'].map(
-                        (pill) => (
-                          <li
-                            key={pill}
-                            className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-gray-300"
-                          >
-                            {pill}
-                          </li>
-                        ),
-                      )}
-                    </ul>
-                  )}
-                </div>
-              </article>
+                      <div>
+                        <span className="text-xs font-semibold tracking-wider text-gray-400 uppercase">
+                          Standard Deliverables &amp; Architectural Stack:
+                        </span>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {item.pills.map((pill) => (
+                            <span
+                              key={pill}
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-violet-400/30 bg-violet-500/10 px-3.5 py-2 text-xs font-medium text-violet-200"
+                            >
+                              <Check className="h-3.5 w-3.5 text-violet-400" />
+                              {pill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Visual Preview Mockup Card */}
+                    <div className="lg:col-span-5">
+                      <div className="group relative overflow-hidden rounded-2xl border border-violet-400/30 bg-[#160c29] p-3 shadow-[0_16px_50px_rgba(139,92,246,0.25)]">
+                        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-[#0a0612]">
+                          <img
+                            src={item.mockupImage}
+                            alt={item.title}
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a0612]/90 via-transparent to-transparent" />
+                          <div className="absolute right-4 bottom-4 left-4 rounded-xl border border-white/10 bg-[#0a0612]/80 p-3 backdrop-blur-md">
+                            <p className="font-display text-sm font-bold text-white">
+                              {item.previewTitle}
+                            </p>
+                            <p className="text-[11px] text-violet-300" dangerouslySetInnerHTML={{ __html: item.previewSubtitle }} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
