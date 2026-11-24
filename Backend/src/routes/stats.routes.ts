@@ -28,11 +28,12 @@ router.get('/', async (_req: Request, res: Response) => {
           ? bookings.filter((b) => b.status === 'pending').length
           : 0,
         subscribersCount: Array.isArray(subscriptions) ? subscriptions.length : 0,
-        servicesCount: 5,
-        projectsCount: 6,
-        teamCount: 8,
-        testimonialsCount: 5,
-        blogsCount: 3,
+        servicesCount: 4,
+        projectsCount: 240,
+        yearsInBusiness: 12,
+        industryAwards: 38,
+        clientRating: 4.9,
+        teamCount: 9,
       },
     });
   } catch (error) {
@@ -44,4 +45,3 @@ router.get('/', async (_req: Request, res: Response) => {
 });
 
 export default router;
-

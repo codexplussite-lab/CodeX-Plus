@@ -1,44 +1,29 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
-import AdminLogin from '../admin/AdminLogin';
+import AdminLogin from '../admin/AdminLogin.jsx';
 
 describe('AdminLogin Component', () => {
-  it('should render password input and login button', () => {
-    render(<AdminLogin onLogin={vi.fn()} />);
+  it('should render login form inputs and title', () => {
+    render(<AdminLogin onLogin={() => {}} onBackToSite={() => {}} />);
 
-    expect(screen.getByPlaceholderText('••••••••••••')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Access Command Console/i })).toBeInTheDocument();
+    expect(screen.getByText('Avista Admin')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/hello@avista.studio or admin/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Sign in to Dashboard/i })).toBeInTheDocument();
   });
 
-  it('should show error when wrong password is submitted', async () => {
-    render(<AdminLogin onLogin={vi.fn()} />);
+  it('should show error when invalid credentials submitted', async () => {
+    render(<AdminLogin onLogin={() => {}} onBackToSite={() => {}} />);
 
-    const emailInput = screen.getByPlaceholderText('admin@codexplus.site');
-    const passwordInput = screen.getByPlaceholderText('••••••••••••');
-    const submitBtn = screen.getByRole('button', { name: /Access Command Console/i });
+    const userInput = screen.getByPlaceholderText(/hello@avista.studio or admin/i);
+    const passInput = screen.getByPlaceholderText('••••••••••••');
+    const submitBtn = screen.getByRole('button', { name: /Sign in to Dashboard/i });
 
-    fireEvent.change(emailInput, { target: { value: 'admin@codexplus.site' } });
-    fireEvent.change(passwordInput, { target: { value: 'wrong-pass' } });
+    fireEvent.change(userInput, { target: { value: 'wronguser' } });
+    fireEvent.change(passInput, { target: { value: 'wrongpass' } });
     fireEvent.click(submitBtn);
 
-    await waitFor(() => {
-      expect(screen.getByText(/Invalid username or password/i)).toBeInTheDocument();
-    });
-  });
-
-  it('should call onLogin callback when demo persona is clicked', () => {
-    const onLogin = vi.fn();
-    render(<AdminLogin onLogin={onLogin} />);
-
-    const demoBtn = screen.getByRole('button', { name: /Alexander Reid/i });
-    fireEvent.click(demoBtn);
-
-    expect(onLogin).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Alexander Reid',
-        role: 'Principal Partner',
-      })
-    );
+    const errorMsg = await screen.findByText(/Invalid username or password/i);
+    expect(errorMsg).toBeInTheDocument();
   });
 });

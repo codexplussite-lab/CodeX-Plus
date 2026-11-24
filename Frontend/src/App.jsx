@@ -1,40 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from './components/Navbar';
-import SearchModal from './components/SearchModal';
-import OffcanvasDrawer from './components/OffcanvasDrawer';
-import Hero from './components/Hero';
-import About from './components/About';
-import Services from './components/Services';
-import Pricing from './components/Pricing';
-import Faqs from './components/Faqs';
-import MarqueeText from './components/MarqueeText';
-import Projects from './components/Projects';
-import Team from './components/Team';
-import Testimonials from './components/Testimonials';
-import Partners from './components/Partners';
-import Blog from './components/Blog';
-import Footer from './components/Footer';
-import ScrollToTop from './components/ScrollToTop';
-import PaymentPolicy from './components/PaymentPolicy';
-import PrivacyPolicy from './components/PrivacyPolicy';
-import DiscoveryBookingModal from './components/DiscoveryBookingModal';
-import AdminPanel from './admin/AdminPanel';
-import FloatingDock from './components/react-bits/FloatingDock';
+import { useEffect, useState } from 'react';
+import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Noise from './components/bits/Noise.jsx';
+import Loader from './components/Loader.jsx';
+import Header from './components/Header.jsx';
+import CursorLabel from './components/CursorLabel.jsx';
+import Hero from './sections/Hero.jsx';
+import About from './sections/About.jsx';
+import Statement from './sections/Statement.jsx';
+import Services from './sections/Services.jsx';
+import Projects from './sections/Projects.jsx';
+import Faq from './sections/Faq.jsx';
+import Team from './sections/Team.jsx';
+import Testimonials from './sections/Testimonials.jsx';
+import Journal from './sections/Journal.jsx';
+import Footer from './sections/Footer.jsx';
+import AdminPanel from './admin/AdminPanel.jsx';
+import { CmsProvider } from './context/CmsContext.jsx';
 
-// Dedicated Standalone Pages
-import AboutPage from './pages/AboutPage';
-import ServicesPage from './pages/ServicesPage';
-import TeamPage from './pages/TeamPage';
-import ContactPage from './pages/ContactPage';
+gsap.registerPlugin(ScrollTrigger);
+
+function MainSite() {
+  const [ready, setReady] = useState(false);
+
+  // Smooth scrolling (Lenis) wired into GSAP ScrollTrigger. Disabled for reduced-motion users.
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+    window.__lenis = lenis;
+    lenis.stop(); // locked until the loader finishes
+    lenis.on('scroll', ScrollTrigger.update);
+    const tick = time => lenis.raf(time * 1000);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+    return () => {
+      gsap.ticker.remove(tick);
+      lenis.destroy();
+      window.__lenis = undefined;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (ready) window.__lenis?.start();
+  }, [ready]);
+
+  return (
+    <>
+      <Loader onReveal={() => setReady(true)} />
+      <Header ready={ready} />
+      <main>
+        <Hero ready={ready} />
+        <About />
+        <Statement />
+        <Services />
+        <Projects />
+        <Faq />
+        <Team />
+        <Testimonials />
+        <Journal />
+      </main>
+      <Footer />
+      <Noise fixed opacity={0.05} className="grain" />
+      <CursorLabel />
+    </>
+  );
+}
 
 export default function App() {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [selectedTier, setSelectedTier] = useState('');
-
-  // Track route for /admin, /about, /services, /team, /contact, /payment-policy, etc.
   const [route, setRoute] = useState(() => {
+    if (typeof window === 'undefined') return '/';
     return window.location.pathname + window.location.hash;
   });
 
@@ -57,311 +92,14 @@ export default function App() {
   };
 
   const isAdminRoute = route.includes('/admin') || route.includes('#admin');
-  const isPaymentPolicyRoute = route.includes('/payment-policy') || route.includes('#payment-policy');
-  const isPrivacyPolicyRoute = route.includes('/privacy-policy') || route.includes('#privacy-policy');
-  const isAboutRoute = route === '/about' || route === '/about/' || route === '#about';
-  const isServicesRoute = route === '/services' || route === '/services/' || route === '#services';
-  const isTeamRoute = route === '/team' || route === '/team/' || route === '#team';
-  const isContactRoute = route === '/contact' || route === '/contact/' || route === '#contact';
-
-  if (isAdminRoute) {
-    return <AdminPanel onBackToSite={() => navigateTo('/')} />;
-  }
-
-  // Standalone About Page
-  if (isAboutRoute) {
-    return (
-      <div className="min-h-screen bg-[#07030e] text-[#c4b4ffcc] font-sans relative">
-        <Navbar 
-          onOpenSearch={() => setIsSearchOpen(true)}
-          onOpenDrawer={() => setIsDrawerOpen(true)}
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <AboutPage 
-          onNavigate={navigateTo} 
-          onOpenBookingModal={() => setIsBookingOpen(true)} 
-        />
-        <Footer 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <ScrollToTop />
-        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-        <OffcanvasDrawer 
-          isOpen={isDrawerOpen} 
-          onClose={() => setIsDrawerOpen(false)} 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <DiscoveryBookingModal 
-          isOpen={isBookingOpen} 
-          onClose={() => setIsBookingOpen(false)} 
-          initialService={selectedTier}
-        />
-      </div>
-    );
-  }
-
-  // Standalone Services Page
-  if (isServicesRoute) {
-    return (
-      <div className="min-h-screen bg-[#07030e] text-[#c4b4ffcc] font-sans relative">
-        <Navbar 
-          onOpenSearch={() => setIsSearchOpen(true)}
-          onOpenDrawer={() => setIsDrawerOpen(true)}
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <ServicesPage 
-          onNavigate={navigateTo} 
-          onOpenBookingModal={() => setIsBookingOpen(true)} 
-        />
-        <Footer 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <ScrollToTop />
-        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-        <OffcanvasDrawer 
-          isOpen={isDrawerOpen} 
-          onClose={() => setIsDrawerOpen(false)} 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <DiscoveryBookingModal 
-          isOpen={isBookingOpen} 
-          onClose={() => setIsBookingOpen(false)} 
-          initialService={selectedTier}
-        />
-      </div>
-    );
-  }
-
-  // Standalone Team Page
-  if (isTeamRoute) {
-    return (
-      <div className="min-h-screen bg-[#07030e] text-[#c4b4ffcc] font-sans relative">
-        <Navbar 
-          onOpenSearch={() => setIsSearchOpen(true)}
-          onOpenDrawer={() => setIsDrawerOpen(true)}
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <TeamPage 
-          onNavigate={navigateTo} 
-          onOpenBookingModal={() => setIsBookingOpen(true)} 
-        />
-        <Footer 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <ScrollToTop />
-        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-        <OffcanvasDrawer 
-          isOpen={isDrawerOpen} 
-          onClose={() => setIsDrawerOpen(false)} 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <DiscoveryBookingModal 
-          isOpen={isBookingOpen} 
-          onClose={() => setIsBookingOpen(false)} 
-          initialService={selectedTier}
-        />
-      </div>
-    );
-  }
-
-  // Standalone Contact Page
-  if (isContactRoute) {
-    return (
-      <div className="min-h-screen bg-[#07030e] text-[#c4b4ffcc] font-sans relative">
-        <Navbar 
-          onOpenSearch={() => setIsSearchOpen(true)}
-          onOpenDrawer={() => setIsDrawerOpen(true)}
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <ContactPage 
-          onNavigate={navigateTo} 
-          onOpenBookingModal={() => setIsBookingOpen(true)} 
-        />
-        <Footer 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <ScrollToTop />
-        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-        <OffcanvasDrawer 
-          isOpen={isDrawerOpen} 
-          onClose={() => setIsDrawerOpen(false)} 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <DiscoveryBookingModal 
-          isOpen={isBookingOpen} 
-          onClose={() => setIsBookingOpen(false)} 
-          initialService={selectedTier}
-        />
-      </div>
-    );
-  }
-
-  if (isPaymentPolicyRoute) {
-    return (
-      <div className="min-h-screen bg-[#07030e] text-[#c4b4ffcc] font-sans relative">
-        <Navbar 
-          onOpenSearch={() => setIsSearchOpen(true)}
-          onOpenDrawer={() => setIsDrawerOpen(true)}
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <PaymentPolicy 
-          onBackToHome={() => navigateTo('/')} 
-          onOpenBookingModal={() => setIsBookingOpen(true)} 
-        />
-        <Footer 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <ScrollToTop />
-        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-        <OffcanvasDrawer 
-          isOpen={isDrawerOpen} 
-          onClose={() => setIsDrawerOpen(false)} 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <DiscoveryBookingModal 
-          isOpen={isBookingOpen} 
-          onClose={() => setIsBookingOpen(false)} 
-          initialService={selectedTier}
-        />
-      </div>
-    );
-  }
-
-  if (isPrivacyPolicyRoute) {
-    return (
-      <div className="min-h-screen bg-[#07030e] text-[#c4b4ffcc] font-sans relative">
-        <Navbar 
-          onOpenSearch={() => setIsSearchOpen(true)}
-          onOpenDrawer={() => setIsDrawerOpen(true)}
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <PrivacyPolicy 
-          onBackToHome={() => navigateTo('/')} 
-        />
-        <Footer 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <ScrollToTop />
-        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-        <OffcanvasDrawer 
-          isOpen={isDrawerOpen} 
-          onClose={() => setIsDrawerOpen(false)} 
-          onNavigate={navigateTo}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-        <DiscoveryBookingModal 
-          isOpen={isBookingOpen} 
-          onClose={() => setIsBookingOpen(false)} 
-          initialService={selectedTier}
-        />
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-[#0a0612] text-[#c4b4ffcc] selection:bg-[#8b5cf6] selection:text-white font-sans relative">
-      
-      {/* Top Navbar */}
-      <Navbar 
-        onOpenSearch={() => setIsSearchOpen(true)}
-        onOpenDrawer={() => setIsDrawerOpen(true)}
-        onNavigate={navigateTo}
-        onOpenBookingModal={() => setIsBookingOpen(true)}
-      />
-
-      {/* Main Page Flow with CodexPlus Violet/Purple Theme */}
-      <main>
-        {/* 1. Hero Section */}
-        <Hero onOpenBookingModal={() => setIsBookingOpen(true)} onNavigate={navigateTo} />
-
-        {/* 2. About Section */}
-        <About onNavigate={navigateTo} />
-
-        {/* 3. Services Section */}
-        <Services onNavigate={navigateTo} />
-
-        {/* 4. Pricing & Investment Tiers Section */}
-        <Pricing 
-          onSelectTier={(tier) => {
-            setSelectedTier(tier);
-            setIsBookingOpen(true);
-          }}
-          onOpenBookingModal={() => setIsBookingOpen(true)}
-        />
-
-        {/* 5. FAQs & Contact Project Form Section */}
-        <Faqs onNavigate={navigateTo} />
-
-        {/* 6. Infinite Text Marquee Banner */}
-        <MarqueeText />
-
-        {/* 7. Recent Projects Showcase */}
-        <Projects onNavigate={navigateTo} />
-
-        {/* 8. Creative Expert Team */}
-        <Team onNavigate={navigateTo} />
-
-        {/* 9. Client Testimonials */}
-        <Testimonials />
-
-        {/* 10. Latest Blog & Articles */}
-        <Blog />
-
-        {/* 11. Partner Logos Carousel */}
-        <Partners />
-      </main>
-
-      {/* Footer */}
-      <Footer 
-        onNavigate={navigateTo}
-        onOpenBookingModal={() => setIsBookingOpen(true)}
-      />
-
-      {/* Luxury React Bits Floating Dock */}
-      <FloatingDock 
-        onNavigate={navigateTo} 
-        onOpenBookingModal={() => setIsBookingOpen(true)} 
-      />
-
-      {/* Floating Scroll To Top Button */}
-      <ScrollToTop />
-
-      {/* Modals & Drawers */}
-      <SearchModal 
-        isOpen={isSearchOpen} 
-        onClose={() => setIsSearchOpen(false)} 
-      />
-      <OffcanvasDrawer 
-        isOpen={isDrawerOpen} 
-        onClose={() => setIsDrawerOpen(false)} 
-        onNavigate={navigateTo}
-        onOpenBookingModal={() => setIsBookingOpen(true)}
-      />
-
-      {/* Discovery Booking Modal */}
-      <DiscoveryBookingModal 
-        isOpen={isBookingOpen} 
-        onClose={() => setIsBookingOpen(false)} 
-        initialService={selectedTier}
-      />
-
-    </div>
+    <CmsProvider>
+      {isAdminRoute ? (
+        <AdminPanel onBackToSite={() => navigateTo('/')} />
+      ) : (
+        <MainSite />
+      )}
+    </CmsProvider>
   );
 }

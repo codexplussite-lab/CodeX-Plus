@@ -3,43 +3,48 @@ import { Request, Response } from 'express';
 const SERVICES = [
   {
     id: 'development',
-    title: 'Full-Stack & Autonomous AI',
-    tag: 'Full-Stack & AI',
+    title: 'Full-Stack Web Development & Apps',
+    tag: 'React / Next.js',
     description:
-      'Bespoke engineering architectures combining high-throughput cloud infrastructure, proprietary autonomous agent pipelines, and lightning-fast web applications.',
-    tier: 'Core Engineering',
+      'Fast, accessible sites and web apps built in React and modern CMS stacks, designed and engineered by the same team.',
+    tier: 'Engineering & Code',
+    tags: ['React / Next.js', 'CMS', 'Performance'],
   },
   {
-    id: 'graphics-design',
-    title: 'Graphics Design & Visual Identity',
+    id: 'branding-identity',
+    title: 'Branding & Visual Identity',
     tag: 'Visual Identity',
     description:
-      'Cinematic visual storytelling, authoritative brand guidelines, and dark-luxury design tokens engineered for global enterprise prestige.',
-    tier: 'Design & Brand',
+      'We define who you are and how you are seen: logos, colour, type and the guidelines that keep every touchpoint consistent.',
+    tier: 'Brand Strategy',
+    tags: ['Logo design', 'Visual identity', 'Motion design'],
   },
   {
-    id: 'video-editing',
-    title: '3D Motion & WebGL Experiences',
-    tag: 'Motion & Post',
+    id: 'application-design',
+    title: 'Application Design & Prototyping',
+    tag: 'Product UX',
     description:
-      'World-class post-production, interactive 3D WebGL motion graphics, and high-impact product keynote films crafted for conversion.',
-    tier: 'Spatial & Motion',
+      'Product design for mobile and desktop apps: flows, prototypes and design systems that developers can build from.',
+    tier: 'Product Architecture',
+    tags: ['Prototyping', 'Design systems', 'Mobile'],
   },
   {
-    id: 'social-media-marketing',
-    title: 'Social Media & Growth Engine',
-    tag: 'Growth Engine',
+    id: 'ui-ux-design',
+    title: 'UI/UX Research & Usability',
+    tag: 'User Research',
     description:
-      'Omnichannel narrative orchestration, strategic executive positioning, and data-backed distribution driving measurable qualified pipeline.',
+      'Research-led interfaces that make complicated things feel obvious. We test early and ship what people actually use.',
+    tier: 'Experience Design',
+    tags: ['User research', 'Wireframes', 'Usability testing'],
+  },
+  {
+    id: 'digital-marketing',
+    title: 'Digital Marketing & Growth Engine',
+    tag: 'Omnichannel Growth',
+    description:
+      'Data-backed distribution, creative storytelling, and strategic executive positioning driving qualified reach.',
     tier: 'Growth Strategy',
-  },
-  {
-    id: 'seo-geo',
-    title: 'SEO / GEO (Generative Engine Optimization)',
-    tag: 'Search & AI Discovery',
-    description:
-      'Next-generation search authority optimized for both traditional algorithmic rankings and generative AI engine discovery worldwide.',
-    tier: 'Search & AI',
+    tags: ['Executive Positioning', 'Search & SEO', 'Analytics'],
   },
 ];
 
@@ -53,10 +58,18 @@ export const getServices = (_req: Request, res: Response): void => {
 
 export const getServiceById = (req: Request, res: Response): void => {
   const { id } = req.params;
-  const service = SERVICES.find((s) => s.id === id);
+  const service = SERVICES.find(s => s.id.toLowerCase() === id.toLowerCase());
+
   if (!service) {
-    res.status(404).json({ success: false, message: 'Service not found' });
+    res.status(404).json({
+      success: false,
+      message: `Discipline '${id}' not found`,
+    });
     return;
   }
-  res.status(200).json({ success: true, data: service });
+
+  res.status(200).json({
+    success: true,
+    data: service,
+  });
 };

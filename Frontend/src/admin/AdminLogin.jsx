@@ -1,16 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Lock,
-  Mail,
-  ArrowRight,
-  ShieldCheck,
-  Sparkles,
-  ArrowLeft,
-  Activity,
-  CheckCircle2,
-  Server,
-  Zap
-} from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft, Activity, CheckCircle2 } from 'lucide-react';
 
 export default function AdminLogin({ onLogin, onBackToSite }) {
   const [email, setEmail] = useState('');
@@ -36,199 +25,225 @@ export default function AdminLogin({ onLogin, onBackToSite }) {
       const data = await res.json().catch(() => null);
 
       if (res.ok && data?.success) {
-        localStorage.setItem('codexplus_admin_token', data.token || ('token_' + Date.now()));
-        onLogin(data.user || { name: 'Alexander Reid (Principal)', role: 'Administrator', email: cleanUser });
+        localStorage.setItem('avista_admin_token', data.token || ('token_' + Date.now()));
+        onLogin(data.user || { name: 'Arnold Vain (Founder & CEO)', role: 'Administrator', email: cleanUser });
         return;
       }
     } catch {
       // Backend request fallback
     }
 
-    // Direct credentials verification
+    // Direct fallback check for local admin
     const isValid =
-      (cleanUser === 'admin' || cleanUser === 'admin@codexplus.site' || cleanUser === 'alexander@codexplus.site' || cleanUser === 'elena@codexplus.site') &&
+      (cleanUser === 'admin' || cleanUser === 'admin@codexplus.site' || cleanUser === 'hello@avista.studio') &&
       (cleanPass === 'admin123' || cleanPass === 'password123' || cleanPass === 'admin');
 
     if (isValid) {
       const fallbackUser = {
-        username: cleanUser.includes('@') ? cleanUser : 'admin@codexplus.site',
-        name: cleanUser.includes('elena') ? 'Elena Vance' : 'Alexander Reid (Principal)',
+        username: cleanUser,
+        name: 'Arnold Vain (Founder & CEO)',
         role: 'Administrator',
       };
-      localStorage.setItem('codexplus_admin_token', 'token_' + Date.now());
+      localStorage.setItem('avista_admin_token', 'token_' + Date.now());
       onLogin(fallbackUser);
     } else {
-      setError('Invalid username or password. (Demo: admin / admin123 or admin@codexplus.site / password123)');
+      setError('Invalid username or password. (Demo: admin / admin123 or hello@avista.studio / password123)');
     }
     setLoading(false);
   };
 
-  const handleQuickDemo = (demoEmail, demoName, demoRole) => {
-    setEmail(demoEmail);
+  const handleQuickDemo = () => {
+    setEmail('hello@avista.studio');
     setPassword('password123');
-    const demoUser = {
-      username: demoEmail,
-      name: demoName,
-      role: demoRole,
-    };
-    localStorage.setItem('codexplus_admin_token', 'demo_token_' + Date.now());
-    onLogin(demoUser);
+    onLogin({
+      username: 'hello@avista.studio',
+      name: 'Arnold Vain (Founder & CEO)',
+      role: 'Administrator',
+    });
   };
 
   return (
-    <div className="min-h-screen bg-[#07030d] text-white flex items-center justify-center p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-[#8b5cf6] selection:text-white">
-      
-      {/* Dynamic ambient lighting & grid backdrop */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#805ad508_1px,transparent_1px),linear-gradient(to_bottom,#805ad508_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-[#7c3aed]/20 via-[#a855f7]/15 to-[#3b82f6]/10 blur-[150px] pointer-events-none rounded-full" />
-      <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-[#9333ea]/15 blur-[130px] pointer-events-none rounded-full" />
-      <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#6366f1]/15 blur-[120px] pointer-events-none rounded-full" />
-
-      {/* Main Glassmorphic Card Container */}
-      <div className="relative w-full max-w-lg bg-[#0e071c]/90 border border-purple-500/25 rounded-3xl p-8 sm:p-11 shadow-[0_0_80px_rgba(112,26,245,0.25)] backdrop-blur-2xl z-10">
-        
-        {/* Top telemetry bar */}
-        <div className="flex items-center justify-between pb-6 mb-6 border-b border-purple-500/15">
+    <div style={{
+      minHeight: '100vh',
+      background: 'var(--paper)',
+      color: 'var(--ink)',
+      fontFamily: 'var(--body)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '2rem 1.5rem',
+      position: 'relative'
+    }}>
+      <div style={{
+        width: '100%',
+        maxWidth: '480px',
+        background: 'var(--white)',
+        border: '1.5px solid var(--line)',
+        borderRadius: '1.75rem',
+        padding: '2.5rem',
+        boxShadow: '0 20px 40px -15px rgba(21, 23, 28, 0.08)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
           <button
             onClick={onBackToSite}
-            className="inline-flex items-center gap-2 text-xs font-mono text-purple-300 hover:text-white transition-colors cursor-pointer group"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              fontSize: '0.9rem',
+              fontWeight: 500,
+              color: 'var(--ink-soft)',
+              cursor: 'pointer'
+            }}
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-purple-400 group-hover:-translate-x-1 transition-transform" />
-            <span>Return to Live Site</span>
+            <ArrowLeft size={16} />
+            <span>Return to Site</span>
           </button>
-
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[10px] font-mono text-emerald-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>API Gateway 5000 Online</span>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            padding: '0.25rem 0.75rem',
+            borderRadius: '999px',
+            background: 'rgba(51, 38, 255, 0.08)',
+            color: 'var(--blue)',
+            fontSize: '0.75rem',
+            fontWeight: 600
+          }}>
+            <Activity size={12} />
+            <span>Avista Studio Portal</span>
           </div>
         </div>
 
-        {/* Brand identity */}
-        <div className="text-center mb-8">
-          <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 p-0.5 shadow-[0_0_30px_rgba(139,92,246,0.5)] mb-4">
-            <div className="w-full h-full bg-[#0a0514] rounded-[14px] flex items-center justify-center p-2.5">
-              <img src="/assets/fevicon-1.webp" alt="CODEXX PLUS" className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
-            </div>
-          </div>
-          
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <h1 className="text-2xl font-bold tracking-tight text-white font-mono">
-              CODEXX<span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-400">+</span>
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.8rem' }}>
+            <span style={{
+              width: '1.2rem',
+              height: '1.2rem',
+              background: 'var(--blue)',
+              borderRadius: '50% 50% 50% 0',
+              transform: 'rotate(-45deg)'
+            }} />
+            <h1 style={{
+              fontFamily: 'var(--display)',
+              fontSize: '1.8rem',
+              fontWeight: 800,
+              letterSpacing: '-0.03em',
+              margin: 0
+            }}>
+              Avista Admin
             </h1>
-            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-md bg-purple-500/20 text-[#c084fc] border border-purple-500/30">
-              V2.4 Console
-            </span>
           </div>
-          <p className="text-xs font-mono text-purple-300/70">
-            Next-Gen AI & Enterprise Studio Command Operations
+          <p style={{ color: 'var(--ink-soft)', fontSize: '0.95rem', margin: 0 }}>
+            Sign in to manage client inquiries, newsletter subscriptions, and live studio CMS.
           </p>
         </div>
 
-        {/* Error notification */}
         {error && (
-          <div className="mb-5 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs font-mono flex items-center gap-2 animate-in fade-in">
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0"></span>
-            <span>{error}</span>
+          <div style={{
+            background: 'rgba(255, 106, 61, 0.1)',
+            border: '1px solid var(--coral)',
+            color: 'var(--coral)',
+            padding: '0.75rem 1rem',
+            borderRadius: '0.75rem',
+            fontSize: '0.85rem',
+            marginBottom: '1.5rem'
+          }}>
+            {error}
           </div>
         )}
 
-        {/* Credentials Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.25rem' }}>
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-purple-300/80 mb-2">
-              Authorized Identity / Email
+            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.4rem' }}>
+              Admin Email / Username
             </label>
-            <div className="relative">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              border: '1.5px solid var(--line)',
+              borderRadius: '0.75rem',
+              padding: '0.6rem 0.8rem',
+              background: 'var(--paper)'
+            }}>
+              <Mail size={16} color="var(--ink-soft)" style={{ marginRight: '0.6rem' }} />
               <input
                 type="text"
-                required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@codexplus.site"
-                className="w-full bg-[#150a2b] border border-purple-500/25 focus:border-[#a855f7] rounded-xl px-4 py-3 pl-11 text-sm text-white placeholder-purple-400/30 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all font-mono"
+                onChange={e => setEmail(e.target.value)}
+                placeholder="hello@avista.studio or admin"
+                required
+                style={{ width: '100%', border: 'none', background: 'transparent', outline: 'none', color: 'var(--ink)' }}
               />
-              <Mail className="w-4 h-4 text-purple-400/70 absolute left-3.5 top-1/2 -translate-y-1/2" />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-purple-300/80 mb-2">
-              Encrypted Master Key / Password
+            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.4rem' }}>
+              Security Password
             </label>
-            <div className="relative">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              border: '1.5px solid var(--line)',
+              borderRadius: '0.75rem',
+              padding: '0.6rem 0.8rem',
+              background: 'var(--paper)'
+            }}>
+              <Lock size={16} color="var(--ink-soft)" style={{ marginRight: '0.6rem' }} />
               <input
                 type="password"
-                required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full bg-[#150a2b] border border-purple-500/25 focus:border-[#a855f7] rounded-xl px-4 py-3 pl-11 text-sm text-white placeholder-purple-400/30 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all font-mono"
+                required
+                style={{ width: '100%', border: 'none', background: 'transparent', outline: 'none', color: 'var(--ink)' }}
               />
-              <Lock className="w-4 h-4 text-purple-400/70 absolute left-3.5 top-1/2 -translate-y-1/2" />
             </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-3 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold py-3.5 px-4 rounded-xl text-xs uppercase tracking-wider transition-all duration-200 shadow-[0_0_25px_rgba(139,92,246,0.45)] hover:shadow-[0_0_35px_rgba(168,85,247,0.65)] hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              padding: '0.85rem 1.4rem',
+              borderRadius: '999px',
+              background: 'var(--blue)',
+              color: '#fff',
+              fontWeight: 600,
+              fontSize: '1rem',
+              border: 'none',
+              cursor: 'pointer',
+              marginTop: '0.5rem'
+            }}
           >
-            <span>{loading ? 'Authenticating System...' : 'Access Command Console'}</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>{loading ? 'Authenticating...' : 'Sign in to Dashboard'}</span>
+            <ArrowRight size={16} />
           </button>
         </form>
 
-        {/* Quick 1-Click Persona Demo Sign-in */}
-        <div className="mt-7 pt-6 border-t border-purple-500/15">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-purple-400/80 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#a855f7]" />
-              <span>1-Click Quick Demo Personas</span>
-            </span>
-            <span className="text-[10px] font-mono text-purple-400/50">Instant Access</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5">
-            <button
-              type="button"
-              onClick={() => handleQuickDemo('alexander@codexplus.site', 'Alexander Reid', 'Principal Partner')}
-              className="p-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 text-left transition-all cursor-pointer group"
-            >
-              <div className="text-xs font-bold text-white group-hover:text-[#c084fc] transition-colors">
-                Alexander Reid
-              </div>
-              <div className="text-[10px] font-mono text-purple-300/70 mt-0.5">
-                Founder & Principal
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleQuickDemo('elena@codexplus.site', 'Elena Vance', 'Head of Engineering')}
-              className="p-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 text-left transition-all cursor-pointer group"
-            >
-              <div className="text-xs font-bold text-white group-hover:text-[#c084fc] transition-colors">
-                Elena Vance
-              </div>
-              <div className="text-[10px] font-mono text-purple-300/70 mt-0.5">
-                Head of Engineering
-              </div>
-            </button>
-          </div>
+        <div style={{
+          marginTop: '1.8rem',
+          paddingTop: '1.2rem',
+          borderTop: '1px solid var(--line)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          fontSize: '0.85rem'
+        }}>
+          <button
+            type="button"
+            onClick={handleQuickDemo}
+            style={{ color: 'var(--blue)', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Demo One-Click Login
+          </button>
+          <span style={{ color: 'var(--ink-soft)' }}>Arnold Vain (CEO)</span>
         </div>
-
-        {/* Security protocol footer */}
-        <div className="mt-7 flex items-center justify-between text-[11px] font-mono text-purple-400/60 pt-4 border-t border-purple-500/10">
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Role-Based RBAC</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Server className="w-3.5 h-3.5 text-purple-400" />
-            <span>Local Disk JSON Engine</span>
-          </div>
-        </div>
-
       </div>
     </div>
   );

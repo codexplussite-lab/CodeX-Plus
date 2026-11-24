@@ -1,13 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { CmsProvider } from './context/CmsContext'
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import '@fontsource-variable/bricolage-grotesque/wdth.css';
+import '@fontsource-variable/inter';
+import './styles.css';
+import App from './App.jsx';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <CmsProvider>
-      <App />
-    </CmsProvider>
-  </React.StrictMode>,
-)
+    <App />
+  </React.StrictMode>
+);

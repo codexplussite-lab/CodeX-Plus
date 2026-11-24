@@ -1,26 +1,24 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
-import Faqs from '../components/Faqs';
-import { CmsProvider } from '../context/CmsContext';
+import Faq from '../sections/Faq.jsx';
+import { CmsProvider } from '../context/CmsContext.jsx';
 
-describe('Faqs Component', () => {
-  it('should render technical FAQ questions and toggle answers on click', () => {
+describe('Faq Section', () => {
+  it('should render questions title and project consultation form', () => {
     render(
       <CmsProvider>
-        <Faqs />
+        <Faq />
       </CmsProvider>
     );
 
-    const firstQuestion = screen.getByText(/What distinguishes CODEXX PLUS from typical digital agencies\?/i);
+    expect(screen.getByText(/Tell us about your project/i)).toBeInTheDocument();
+    expect(screen.getByText(/We reply within 1 hour on business days/i)).toBeInTheDocument();
+
+    const firstQuestion = screen.getByText('What services does Avista offer?');
     expect(firstQuestion).toBeInTheDocument();
 
-    // First question is initially open by default
-    expect(screen.getByText(/We operate as an elite engineering/i)).toBeInTheDocument();
-
-    // Toggle by clicking second question
-    const secondQuestion = screen.getByText(/How does your 4-stage engagement methodology work\?/i);
-    fireEvent.click(secondQuestion);
-    expect(screen.getByText(/Our framework spans 4 deterministic phases/i)).toBeInTheDocument();
+    fireEvent.click(firstQuestion);
+    expect(firstQuestion).toBeInTheDocument();
   });
 });

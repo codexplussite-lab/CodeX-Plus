@@ -124,3 +124,4 @@ export default function FloatingDock({ onNavigate, onOpenBookingModal }) {
     </nav>
   );
 }
+
