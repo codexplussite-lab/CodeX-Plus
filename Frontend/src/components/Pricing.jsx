@@ -1,6 +1,7 @@
 import React from 'react';
-import { Check, Sparkles, ArrowRight, ShieldCheck, Zap, Clock } from 'lucide-react';
+import { Check, Sparkles, ArrowRight, Clock } from 'lucide-react';
 import { useCms } from '../context/CmsContext';
+import SpotlightCard from './react-bits/SpotlightCard';
 
 export default function Pricing({ onSelectTier, onOpenBookingModal }) {
   const { content } = useCms();
@@ -91,9 +92,11 @@ export default function Pricing({ onSelectTier, onOpenBookingModal }) {
         {/* 3 Pricing Cards Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
           {tiers.map((tier, idx) => (
-            <div
+            <SpotlightCard
               key={idx}
-              className={`relative flex flex-col justify-between rounded-3xl p-8 sm:p-10 transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer ${
+              spotlightColor={tier.popular ? 'rgba(168, 85, 247, 0.45)' : 'rgba(139, 92, 246, 0.2)'}
+              borderColor={tier.popular ? 'rgba(168, 85, 247, 0.6)' : 'rgba(168, 85, 247, 0.2)'}
+              className={`relative flex flex-col justify-between p-8 sm:p-10 transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer ${
                 tier.popular
                   ? 'bg-gradient-to-b from-[#1b0c36] via-[#120726] to-[#0a0416] border-2 border-[#a855f7] shadow-[0_0_60px_rgba(168,85,247,0.3)] hover:shadow-[0_20px_70px_rgba(168,85,247,0.45)] lg:-translate-y-3'
                   : 'bg-[#0e071c]/90 border border-purple-500/20 hover:border-purple-400/50 shadow-xl hover:shadow-[0_16px_40px_rgba(139,92,246,0.22)]'
@@ -101,7 +104,7 @@ export default function Pricing({ onSelectTier, onOpenBookingModal }) {
             >
               {/* Popular Badge */}
               {tier.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white text-[11px] font-mono font-bold uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white text-[11px] font-mono font-bold uppercase tracking-wider shadow-lg flex items-center gap-1.5 z-20">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>{tier.badge}</span>
                 </div>
@@ -165,7 +168,7 @@ export default function Pricing({ onSelectTier, onOpenBookingModal }) {
                 </button>
               </div>
 
-            </div>
+            </SpotlightCard>
           ))}
         </div>
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, Plus, Minus, CodeXml, Palette, Film, TrendingUp, Compass } from 'lucide-react';
 import { useCms } from '../context/CmsContext';
+import SpotlightCard from './react-bits/SpotlightCard';
+import TiltedCard from './react-bits/TiltedCard';
 
 export default function Services({ onNavigate }) {
   const { content } = useCms();
@@ -119,108 +121,116 @@ export default function Services({ onNavigate }) {
               const isActive = activeService === idx;
               const IconComp = item.icon || iconMap[item.id] || fallbackIcons[idx % fallbackIcons.length] || CodeXml;
               return (
-                <div
+                <SpotlightCard
                   key={item.id || idx}
-                  onMouseEnter={() => setActiveService(idx)}
-                  className={`rounded-2xl border transition-all duration-300 p-6 sm:p-7 cursor-pointer ${
+                  spotlightColor={isActive ? 'rgba(168, 85, 247, 0.35)' : 'rgba(139, 92, 246, 0.15)'}
+                  borderColor={isActive ? 'rgba(168, 85, 247, 0.5)' : 'rgba(168, 85, 247, 0.15)'}
+                  className={`p-6 sm:p-7 cursor-pointer transition-all duration-300 ${
                     isActive
-                      ? 'bg-[#140a26] border-purple-500/50 shadow-[0_10px_35px_rgba(139,92,246,0.18)]'
-                      : 'bg-[#10081e] border-purple-500/10 hover:border-purple-500/25'
+                      ? 'bg-[#140a26] shadow-[0_10px_35px_rgba(139,92,246,0.18)]'
+                      : 'bg-[#10081e] hover:border-purple-500/25'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <span className={`text-xs font-mono px-2.5 py-1 rounded-md ${
-                        isActive ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-md' : 'bg-purple-500/10 text-purple-300'
-                      }`}>
-                        {'{'} {item.num || `0${idx + 1}`} {'}'}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        {IconComp && <IconComp className={`w-5 h-5 ${isActive ? 'text-[#c084fc]' : 'text-purple-400/50'}`} />}
-                        <h3 className={`text-xl sm:text-2xl font-bold transition-colors ${
-                          isActive ? 'text-white' : 'text-gray-300'
+                  <div 
+                    onMouseEnter={() => setActiveService(idx)}
+                    onClick={() => setActiveService(idx)}
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <span className={`text-xs font-mono px-2.5 py-1 rounded-md ${
+                          isActive ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-md' : 'bg-purple-500/10 text-purple-300'
                         }`}>
-                          {item.title}
-                        </h3>
-                      </div>
-                      <span className="hidden sm:inline-block text-xs font-mono text-purple-400/70 bg-purple-500/10 px-2 py-0.5 rounded-full">
-                        {item.tag}
-                      </span>
-                    </div>
-
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                      isActive ? 'bg-[#7c3aed] text-white' : 'bg-purple-500/10 text-purple-300'
-                    }`}>
-                      {isActive ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                    </div>
-                  </div>
-
-                  {/* Expanded Content */}
-                  {isActive && (
-                    <div className="mt-5 pt-5 border-t border-purple-500/15 animate-in fade-in">
-                      <p className="text-sm text-purple-200/80 leading-relaxed mb-5">
-                        {item.desc}
-                      </p>
-
-                      <div className="flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex flex-wrap gap-2">
-                          {Array.isArray(item.tags) ? item.tags.map((t, i) => (
-                            <span
-                              key={i}
-                              className="text-xs bg-purple-500/10 border border-purple-500/20 px-3 py-1 rounded-full text-purple-200 font-mono"
-                            >
-                              {t}
-                            </span>
-                          )) : (
-                            <span className="text-xs bg-purple-500/10 border border-purple-500/20 px-3 py-1 rounded-full text-purple-200 font-mono">
-                              {item.tag || 'Discipline'}
-                            </span>
-                          )}
+                          {'{'} {item.num || `0${idx + 1}`} {'}'}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          {IconComp && <IconComp className={`w-5 h-5 ${isActive ? 'text-[#c084fc]' : 'text-purple-400/50'}`} />}
+                          <h3 className={`text-xl sm:text-2xl font-bold transition-colors ${
+                            isActive ? 'text-white' : 'text-gray-300'
+                          }`}>
+                            {item.title}
+                          </h3>
                         </div>
+                        <span className="hidden sm:inline-block text-xs font-mono text-purple-400/70 bg-purple-500/10 px-2 py-0.5 rounded-full">
+                          {item.tag}
+                        </span>
+                      </div>
 
-                        <a
-                          href="#contact"
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#c084fc] hover:text-white uppercase tracking-wider transition-colors"
-                        >
-                          <span>Explore More</span>
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </a>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                        isActive ? 'bg-[#7c3aed] text-white' : 'bg-purple-500/10 text-purple-300'
+                      }`}>
+                        {isActive ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                       </div>
                     </div>
-                  )}
-                </div>
+
+                    {/* Expanded Content */}
+                    {isActive && (
+                      <div className="mt-5 pt-5 border-t border-purple-500/15 animate-in fade-in">
+                        <p className="text-sm text-purple-200/80 leading-relaxed mb-5">
+                          {item.desc}
+                        </p>
+
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div className="flex flex-wrap gap-2">
+                            {Array.isArray(item.tags) ? item.tags.map((t, i) => (
+                              <span
+                                key={i}
+                                className="text-xs bg-purple-500/10 border border-purple-500/20 px-3 py-1 rounded-full text-purple-200 font-mono"
+                              >
+                                {t}
+                              </span>
+                            )) : (
+                              <span className="text-xs bg-purple-500/10 border border-purple-500/20 px-3 py-1 rounded-full text-purple-200 font-mono">
+                                {item.tag || 'Discipline'}
+                              </span>
+                            )}
+                          </div>
+
+                          <a
+                            href="#contact"
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#c084fc] hover:text-white uppercase tracking-wider transition-colors"
+                          >
+                            <span>Explore More</span>
+                            <ArrowUpRight className="w-3.5 h-3.5" />
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </SpotlightCard>
               );
             })}
           </div>
 
           {/* Dynamic Image Preview (Right) */}
           <div className="lg:col-span-5 relative hidden lg:block">
-            <div className="relative rounded-3xl overflow-hidden border border-purple-500/20 bg-[#140a26] p-3 shadow-2xl">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black">
-                <img
-                  key={activeService}
-                  src={currentService.image || '/assets/p3-img-2.webp'}
-                  alt={currentService.title || 'Service Preview'}
-                  className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0612]/90 via-transparent to-transparent" />
-                
-                {/* Floating Info on preview */}
-                <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs font-mono uppercase text-[#c084fc] block mb-1">
-                      {currentService.badge || 'Discipline'}
-                    </span>
-                    <h4 className="text-lg font-bold text-white">
-                      {currentService.title || 'Studio Discipline'}
-                    </h4>
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 text-white flex items-center justify-center shadow-lg">
-                    <ArrowUpRight className="w-5 h-5" />
+            <TiltedCard maxTilt={8} scale={1.02} glare={true} className="rounded-3xl">
+              <div className="relative rounded-3xl overflow-hidden border border-purple-500/20 bg-[#140a26] p-3 shadow-2xl">
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black">
+                  <img
+                    key={activeService}
+                    src={currentService.image || '/assets/p3-img-2.webp'}
+                    alt={currentService.title || 'Service Preview'}
+                    className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0612]/90 via-transparent to-transparent" />
+                  
+                  {/* Floating Info on preview */}
+                  <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-mono uppercase text-[#c084fc] block mb-1">
+                        {currentService.badge || 'Discipline'}
+                      </span>
+                      <h4 className="text-lg font-bold text-white">
+                        {currentService.title || 'Studio Discipline'}
+                      </h4>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 text-white flex items-center justify-center shadow-lg">
+                      <ArrowUpRight className="w-5 h-5" />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </TiltedCard>
           </div>
 
         </div>

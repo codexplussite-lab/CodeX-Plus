@@ -19,6 +19,7 @@ import PaymentPolicy from './components/PaymentPolicy';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import DiscoveryBookingModal from './components/DiscoveryBookingModal';
 import AdminPanel from './admin/AdminPanel';
+import FloatingDock from './components/react-bits/FloatingDock';
 
 // Dedicated Standalone Pages
 import AboutPage from './pages/AboutPage';
@@ -331,6 +332,12 @@ export default function App() {
       <Footer 
         onNavigate={navigateTo}
         onOpenBookingModal={() => setIsBookingOpen(true)}
+      />
+
+      {/* Luxury React Bits Floating Dock */}
+      <FloatingDock 
+        onNavigate={navigateTo} 
+        onOpenBookingModal={() => setIsBookingOpen(true)} 
       />
 
       {/* Floating Scroll To Top Button */}
