@@ -1,6 +1,9 @@
 import React from 'react';
 import { ArrowUpRight, Award, Sparkles, CheckCircle2, Cpu, Layers, Palette } from 'lucide-react';
 import { useCms } from '../context/CmsContext';
+import SpotlightCard from './react-bits/SpotlightCard';
+import TiltedCard from './react-bits/TiltedCard';
+import CountUp from './react-bits/CountUp';
 
 export default function About({ onNavigate }) {
   const { content } = useCms();
@@ -41,25 +44,29 @@ export default function About({ onNavigate }) {
             </blockquote>
           </div>
 
-          <div className="lg:col-span-4 flex items-center gap-4 bg-[#140a26] border border-purple-500/20 p-5 rounded-2xl shadow-lg">
-            <div className="relative">
-              <img
-                src={about.founderImage || '/assets/a3-author-1.webp'}
-                alt={about.founderName || 'Alexander Reid'}
-                className="w-16 h-16 rounded-full object-cover border-2 border-[#a855f7]"
-                loading="lazy"
-                decoding="async"
-              />
-              <span className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#140a26]" />
-            </div>
-            <div>
-              <h4 className="text-lg font-bold text-white">{about.founderName || 'Alexander Reid'}</h4>
-              <p className="text-xs text-purple-300/80 font-mono">{about.founderRole || 'Founder & Managing Partner'}</p>
-              <div className="flex items-center gap-1 mt-1 text-[11px] text-[#c084fc]">
-                <Award className="w-3.5 h-3.5" />
-                <span>{about.founderExp || '15+ Years Enterprise Experience'}</span>
+          <div className="lg:col-span-4">
+            <TiltedCard maxTilt={8} scale={1.02} glare={true} className="rounded-2xl">
+              <div className="flex items-center gap-4 bg-[#140a26] border border-purple-500/20 p-5 rounded-2xl shadow-lg">
+                <div className="relative shrink-0">
+                  <img
+                    src={about.founderImage || '/assets/a3-author-1.webp'}
+                    alt={about.founderName || 'Alexander Reid'}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-[#a855f7]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#140a26]" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-white">{about.founderName || 'Alexander Reid'}</h4>
+                  <p className="text-xs text-purple-300/80 font-mono">{about.founderRole || 'Founder & Managing Partner'}</p>
+                  <div className="flex items-center gap-1 mt-1 text-[11px] text-[#c084fc]">
+                    <Award className="w-3.5 h-3.5" />
+                    <span>{about.founderExp || '15+ Years Enterprise Experience'}</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            </TiltedCard>
           </div>
 
         </div>
@@ -68,7 +75,11 @@ export default function About({ onNavigate }) {
         <div className="pt-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Pillar 1 */}
-          <div className="bg-[#120822] hover:bg-[#180d2e] border border-purple-500/15 hover:border-purple-400/50 rounded-3xl p-8 transition-all duration-500 ease-out group shadow-lg hover:shadow-[0_16px_40px_rgba(139,92,246,0.22)] hover:-translate-y-2 flex flex-col justify-between cursor-pointer">
+          <SpotlightCard
+            spotlightColor="rgba(168, 85, 247, 0.25)"
+            borderColor="rgba(168, 85, 247, 0.2)"
+            className="p-8 group shadow-lg hover:shadow-[0_16px_40px_rgba(139,92,246,0.22)] hover:-translate-y-2 flex flex-col justify-between cursor-pointer transition-all duration-500 ease-out bg-[#120822] hover:bg-[#180d2e]"
+          >
             <div>
               <div className="flex items-center justify-between mb-6">
                 <span className="text-xs font-mono px-3 py-1 rounded-full bg-purple-500/15 text-[#c084fc] border border-purple-500/25">
@@ -99,10 +110,14 @@ export default function About({ onNavigate }) {
                 <span>Zero-layout-shift architecture</span>
               </li>
             </ul>
-          </div>
+          </SpotlightCard>
 
           {/* Pillar 2 */}
-          <div className="bg-[#120822] hover:bg-[#180d2e] border border-purple-500/15 hover:border-purple-400/50 rounded-3xl p-8 transition-all duration-500 ease-out group shadow-lg hover:shadow-[0_16px_40px_rgba(139,92,246,0.22)] hover:-translate-y-2 flex flex-col justify-between cursor-pointer">
+          <SpotlightCard
+            spotlightColor="rgba(168, 85, 247, 0.25)"
+            borderColor="rgba(168, 85, 247, 0.2)"
+            className="p-8 group shadow-lg hover:shadow-[0_16px_40px_rgba(139,92,246,0.22)] hover:-translate-y-2 flex flex-col justify-between cursor-pointer transition-all duration-500 ease-out bg-[#120822] hover:bg-[#180d2e]"
+          >
             <div>
               <div className="flex items-center justify-between mb-6">
                 <span className="text-xs font-mono px-3 py-1 rounded-full bg-purple-500/15 text-[#c084fc] border border-purple-500/25">
@@ -133,10 +148,14 @@ export default function About({ onNavigate }) {
                 <span>Deterministic security boundaries</span>
               </li>
             </ul>
-          </div>
+          </SpotlightCard>
 
           {/* Pillar 3 */}
-          <div className="bg-[#120822] hover:bg-[#180d2e] border border-purple-500/15 hover:border-purple-400/50 rounded-3xl p-8 transition-all duration-500 ease-out group shadow-lg hover:shadow-[0_16px_40px_rgba(139,92,246,0.22)] hover:-translate-y-2 flex flex-col justify-between cursor-pointer">
+          <SpotlightCard
+            spotlightColor="rgba(168, 85, 247, 0.25)"
+            borderColor="rgba(168, 85, 247, 0.2)"
+            className="p-8 group shadow-lg hover:shadow-[0_16px_40px_rgba(139,92,246,0.22)] hover:-translate-y-2 flex flex-col justify-between cursor-pointer transition-all duration-500 ease-out bg-[#120822] hover:bg-[#180d2e]"
+          >
             <div>
               <div className="flex items-center justify-between mb-6">
                 <span className="text-xs font-mono px-3 py-1 rounded-full bg-purple-500/15 text-[#c084fc] border border-purple-500/25">
@@ -167,28 +186,28 @@ export default function About({ onNavigate }) {
                 <span>High-conversion typography</span>
               </li>
             </ul>
-          </div>
+          </SpotlightCard>
 
         </div>
 
         {/* Studio Values Row */}
         <div className="mt-16 pt-12 border-t border-purple-500/15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
-          <div className="bg-[#10081e] border border-purple-500/10 p-5 rounded-2xl">
+          <SpotlightCard spotlightColor="rgba(139, 92, 246, 0.15)" className="p-5 rounded-2xl bg-[#10081e] border-purple-500/10">
             <h4 className="font-bold text-white mb-1">Deep Asynchronous Focus</h4>
             <p className="text-purple-300/70 leading-relaxed">We eliminate excessive meetings. Our architects work in deep, uninterrupted blocks to produce pristine digital craft.</p>
-          </div>
-          <div className="bg-[#10081e] border border-purple-500/10 p-5 rounded-2xl">
+          </SpotlightCard>
+          <SpotlightCard spotlightColor="rgba(139, 92, 246, 0.15)" className="p-5 rounded-2xl bg-[#10081e] border-purple-500/10">
             <h4 className="font-bold text-white mb-1">Direct Principal Access</h4>
             <p className="text-purple-300/70 leading-relaxed">Clients communicate directly with senior engineers and design leads who actually author their systems.</p>
-          </div>
-          <div className="bg-[#10081e] border border-purple-500/10 p-5 rounded-2xl">
+          </SpotlightCard>
+          <SpotlightCard spotlightColor="rgba(139, 92, 246, 0.15)" className="p-5 rounded-2xl bg-[#10081e] border-purple-500/10">
             <h4 className="font-bold text-white mb-1">Zero-Bloat Rigor</h4>
             <p className="text-purple-300/70 leading-relaxed">We reject heavy dependencies and fragile boilerplate. Every component is constructed with typed discipline.</p>
-          </div>
-          <div className="bg-[#10081e] border border-purple-500/10 p-5 rounded-2xl">
+          </SpotlightCard>
+          <SpotlightCard spotlightColor="rgba(139, 92, 246, 0.15)" className="p-5 rounded-2xl bg-[#10081e] border-purple-500/10">
             <h4 className="font-bold text-white mb-1">High-Touch Partnership</h4>
             <p className="text-purple-300/70 leading-relaxed">We only take on 3 to 4 flagship enterprise engagements simultaneously to ensure undivided attention.</p>
-          </div>
+          </SpotlightCard>
         </div>
 
       </div>

@@ -1,32 +1,20 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
-import Hero from '../components/Hero';
-import { CmsProvider } from '../context/CmsContext';
+import Hero from '../sections/Hero.jsx';
+import { CmsProvider } from '../context/CmsContext.jsx';
 
-describe('Hero Component', () => {
-  it('should render hero title, highlight, and description', () => {
+describe('Hero Section', () => {
+  it('should render digital agency tag and search options', () => {
     render(
       <CmsProvider>
-        <Hero />
+        <Hero ready={true} />
       </CmsProvider>
     );
 
-    expect(screen.getByText(/AI Innovation/i)).toBeInTheDocument();
-    expect(screen.getByText(/Schedule 15-Min Discovery/i)).toBeInTheDocument();
-    expect(screen.getByText(/Explore Capabilities/i)).toBeInTheDocument();
-  });
-
-  it('should trigger onOpenBookingModal on primary CTA click', () => {
-    const onOpenBookingModal = vi.fn();
-    render(
-      <CmsProvider>
-        <Hero onOpenBookingModal={onOpenBookingModal} />
-      </CmsProvider>
-    );
-
-    const cta = screen.getByText(/Schedule 15-Min Discovery/i);
-    fireEvent.click(cta);
-    expect(onOpenBookingModal).toHaveBeenCalled();
+    expect(screen.getByText(/CODEXX PLUS/i)).toBeInTheDocument();
+    expect(screen.getByText(/People also search for/i)).toBeInTheDocument();
+    expect(screen.getByText('Autonomous AI')).toBeInTheDocument();
+    expect(screen.getByText('Next.js 15')).toBeInTheDocument();
   });
 });

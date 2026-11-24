@@ -18,7 +18,11 @@ export default function Testimonials() {
       <div className="wrap testimonials__layout">
         <div className="testimonials__badge">
           <CircularText text="Trusted by founders • Trusted by founders • " size={150} fontSize={12} fontWeight={600} letterSpacing={2} spinDuration={26}>
-            <Visual seed={i + 3} className="testimonials__avatar" />
+            {t?.avatar ? (
+              <img src={t.avatar} alt={t.name} className="testimonials__avatar" style={{ objectFit: 'cover' }} />
+            ) : (
+              <Visual seed={i + 3} className="testimonials__avatar" />
+            )}
           </CircularText>
         </div>
         <div className="testimonials__body" aria-live="polite">

@@ -1,15 +1,18 @@
-// All copy lives here. Edit text, add projects or swap in real images (set `image`) without touching components.
+// Central Copy & Data for CODEXX PLUS Platform
+// Populated directly from verified site data, database, and architectural copy.
 
 export const brand = {
-  name: 'Avista',
-  email: 'hello@avista.studio',
-  phone: '(0456) 6757-888',
-  city: 'Los Angeles, CA',
+  name: 'CODEXX PLUS',
+  wordmark: 'CODEXX',
+  tagline: 'Next-Generation AI Innovation & Digital Solutions',
+  email: 'contact@codexplus.site',
+  phone: '+1 (415) 890-CODEX',
+  city: 'San Francisco, CA & Zürich, Switzerland',
   socials: [
-    { label: 'X', href: '#' },
-    { label: 'LinkedIn', href: '#' },
-    { label: 'Dribbble', href: '#' },
-    { label: 'Instagram', href: '#' }
+    { label: 'X', href: 'https://twitter.com' },
+    { label: 'LinkedIn', href: 'https://linkedin.com' },
+    { label: 'GitHub', href: 'https://github.com' },
+    { label: 'Dribbble', href: 'https://dribbble.com' }
   ]
 };
 
@@ -21,118 +24,245 @@ export const nav = [
   { label: 'Journal', href: '#journal' }
 ];
 
-export const searches = ['UI/UX', 'We design', 'Development', 'Marketing', 'Consulting'];
+export const searches = [
+  'Autonomous AI',
+  'Next.js 15',
+  'Design Tokens',
+  'High-Throughput Cloud',
+  'WebGL Shaders'
+];
 
 export const about = {
+  leadLabel: 'Architectural Intelligence & Digital Craft',
   statement:
-    'Avista was built on one belief: great design and digital craft change how businesses connect with people. We blend creativity with strategy so brands do not just look better, they perform better.',
-  founder: { name: 'Arnold Vain', role: 'Founder & CEO' },
+    'CODEXX PLUS was built on a singular conviction: deterministic AI systems and high-craft digital architectures fundamentally transform how enterprise leaders dominate modern markets. We eliminate latency and operational debt, allowing visionary brands to perform at scale.',
+  founder: {
+    name: 'Alexander Reid',
+    role: 'Founder & Managing Partner',
+    avatar: '/assets/t3-img-1.webp'
+  },
   story:
-    'A small team of designers and strategists who wanted to close the gap between creativity and technology. Today we are a full-service studio working with startups and growing brands.',
-  goal: 'Build digital experiences that help brands grow, stand out and connect with the people they want to reach.',
+    'Founded at the intersection of algorithmic compute and luxury interface design, our studio emerged to reject fragile cookie-cutter templates. Today, we architect mission-critical platforms for Fortune 500 enterprises and hyper-growth startups worldwide.',
+  goal:
+    'Deliver zero-defect digital ecosystems, high-throughput AI pipelines, and bespoke interfaces that captivate users and command enterprise valuations.',
   stats: [
-    { to: 240, suffix: '+', label: 'Projects shipped' },
-    { to: 12, suffix: '', label: 'Years in business' },
-    { to: 38, suffix: '', label: 'Industry awards' },
-    { to: 4.9, suffix: '/5', label: 'Client rating', decimals: 1 }
+    { to: 120, suffix: '+', label: 'Flagship projects shipped' },
+    { to: 99.98, suffix: '%', label: 'Platform reliability SLA', decimals: 2 },
+    { to: 500, suffix: '+', label: 'Enterprise partners' },
+    { to: 4.9, suffix: '/5', label: 'Average client rating', decimals: 1 }
   ]
 };
 
 export const marqueeLines = [
-  'Best performing digital marketing agency',
-  'Innovating the way brands are built'
+  'Autonomous Intelligence & Full-Stack Systems Architecture',
+  'From Vision to Reality — Software Crafted to Captivate'
 ];
 
 export const services = [
   {
-    title: 'Branding & Identity',
-    body: 'We define who you are and how you are seen: logos, colour, type and the guidelines that keep every touchpoint consistent.',
-    tags: ['Logo design', 'Visual identity', 'Motion design']
+    num: '01',
+    title: 'Development (Full-Stack & AI)',
+    body: 'Bespoke engineering architectures combining high-throughput cloud infrastructure, proprietary autonomous agent pipelines, and lightning-fast web applications.',
+    tags: ['Next.js 15', 'Autonomous LLMs', 'Cloud Infrastructure', 'GPU Shaders'],
+    image: '/assets/p3-img-2.webp'
   },
   {
-    title: 'Web Development',
-    body: 'Fast, accessible sites and web apps built in React and modern CMS stacks, designed and engineered by the same team.',
-    tags: ['React / Next.js', 'CMS', 'Performance']
+    num: '02',
+    title: 'Graphics Design (Visual Identity)',
+    body: 'Cinematic visual storytelling, authoritative brand guidelines, and dark-luxury design tokens engineered for global enterprise prestige.',
+    tags: ['Design Tokens', 'Brand Guidelines', 'Luxury Identity', 'Spatial UX'],
+    image: '/assets/s3-img-1.webp'
   },
   {
-    title: 'Application Design',
-    body: 'Product design for mobile and desktop apps: flows, prototypes and design systems that developers can build from.',
-    tags: ['Prototyping', 'Design systems', 'Mobile']
+    num: '03',
+    title: 'Video Editing (Motion & 3D)',
+    body: 'World-class post-production, interactive 3D WebGL motion graphics, and high-impact product keynote films crafted for conversion.',
+    tags: ['Interactive 3D', 'WebGL Motion', 'Product Keynotes', 'Sound Design'],
+    image: '/assets/p3-img-3.webp'
   },
   {
-    title: 'UI/UX Design',
-    body: 'Research-led interfaces that make complicated things feel obvious. We test early and ship what people actually use.',
-    tags: ['User research', 'Wireframes', 'Usability testing']
+    num: '04',
+    title: 'Social Media Marketing (Growth Engine)',
+    body: 'Omnichannel narrative orchestration, strategic executive positioning, and data-backed distribution driving measurable qualified pipeline.',
+    tags: ['Executive Positioning', 'Pipeline Growth', 'Omnichannel Strategy', 'Analytics'],
+    image: '/assets/p3-img-4.webp'
+  },
+  {
+    num: '05',
+    title: 'SEO / GEO (Generative Discovery)',
+    body: 'Next-generation search authority optimized for algorithmic rankings and generative AI discovery engines (Perplexity, ChatGPT, Gemini).',
+    tags: ['Generative Engine (GEO)', 'Algorithmic SEO', 'Structured Citations', 'Authority Indexing'],
+    image: '/assets/p3-img-5.webp'
   }
 ];
 
 export const projects = [
-  { title: 'Design Studio', type: 'UI/UX Design', year: '2025' },
-  { title: 'Tech Workspace', type: 'Productivity / SaaS UI', year: '2025' },
-  { title: 'StyleCart', type: 'E-commerce UX', year: '2025' },
-  { title: 'LensCraft', type: 'Visual storytelling', year: '2025' },
-  { title: 'BrandForge', type: 'Branding & web strategy', year: '2024' },
-  { title: 'MindSparks', type: 'Content UX', year: '2024' }
+  {
+    title: 'OWL AI Systems',
+    type: 'Autonomous AI Cognitive Pipeline',
+    year: '2025',
+    image: '/assets/p3-img-2.webp'
+  },
+  {
+    title: 'Morheme Tech',
+    type: 'High-Throughput Cloud Observability',
+    year: '2025',
+    image: '/assets/p3-img-3.webp'
+  },
+  {
+    title: 'Zainab Bees Global',
+    type: 'Luxury Brand & Headless Commerce',
+    year: '2025',
+    image: '/assets/p3-img-4.webp'
+  },
+  {
+    title: 'Lumina Intelligence',
+    type: 'Interactive WebGL & Neural Telemetry',
+    year: '2025',
+    image: '/assets/p3-img-5.webp'
+  },
+  {
+    title: 'Veritas Capital',
+    type: 'Institutional Trading UI & High-Throughput API',
+    year: '2025',
+    image: '/assets/p3-img-6.webp'
+  },
+  {
+    title: 'Apex Cloud Intelligence',
+    type: 'Keynote Film & Generative Optimization',
+    year: '2025',
+    image: '/assets/p1-img-1.webp'
+  }
 ];
 
 export const faqs = [
   {
-    q: 'What services does Avista offer?',
-    a: 'Branding and identity, UI/UX design, web design and development, digital marketing and content. Most clients start with one and add others as they grow.'
+    q: 'What core services does CODEXX PLUS architect & deploy?',
+    a: 'We specialize in autonomous AI multi-agent pipelines, high-throughput cloud web applications (Next.js 15, React 19, TypeScript), bespoke luxury design systems, and GPU-accelerated interactive WebGL shaders.'
   },
   {
-    q: 'How long does a typical project take?',
-    a: 'A brand identity usually takes 4 to 6 weeks and a marketing site 6 to 10. App design depends on scope; you get a timeline in the proposal.'
+    q: 'What is the standard sprint duration for an enterprise engagement?',
+    a: 'A typical flagship overhaul or custom AI platform rollout spans 4 to 8 weeks delivered in bi-weekly milestones with verified acceptance tests and continuous staging previews.'
   },
   {
-    q: 'How much do your services cost?',
-    a: 'Projects are scoped and fixed-price. Send us a few details and we reply with a range within one business day.'
+    q: 'How are commercial agreements and retainer structures scheduled?',
+    a: 'We offer fixed-scope milestone sprints starting from $25,000 as well as dedicated embedded studio retainers ($18,000/mo) with guaranteed senior architect bandwidth and SLA guarantees.'
   },
   {
-    q: 'Do you support projects after launch?',
-    a: 'Yes. Every project includes 30 days of support, and monthly retainers cover updates, experiments and new pages.'
+    q: 'Do you provide maintenance and engineering support post-launch?',
+    a: 'Yes. Every project includes 30 days of post-deployment monitoring, direct senior architect access, and optional ongoing retainer arrangements covering continuous feature rollouts.'
   },
   {
-    q: 'How can I get started?',
-    a: 'Fill in the short form beside these questions or email us. We set up a free 30-minute call to talk through goals.'
+    q: 'How does our enterprise team initiate an architectural engagement?',
+    a: 'Submit the brief in the form or schedule a direct discovery call with our leadership. We deliver an architectural proposal and bilateral NDA within 24 hours.'
   }
 ];
 
 export const team = [
-  { name: 'Trina Alfard', role: 'Lead UI/UX Designer' },
-  { name: 'John Smith', role: 'Creative Director' },
-  { name: 'Noah Williams', role: 'Front-end Engineer' },
-  { name: 'Emily Johnson', role: 'Brand Strategist' },
-  { name: 'Sophia Martinez', role: 'Motion Designer' },
-  { name: 'David Kim', role: 'Product Designer' },
-  { name: 'Ava Thompson', role: 'Marketing Lead' }
+  {
+    name: 'Alexander Reid',
+    role: 'Founder & Managing Partner',
+    image: '/assets/t3-img-1.webp'
+  },
+  {
+    name: 'Helena Rostova',
+    role: 'Creative Director & Founder',
+    image: '/assets/t3-img-2.webp'
+  },
+  {
+    name: 'Marcus Thorne',
+    role: 'Principal AI Systems Engineer',
+    image: '/assets/t3-img-3.webp'
+  },
+  {
+    name: 'Maya Patel',
+    role: 'Head of Product Strategy',
+    image: '/assets/t3-img-4.webp'
+  },
+  {
+    name: 'Kai Takahashi',
+    role: 'Senior WebGL & 3D Engineer',
+    image: '/assets/t3-img-5.webp'
+  },
+  {
+    name: 'Liam Chen',
+    role: 'Lead Cloud Architect',
+    image: '/assets/t3-img-6.webp'
+  },
+  {
+    name: 'Amara Okafor',
+    role: 'Principal Product Designer',
+    image: '/assets/t3-img-7.webp'
+  },
+  {
+    name: 'Julian Croft',
+    role: 'Lead Spatial Computing Architect',
+    image: '/assets/author-4.webp'
+  }
 ];
 
 export const testimonials = [
   {
     quote:
-      'Avista took the time to understand our goals before drawing a single screen. The result is a product that looks beautiful and converts better than anything we had before.',
-    name: 'Robert Tom',
-    role: 'CEO, Chapelle'
+      'Super easy to use and actually works! The deterministic AI workflows saved our faculty countless hours of manual overhead.',
+    name: 'Ashley Cole',
+    role: 'Researcher, Stanford University',
+    avatar: '/assets/author-1.webp'
   },
   {
     quote:
-      'They moved faster than any agency we have worked with and never lost the details. Our launch week traffic tripled.',
-    name: 'Maya Ortiz',
-    role: 'Founder, Northwind'
+      'Their AI workflow automation cut our manual reporting time by 70% within the very first month. Flawless execution, zero bloat, and dependable architectural integrity.',
+    name: 'Marcus Vance',
+    role: 'Founder, Morheme Tech',
+    avatar: '/assets/author-2.webp'
   },
   {
     quote:
-      'Strategy, design and code from one team meant no hand-off problems. We now use their design system across three products.',
-    name: 'Daniel Reyes',
-    role: 'CPO, Lumen Labs'
+      'Rare blend of dark-luxury visual craft and rock-solid engineering. Every milestone shipped ahead of schedule. Our enterprise user engagement jumped by 65%.',
+    name: 'Elena Rostova',
+    role: 'Product Lead, OWL Neural Systems',
+    avatar: '/assets/author-3.webp'
+  },
+  {
+    quote:
+      'From brand identity tokens to full-stack delivery, CODEXX PLUS transformed how our enterprise clients perceive us. Truly a standout digital architecture partner.',
+    name: 'David Chen',
+    role: 'Director of Ops, Lumina Labs',
+    avatar: '/assets/author-5.webp'
+  },
+  {
+    quote:
+      'Thoughtful communication, sharp strategy, and measurable ROI across both web conversion and Generative Engine Optimization (GEO).',
+    name: 'Nadia Karim',
+    role: 'CEO, Zainab Bees Global',
+    avatar: '/assets/author-6.webp'
   }
 ];
 
 export const posts = [
-  { title: 'Avista wins Top Creative Agency award', date: 'May 17, 2025', excerpt: 'Recognised for brand work across fintech and retail.' },
-  { title: 'Ten new premium themes now live', date: 'May 17, 2025', excerpt: 'A new library of production-ready templates for founders.' },
-  { title: 'How good design helps your SEO', date: 'Jan 10, 2024', excerpt: 'Your website is the first impression of your brand. Make it count.' }
+  {
+    title: 'The Rise of Generative Engine Optimization (GEO): Securing Discovery in the Age of LLMs',
+    date: 'May 17, 2025',
+    excerpt: 'Traditional Google SEO is no longer sufficient. Explore how structuring your data tokens and knowledge graph citations ensures Perplexity, ChatGPT, and Gemini cite your brand authoritative.'
+  },
+  {
+    title: 'Deterministic Multi-Agent Workflows: Moving Beyond Hallucinating Enterprise Chatbots',
+    date: 'Apr 22, 2025',
+    excerpt: 'Why enterprise autonomy requires rigid state validation, cryptographic audit boundaries, and multi-agent consensus protocols to replace brittle single-prompt implementations.'
+  },
+  {
+    title: 'The Dark Luxury Design Language: Why High-Prestige Software Wins Enterprise Deals',
+    date: 'Mar 14, 2025',
+    excerpt: 'Enterprise software does not have to feel like a bland spreadsheet. Deep obsidian surfaces, subtle specular highlights, and commanding typography build instant investor prestige.'
+  }
 ];
 
-export const partners = ['Chapelle', 'Northwind', 'Lumen Labs', 'Parallel', 'Kestrel', 'Oakline', 'Vantage'];
+export const partners = [
+  'Stanford AI Labs',
+  'Morheme Tech',
+  'OWL Neural',
+  'Lumina Labs',
+  'Zainab Bees',
+  'Veritas Capital',
+  'Apex Cloud'
+];

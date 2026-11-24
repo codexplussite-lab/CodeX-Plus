@@ -8,8 +8,8 @@ describe('CmsContext', () => {
     const wrapper = ({ children }) => <CmsProvider>{children}</CmsProvider>;
     const { result } = renderHook(() => useCms(), { wrapper });
 
-    expect(result.current.content.brand.name).toBe('Avista');
-    expect(result.current.content.about.founder.name).toBe('Arnold Vain');
+    expect(result.current.content.brand.name).toBe('CODEXX PLUS');
+    expect(result.current.content.about.founder.name).toBe('Alexander Reid');
     expect(Array.isArray(result.current.content.services)).toBe(true);
     expect(Array.isArray(result.current.content.projects)).toBe(true);
   });

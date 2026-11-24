@@ -12,9 +12,9 @@ describe('Hero Section', () => {
       </CmsProvider>
     );
 
-    expect(screen.getByText(/Digital agency in Los Angeles/i)).toBeInTheDocument();
+    expect(screen.getByText(/CODEXX PLUS/i)).toBeInTheDocument();
     expect(screen.getByText(/People also search for/i)).toBeInTheDocument();
-    expect(screen.getByText('UI/UX')).toBeInTheDocument();
-    expect(screen.getByText('Development')).toBeInTheDocument();
+    expect(screen.getByText('Autonomous AI')).toBeInTheDocument();
+    expect(screen.getByText('Next.js 15')).toBeInTheDocument();
   });
 });

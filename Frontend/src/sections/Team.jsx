@@ -41,14 +41,22 @@ export default function Team() {
         <ul className="roster" onMouseLeave={hide}>
           {team.map((m, i) => (
             <li key={m.name} onMouseEnter={() => show(i)} onFocus={() => show(i)} onBlur={hide}>
-              <Visual seed={i + 7} className="roster__thumb" />
+              {m.image ? (
+                <img src={m.image} alt={m.name} className="roster__thumb" style={{ objectFit: 'cover' }} />
+              ) : (
+                <Visual seed={i + 7} className="roster__thumb" />
+              )}
               <a href="#contact" className="roster__name">{m.name}</a>
               <span className="roster__role">{m.role}</span>
             </li>
           ))}
         </ul>
         <div className="roster__portrait" ref={portrait} aria-hidden="true">
-          <Visual seed={hover + 7} />
+          {team[hover]?.image ? (
+            <img src={team[hover].image} alt={team[hover].name} className="visual" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+          ) : (
+            <Visual seed={hover + 7} />
+          )}
         </div>
       </div>
     </section>

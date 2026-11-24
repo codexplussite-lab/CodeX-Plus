@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, ExternalLink, X } from 'lucide-react';
 import { useCms } from '../context/CmsContext';
+import SpotlightCard from './react-bits/SpotlightCard';
+import TiltedCard from './react-bits/TiltedCard';
 
 export default function Projects() {
   const { content } = useCms();
@@ -136,18 +138,21 @@ export default function Projects() {
           {filteredProjects.map((project, idx) => {
             const isHovered = hoveredIdx === idx;
             return (
-              <div
+              <SpotlightCard
                 key={project.id}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onClick={() => setSelectedProject(project)}
-                className={`group relative rounded-2xl border p-6 sm:p-8 transition-all duration-500 ease-out cursor-pointer overflow-hidden hover:-translate-y-1.5 ${
+                spotlightColor="rgba(168, 85, 247, 0.3)"
+                borderColor={isHovered ? 'rgba(168, 85, 247, 0.5)' : 'rgba(168, 85, 247, 0.15)'}
+                className={`p-6 sm:p-8 cursor-pointer transition-all duration-500 ease-out hover:-translate-y-1.5 ${
                   isHovered 
-                    ? 'bg-[#140a26] border-purple-500/50 shadow-[0_16px_40px_rgba(139,92,246,0.25)]' 
-                    : 'bg-[#10081e] border-purple-500/10 hover:border-purple-400/40 hover:shadow-[0_10px_30px_rgba(139,92,246,0.15)]'
+                    ? 'bg-[#140a26] shadow-[0_16px_40px_rgba(139,92,246,0.25)]' 
+                    : 'bg-[#10081e] hover:border-purple-400/40 hover:shadow-[0_10px_30px_rgba(139,92,246,0.15)]'
                 }`}
               >
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-                  
+                <div
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onClick={() => setSelectedProject(project)}
+                  className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10"
+                >
                   {/* Left: Tag, Title & Year */}
                   <div className="space-y-2">
                     <span className="text-xs font-mono text-[#c084fc]">
@@ -183,9 +188,8 @@ export default function Projects() {
                       <ArrowUpRight className="w-5 h-5" />
                     </div>
                   </div>
-
                 </div>
-              </div>
+              </SpotlightCard>
             );
           })}
         </div>
@@ -211,11 +215,13 @@ export default function Projects() {
             </h3>
 
             <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden mb-6 border border-purple-500/20 bg-black">
-              <img
-                src={selectedProject.image}
-                alt={selectedProject.title}
-                className="w-full h-full object-cover"
-              />
+              <TiltedCard maxTilt={6} scale={1.01} glare={true}>
+                <img
+                  src={selectedProject.image}
+                  alt={selectedProject.title}
+                  className="w-full h-full object-cover"
+                />
+              </TiltedCard>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-6 border-b border-purple-500/20 text-xs font-mono">

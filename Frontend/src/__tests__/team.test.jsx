@@ -12,9 +12,9 @@ describe('Team Section', () => {
       </CmsProvider>
     );
 
-    expect(screen.getByText('Trina Alfard')).toBeInTheDocument();
-    expect(screen.getByText('Lead UI/UX Designer')).toBeInTheDocument();
-    expect(screen.getByText('John Smith')).toBeInTheDocument();
-    expect(screen.getByText('Creative Director')).toBeInTheDocument();
+    expect(screen.getByText('Alexander Reid')).toBeInTheDocument();
+    expect(screen.getByText('Founder & Managing Partner')).toBeInTheDocument();
+    expect(screen.getByText('Helena Rostova')).toBeInTheDocument();
+    expect(screen.getByText('Creative Director & Founder')).toBeInTheDocument();
   });
 });

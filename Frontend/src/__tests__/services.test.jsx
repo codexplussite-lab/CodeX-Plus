@@ -12,13 +12,12 @@ describe('Services Section', () => {
       </CmsProvider>
     );
 
-    expect(screen.getByText('Branding & Identity')).toBeInTheDocument();
-    expect(screen.getByText('Web Development')).toBeInTheDocument();
-    expect(screen.getByText('Application Design')).toBeInTheDocument();
-    expect(screen.getByText('UI/UX Design')).toBeInTheDocument();
+    expect(screen.getByText('Development (Full-Stack & AI)')).toBeInTheDocument();
+    expect(screen.getByText('Graphics Design (Visual Identity)')).toBeInTheDocument();
+    expect(screen.getByText('Video Editing (Motion & 3D)')).toBeInTheDocument();
 
-    const brandingBtn = screen.getByRole('button', { name: /Branding & Identity/i });
-    fireEvent.click(brandingBtn);
-    expect(brandingBtn).toBeInTheDocument();
+    const devBtn = screen.getByRole('button', { name: /Development/i });
+    fireEvent.click(devBtn);
+    expect(devBtn).toBeInTheDocument();
   });
 });

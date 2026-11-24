@@ -12,7 +12,7 @@ describe('Testimonials Section', () => {
       </CmsProvider>
     );
 
-    expect(screen.getByText('Robert Tom')).toBeInTheDocument();
-    expect(screen.getByText('CEO, Chapelle')).toBeInTheDocument();
+    expect(screen.getByText('Ashley Cole')).toBeInTheDocument();
+    expect(screen.getByText('Researcher, Stanford University')).toBeInTheDocument();
   });
 });

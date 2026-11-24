@@ -67,7 +67,11 @@ export default function Services() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
               >
-                <Visual seed={seeds[active]} />
+                {services[active]?.image ? (
+                  <img src={services[active].image} alt={services[active].title} className="visual" style={{ objectFit: 'cover' }} />
+                ) : (
+                  <Visual seed={seeds[active % seeds.length]} />
+                )}
               </motion.div>
             </AnimatePresence>
           </div>

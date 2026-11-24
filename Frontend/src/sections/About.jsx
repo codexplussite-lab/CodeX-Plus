@@ -14,7 +14,11 @@ export default function About() {
         </ScrollReveal>
 
         <div className="about__founder">
-          <Visual seed={4} className="about__avatar" title="Portrait placeholder" />
+          {about.founder.avatar ? (
+            <img src={about.founder.avatar} alt={about.founder.name} className="about__avatar" style={{ objectFit: 'cover' }} />
+          ) : (
+            <Visual seed={4} className="about__avatar" title="Portrait placeholder" />
+          )}
           <div>
             <p className="about__name">{about.founder.name}</p>
             <p className="about__role">{about.founder.role}</p>

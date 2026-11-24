@@ -43,9 +43,9 @@ export default function Header({ ready }) {
         animate={ready ? { y: hidden && !open ? -90 : 0, opacity: 1 } : {}}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        <a className="logo" href="#top" onClick={e => go(e, '#top')} aria-label="Avista home">
+        <a className="logo" href="#top" onClick={e => go(e, '#top')} aria-label={`${brand.name} home`}>
           <span className="logo__mark" aria-hidden="true" />
-          Avista
+          {brand.name}
         </a>
         <nav className="header__nav" aria-label="Primary">
           {nav.map(item => (

@@ -1,30 +1,21 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import About from '../components/About';
-import { CmsProvider } from '../context/CmsContext';
+import About from '../sections/About.jsx';
+import { CmsProvider } from '../context/CmsContext.jsx';
 
-describe('About Component', () => {
-  it('should render executive manifesto quote and founder card', () => {
+describe('About Section', () => {
+  it('should render founder information and studio story', () => {
     render(
       <CmsProvider>
         <About />
       </CmsProvider>
     );
 
-    expect(screen.getByText(/Alexander Reid/i)).toBeInTheDocument();
-    expect(screen.getByText(/Founder & Managing Partner/i)).toBeInTheDocument();
-  });
-
-  it('should render 3 studio architectural pillars', () => {
-    render(
-      <CmsProvider>
-        <About />
-      </CmsProvider>
-    );
-
-    expect(screen.getByText('Architectural Precision')).toBeInTheDocument();
-    expect(screen.getByText('Autonomous Intelligence')).toBeInTheDocument();
-    expect(screen.getByText('Dark Luxury Aesthetic')).toBeInTheDocument();
+    expect(screen.getByText('Who we are')).toBeInTheDocument();
+    expect(screen.getByText('Alexander Reid')).toBeInTheDocument();
+    expect(screen.getByText('Founder & Managing Partner')).toBeInTheDocument();
+    expect(screen.getByText('Our story')).toBeInTheDocument();
+    expect(screen.getByText('Our goal')).toBeInTheDocument();
   });
 });

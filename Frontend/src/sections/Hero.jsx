@@ -4,7 +4,7 @@ import SplitText from '../components/bits/SplitText.jsx';
 import VariableProximity from '../components/bits/VariableProximity.jsx';
 import CircularText from '../components/bits/CircularText.jsx';
 import Magnet from '../components/bits/Magnet.jsx';
-import { searches } from '../data/content.js';
+import { brand, searches } from '../data/content.js';
 
 export default function Hero({ ready }) {
   const section = useRef(null);
@@ -27,7 +27,7 @@ export default function Hero({ ready }) {
     <section className="hero" id="top" ref={section}>
       <div className="hero__grid">
         <div className="hero__copy">
-          <p className="hero__tag">Digital agency in Los Angeles</p>
+          <p className="hero__tag">{brand.name} &bull; {brand.city}</p>
           <div className="hero__headline">
             {ready && (
               <SplitText
@@ -72,7 +72,7 @@ export default function Hero({ ready }) {
       <h1 className="hero__wordmark">
         {ready && (
           <VariableProximity
-            label="Avista"
+            label={brand.wordmark || 'CODEXX'}
             containerRef={section}
             radius={260}
             falloff="gaussian"

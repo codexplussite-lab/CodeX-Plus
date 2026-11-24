@@ -63,7 +63,7 @@ export default function Loader({ onReveal }) {
       <div className="loader__panel loader__panel--b" />
       <div className="loader__content">
         <div className="loader__word">
-          {'Avista'.split('').map((l, i) => (
+          {'CODEXX'.split('').map((l, i) => (
             <span className="loader__mask" key={i}>
               <span className="loader__letter">{l}</span>
             </span>

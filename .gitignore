@@ -29,3 +29,7 @@ Backend/data/*.json
 Thumbs.db
 __pycache__/
 *.pyc
+
+# Local theme archives
+avista-frontend/
+avista-frontend.zip

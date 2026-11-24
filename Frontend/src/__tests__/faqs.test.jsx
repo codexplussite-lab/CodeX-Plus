@@ -15,7 +15,7 @@ describe('Faq Section', () => {
     expect(screen.getByText(/Tell us about your project/i)).toBeInTheDocument();
     expect(screen.getByText(/We reply within 1 hour on business days/i)).toBeInTheDocument();
 
-    const firstQuestion = screen.getByText('What services does Avista offer?');
+    const firstQuestion = screen.getByText('What core services does CODEXX PLUS architect & deploy?');
     expect(firstQuestion).toBeInTheDocument();
 
     fireEvent.click(firstQuestion);

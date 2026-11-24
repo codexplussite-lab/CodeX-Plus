@@ -13,8 +13,8 @@ describe('About Section', () => {
     );
 
     expect(screen.getByText('Who we are')).toBeInTheDocument();
-    expect(screen.getByText('Arnold Vain')).toBeInTheDocument();
-    expect(screen.getByText('Founder & CEO')).toBeInTheDocument();
+    expect(screen.getByText('Alexander Reid')).toBeInTheDocument();
+    expect(screen.getByText('Founder & Managing Partner')).toBeInTheDocument();
     expect(screen.getByText('Our story')).toBeInTheDocument();
     expect(screen.getByText('Our goal')).toBeInTheDocument();
   });

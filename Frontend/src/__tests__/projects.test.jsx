@@ -13,7 +13,7 @@ describe('Projects Section', () => {
     );
 
     expect(screen.getByText('Recent projects')).toBeInTheDocument();
-    expect(screen.getByText('Design Studio')).toBeInTheDocument();
-    expect(screen.getByText('StyleCart')).toBeInTheDocument();
+    expect(screen.getByText('OWL AI Systems')).toBeInTheDocument();
+    expect(screen.getByText('Morheme Tech')).toBeInTheDocument();
   });
 });

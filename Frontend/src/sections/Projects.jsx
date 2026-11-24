@@ -57,7 +57,11 @@ export default function Projects() {
           <a className="project" href="#contact" key={p.title} data-cursor="View" aria-label={`${p.title}, ${p.type}, ${p.year}`}>
             <div className="project__media">
               <div className="project__img">
-                <Visual seed={i + 2} />
+                {p.image ? (
+                  <img src={p.image} alt={p.title} className="visual" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                ) : (
+                  <Visual seed={i + 2} />
+                )}
               </div>
               <span className="project__year">{p.year}</span>
             </div>
