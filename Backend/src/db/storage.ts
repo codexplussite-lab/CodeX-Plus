@@ -342,6 +342,20 @@ class StorageEngine {
     this.flushToDisk();
     return { subscription: record, isNew: true };
   }
+
+  public async getSubscriptions(): Promise<NewsletterSubscription[]> {
+    return this.data.subscriptions || [];
+  }
+
+  public async deleteSubscription(id: string): Promise<boolean> {
+    const idx = this.data.subscriptions.findIndex((s) => s.id === id);
+    if (idx !== -1) {
+      this.data.subscriptions.splice(idx, 1);
+      this.flushToDisk();
+      return true;
+    }
+    return false;
+  }
 }
 
 export const storage = new StorageEngine();

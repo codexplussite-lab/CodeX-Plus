@@ -50,3 +50,13 @@ export const getServices = (_req: Request, res: Response): void => {
     data: SERVICES,
   });
 };
+
+export const getServiceById = (req: Request, res: Response): void => {
+  const { id } = req.params;
+  const service = SERVICES.find((s) => s.id === id);
+  if (!service) {
+    res.status(404).json({ success: false, message: 'Service not found' });
+    return;
+  }
+  res.status(200).json({ success: true, data: service });
+};

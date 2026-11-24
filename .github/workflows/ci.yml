@@ -29,8 +29,8 @@ jobs:
           VITE_SITE_NAME: CODEX PLUS
         run: |
           npm install
-          npx tsc -b
           npm run build
+          npm test
 
   deploy-vps:
     name: Deploy to codexplus.site VPS

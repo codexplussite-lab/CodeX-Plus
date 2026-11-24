@@ -12,6 +12,8 @@ import teamRoutes from './routes/team.routes';
 import servicesRoutes from './routes/services.routes';
 import cmsRoutes from './routes/cms.routes';
 import authRoutes from './routes/auth.routes';
+import statsRoutes from './routes/stats.routes';
+import newsletterRoutes from './routes/newsletter.routes';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 
 export const createApp = (): Application => {
@@ -73,6 +75,8 @@ export const createApp = (): Application => {
         team: '/api/team',
         services: '/api/services',
         cms: '/api/cms',
+        stats: '/api/stats',
+        newsletter: '/api/newsletter',
       },
     });
   });
@@ -85,6 +89,8 @@ export const createApp = (): Application => {
   app.use('/api/services', servicesRoutes);
   app.use('/api/cms', cmsRoutes);
   app.use('/api/auth', authRoutes);
+  app.use('/api/stats', statsRoutes);
+  app.use('/api/newsletter', newsletterRoutes);
 
   // Serve static Frontend build in non-test environments if present
   if (config.nodeEnv !== 'test') {

@@ -8,9 +8,9 @@ cd "$ROOT/Backend"
 npm run build || { echo "❌ Backend TypeScript build failed! Push aborted."; exit 1; }
 npm test || { echo "❌ Backend tests failed! Push aborted."; exit 1; }
 
-echo "🔍 [2/2] Checking Frontend (TypeScript & Vite Build)..."
+echo "🔍 [2/2] Checking Frontend (Vitest & Vite Build)..."
 cd "$ROOT/Frontend"
-npx tsc -b || { echo "❌ Frontend TypeScript check failed! Push aborted."; exit 1; }
+npm test || { echo "❌ Frontend tests failed! Push aborted."; exit 1; }
 npm run build || { echo "❌ Frontend production build failed! Push aborted."; exit 1; }
 
 echo "✅ All checks passed! Proceeding with git push..."
