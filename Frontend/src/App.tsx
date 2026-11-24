@@ -19,8 +19,9 @@ import { LoginPage } from './pages/LoginPage';
 function getInitialPage(): AppPage {
   const path = window.location.pathname.toLowerCase();
   const hash = window.location.hash.toLowerCase();
-  if (path === '/admin' || hash === '#admin') return 'admin';
-  if (path === '/login' || hash === '#login' || path === '/signin' || hash === '#signin') return 'login';
+  if (path === '/admin' || hash === '#admin' || path === '/login' || hash === '#login' || path === '/signin' || hash === '#signin') {
+    return 'admin';
+  }
   if (path === '/about' || hash === '#about') return 'about';
   if (path === '/services' || hash === '#services' || path === '/work' || hash === '#work') return 'services';
   if (path === '/team' || hash === '#team') return 'team';
@@ -35,16 +36,9 @@ export function App() {
   const handleNavigate = useCallback((page: AppPage, targetHash?: string) => {
     setCurrentPage(page);
 
-    if (page === 'admin') {
+    if (page === 'admin' || page === 'login') {
       window.history.pushState(null, '', '/admin');
       window.location.hash = '#admin';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    if (page === 'login') {
-      if (window.location.pathname === '/admin') window.history.pushState(null, '', '/');
-      window.location.hash = '#login';
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
