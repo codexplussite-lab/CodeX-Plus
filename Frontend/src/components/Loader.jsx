@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -6,18 +6,36 @@ import { useGSAP } from '@gsap/react';
 export default function Loader({ onReveal }) {
   const root = useRef(null);
   const counter = useRef(null);
+  const [isDismissed, setIsDismissed] = useState(false);
+
+  // Safety fallback: guaranteed unmount and scroll unlock even on slow devices/background tabs
+  useEffect(() => {
+    const fallbackTimer = setTimeout(() => {
+      onReveal?.();
+      setIsDismissed(true);
+    }, 2400);
+
+    return () => clearTimeout(fallbackTimer);
+  }, [onReveal]);
 
   useGSAP(
     () => {
+      if (isDismissed) return;
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const state = { v: 0 };
-      const tl = gsap.timeline();
+      const tl = gsap.timeline({
+        onComplete: () => {
+          onReveal?.();
+          setIsDismissed(true);
+        }
+      });
+
       tl.from('.loader__letter', { yPercent: 110, duration: 0.8, ease: 'expo.out', stagger: 0.06 }, 0)
         .to(
           state,
           {
             v: 100,
-            duration: reduce ? 0.2 : 1.8,
+            duration: reduce ? 0.2 : 1.6,
             ease: 'power2.inOut',
             onUpdate: () => {
               if (counter.current) counter.current.textContent = String(Math.round(state.v)).padStart(3, '0');
@@ -25,14 +43,19 @@ export default function Loader({ onReveal }) {
           },
           0
         )
-        .to('.loader__content', { opacity: 0, duration: 0.3 }, '>+0.1')
+        .to('.loader__content', { opacity: 0, duration: 0.25 }, '>+0.1')
         .addLabel('lift')
-        .to('.loader__panel', { yPercent: -100, duration: reduce ? 0.01 : 1, ease: 'expo.inOut', stagger: 0.08 }, 'lift')
-        .call(onReveal, null, 'lift+=0.45')
-        .set(root.current, { display: 'none' });
+        .set(root.current, { pointerEvents: 'none' }, 'lift')
+        .to('.loader__panel--a', { yPercent: -100, duration: reduce ? 0.01 : 0.85, ease: 'expo.inOut' }, 'lift')
+        .to('.loader__panel--b', { yPercent: 100, duration: reduce ? 0.01 : 0.85, ease: 'expo.inOut' }, 'lift')
+        .call(() => onReveal?.(), null, 'lift+=0.35');
     },
-    { scope: root }
+    { scope: root, dependencies: [isDismissed] }
   );
+
+  if (isDismissed) {
+    return null;
+  }
 
   return (
     <div className="loader" ref={root} aria-hidden="true">
