@@ -135,7 +135,7 @@ export function Footer({ onOpenModal, onNavigate }: FooterProps) {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={social.name}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-gray-300 transition-all duration-300 hover:border-violet-400/60 hover:bg-violet-500/20 hover:text-white"
+                  className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-gray-300 transition-all duration-300 hover:border-violet-400/60 hover:bg-violet-500/20 hover:text-white focus-visible:outline-2 focus-visible:outline-violet-400"
                 >
                   {social.icon}
                 </a>

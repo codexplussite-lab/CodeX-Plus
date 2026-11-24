@@ -101,7 +101,7 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
             <button
               type="button"
               onClick={resetAndClose}
-              className="mt-7 cursor-pointer rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#0a0612] transition-colors hover:bg-violet-100"
+              className="mt-7 inline-flex min-h-[44px] cursor-pointer items-center justify-center rounded-full bg-white px-7 py-3 text-sm font-semibold text-[#0a0612] transition-colors hover:bg-violet-100 focus-visible:outline-2 focus-visible:outline-violet-400"
             >
               Done
             </button>
@@ -125,41 +125,44 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <div>
-                <label className="block text-xs font-medium text-gray-300">
+                <label htmlFor="booking-name" className="block text-xs font-medium text-gray-300">
                   Full Name
                 </label>
                 <input
+                  id="booking-name"
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Elena Rostova"
-                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-gray-500 transition-colors focus:border-violet-400/60 focus:bg-white/10 focus:outline-none"
+                  className="mt-1.5 min-h-[44px] w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-gray-500 transition-colors focus:border-violet-400/60 focus:bg-white/10 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-300">
+                <label htmlFor="booking-email" className="block text-xs font-medium text-gray-300">
                   Email Address
                 </label>
                 <input
+                  id="booking-email"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@company.com"
-                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-gray-500 transition-colors focus:border-violet-400/60 focus:bg-white/10 focus:outline-none"
+                  className="mt-1.5 min-h-[44px] w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-gray-500 transition-colors focus:border-violet-400/60 focus:bg-white/10 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-300">
+                <label htmlFor="booking-service" className="block text-xs font-medium text-gray-300">
                   Topic of Discussion
                 </label>
                 <select
+                  id="booking-service"
                   value={service}
                   onChange={(e) => setService(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-[#170c2a] px-3.5 py-2.5 text-sm text-white transition-colors focus:border-violet-400/60 focus:outline-none"
+                  className="mt-1.5 min-h-[44px] w-full rounded-xl border border-white/10 bg-[#170c2a] px-3.5 py-2.5 text-sm text-white transition-colors focus:border-violet-400/60 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:outline-none"
                 >
                   <option value="AI Innovation & Development">
                     AI Innovation &amp; Development
@@ -183,7 +186,7 @@ export function BookingModal({ open, onClose }: BookingModalProps) {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="group inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-semibold text-[#0a0612] shadow-[0_0_28px_rgba(168,85,247,0.4)] transition-all hover:bg-violet-100 disabled:opacity-50"
+                  className="group inline-flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-semibold text-[#0a0612] shadow-[0_0_28px_rgba(168,85,247,0.4)] transition-all hover:bg-violet-100 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-violet-400"
                 >
                   <span>{submitting ? 'Confirming...' : 'Confirm Call Request'}</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

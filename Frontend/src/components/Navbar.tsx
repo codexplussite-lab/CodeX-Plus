@@ -98,7 +98,7 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
         <CodexxLogo onClick={() => onNavigate('home', '#home')} />
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1 rounded-full border border-white/10 bg-[#120820]/60 px-4 py-1.5 backdrop-blur-md">
+        <nav className="hidden md:flex items-center gap-1 rounded-full border border-white/10 bg-[#120820]/60 px-4 py-1.5 backdrop-blur-md" aria-label="Main Navigation">
           {NAV_ITEMS.map((item) => {
             const isActive = currentPage === item.page;
             return (
@@ -106,7 +106,7 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
                 key={item.label}
                 type="button"
                 onClick={() => handleLinkClick(item)}
-                className={`cursor-pointer rounded-full px-4 py-2 text-xs font-medium tracking-wide transition-all ${
+                className={`cursor-pointer rounded-full px-4 py-2 text-xs font-medium tracking-wide transition-all focus-visible:outline-2 focus-visible:outline-violet-400 ${
                   isActive
                     ? 'bg-white/10 text-white shadow-sm'
                     : 'text-gray-400 hover:text-white'
@@ -123,7 +123,7 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
           <button
             type="button"
             onClick={() => onNavigate('login')}
-            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold tracking-wider uppercase transition-all ${
+            className={`inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold tracking-wider uppercase transition-all focus-visible:outline-2 focus-visible:outline-violet-400 ${
               currentPage === 'login'
                 ? 'border-violet-400 bg-violet-600/30 text-white shadow-[0_0_15px_rgba(139,92,246,0.35)]'
                 : 'border-white/15 bg-white/5 text-gray-300 hover:border-violet-400/50 hover:bg-violet-500/10 hover:text-white'
@@ -135,14 +135,14 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
           <button
             type="button"
             onClick={() => onNavigate('contact')}
-            className="cursor-pointer rounded-full border border-white/20 px-4 py-2 text-xs font-semibold tracking-wider text-white uppercase transition-colors hover:border-violet-400 hover:text-violet-300"
+            className="inline-flex min-h-[40px] cursor-pointer items-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold tracking-wider text-white uppercase transition-colors hover:border-violet-400 hover:text-violet-300 focus-visible:outline-2 focus-visible:outline-violet-400"
           >
             Start a Project
           </button>
           <button
             type="button"
             onClick={onOpenModal}
-            className="group relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-full border border-violet-400/40 bg-gradient-to-r from-violet-600/30 to-fuchsia-600/20 px-5 py-2.5 text-xs font-semibold tracking-wider text-white uppercase shadow-[0_0_20px_rgba(139,92,246,0.25)] transition-all duration-300 hover:scale-105 hover:border-violet-400/80 hover:shadow-[0_0_30px_rgba(139,92,246,0.5)]"
+            className="group relative inline-flex min-h-[40px] cursor-pointer items-center justify-center overflow-hidden rounded-full border border-violet-400/40 bg-gradient-to-r from-violet-600/30 to-fuchsia-600/20 px-5 py-2.5 text-xs font-semibold tracking-wider text-white uppercase shadow-[0_0_20px_rgba(139,92,246,0.25)] transition-all duration-300 hover:scale-105 hover:border-violet-400/80 hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] focus-visible:outline-2 focus-visible:outline-violet-400"
           >
             <span className="relative z-10">Schedule Call</span>
             <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-violet-500/0 via-violet-300/20 to-violet-500/0 transition-transform duration-700 group-hover:translate-x-full" />
@@ -185,7 +185,7 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
                   setMobileOpen(false);
                   onNavigate('login');
                 }}
-                className="w-full cursor-pointer flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 py-3 text-center text-xs font-semibold tracking-wider text-white uppercase hover:bg-white/10"
+                className="w-full min-h-[44px] cursor-pointer flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 py-3 text-center text-xs font-semibold tracking-wider text-white uppercase hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-violet-400"
               >
                 <LogIn className="h-4 w-4 text-violet-400" />
                 <span>Sign In / Portal</span>
@@ -196,7 +196,7 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
                   setMobileOpen(false);
                   onNavigate('contact');
                 }}
-                className="w-full cursor-pointer rounded-2xl border border-violet-400/40 bg-violet-500/20 py-3 text-center text-xs font-semibold tracking-wider text-white uppercase hover:bg-violet-500/30"
+                className="w-full min-h-[44px] cursor-pointer flex items-center justify-center rounded-2xl border border-violet-400/40 bg-violet-500/20 py-3 text-center text-xs font-semibold tracking-wider text-white uppercase hover:bg-violet-500/30 focus-visible:outline-2 focus-visible:outline-violet-400"
               >
                 Start a Project
               </button>
@@ -206,7 +206,7 @@ export function Navbar({ onOpenModal, currentPage, onNavigate }: NavbarProps) {
                   setMobileOpen(false);
                   onOpenModal();
                 }}
-                className="w-full cursor-pointer rounded-2xl bg-white py-3.5 text-center text-xs font-semibold tracking-wider text-[#0a0612] uppercase shadow-lg hover:bg-violet-100"
+                className="w-full min-h-[44px] cursor-pointer flex items-center justify-center rounded-2xl bg-white py-3.5 text-center text-xs font-semibold tracking-wider text-[#0a0612] uppercase shadow-lg hover:bg-violet-100 focus-visible:outline-2 focus-visible:outline-violet-400"
               >
                 Schedule Call
               </button>

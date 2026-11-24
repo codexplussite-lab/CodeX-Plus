@@ -322,7 +322,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                         key={svc}
                         type="button"
                         onClick={() => setSelectedService(svc)}
-                        className={`cursor-pointer rounded-full px-4 py-2 text-xs font-medium transition-all ${
+                        className={`min-h-[44px] cursor-pointer rounded-full px-4 py-2 text-xs font-medium transition-all focus-visible:outline-2 focus-visible:outline-violet-400 ${
                           selectedService === svc
                             ? 'border border-violet-400/80 bg-violet-500/20 text-white shadow-[0_0_15px_rgba(139,92,246,0.35)]'
                             : 'border border-white/10 bg-white/[0.03] text-gray-400 hover:border-white/20 hover:text-white'
@@ -345,7 +345,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                         key={tier}
                         type="button"
                         onClick={() => setSelectedBudget(tier)}
-                        className={`cursor-pointer rounded-full px-4 py-2 text-xs font-medium transition-all ${
+                        className={`min-h-[44px] cursor-pointer rounded-full px-4 py-2 text-xs font-medium transition-all focus-visible:outline-2 focus-visible:outline-violet-400 ${
                           selectedBudget === tier
                             ? 'border border-violet-400/80 bg-violet-500/20 text-white shadow-[0_0_15px_rgba(139,92,246,0.35)]'
                             : 'border border-white/10 bg-white/[0.03] text-gray-400 hover:border-white/20 hover:text-white'
@@ -368,20 +368,22 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                       type="text"
                       required
                       aria-required="true"
+                      aria-invalid={errors.name ? 'true' : 'false'}
+                      aria-describedby={errors.name ? 'client-name-error' : undefined}
                       value={name}
                       onChange={(e) => {
                         setName(e.target.value);
                         if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
                       }}
                       placeholder="e.g. Julian Mercer"
-                      className={`mt-2 w-full rounded-2xl border px-4 py-3.5 text-sm text-white placeholder-gray-500 transition-colors focus:bg-white/[0.06] focus:outline-none ${
+                      className={`mt-2 min-h-[44px] w-full rounded-2xl border px-4 py-3.5 text-sm text-white placeholder-gray-500 transition-colors focus:bg-white/[0.06] focus-visible:outline-2 focus-visible:outline-violet-400 ${
                         errors.name
                           ? 'border-rose-400/80 bg-rose-500/[0.04]'
                           : 'border-white/10 bg-white/[0.03] focus:border-violet-400/60'
                       }`}
                     />
                     {errors.name && (
-                      <p className="mt-1 text-xs text-rose-400">{errors.name}</p>
+                      <p id="client-name-error" className="mt-1 text-xs text-rose-400">{errors.name}</p>
                     )}
                   </div>
 
@@ -394,20 +396,22 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                       type="email"
                       required
                       aria-required="true"
+                      aria-invalid={errors.email ? 'true' : 'false'}
+                      aria-describedby={errors.email ? 'client-email-error' : undefined}
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
                         if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
                       }}
                       placeholder="name@company.com"
-                      className={`mt-2 w-full rounded-2xl border px-4 py-3.5 text-sm text-white placeholder-gray-500 transition-colors focus:bg-white/[0.06] focus:outline-none ${
+                      className={`mt-2 min-h-[44px] w-full rounded-2xl border px-4 py-3.5 text-sm text-white placeholder-gray-500 transition-colors focus:bg-white/[0.06] focus-visible:outline-2 focus-visible:outline-violet-400 ${
                         errors.email
                           ? 'border-rose-400/80 bg-rose-500/[0.04]'
                           : 'border-white/10 bg-white/[0.03] focus:border-violet-400/60'
                       }`}
                     />
                     {errors.email && (
-                      <p className="mt-1 text-xs text-rose-400">{errors.email}</p>
+                      <p id="client-email-error" className="mt-1 text-xs text-rose-400">{errors.email}</p>
                     )}
                   </div>
                 </div>
@@ -422,7 +426,7 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
                     placeholder="e.g. Northstar Cloud Technologies"
-                    className="mt-2 w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white placeholder-gray-500 transition-colors focus:border-violet-400/60 focus:bg-white/[0.06] focus:outline-none"
+                    className="mt-2 min-h-[44px] w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white placeholder-gray-500 transition-colors focus:border-violet-400/60 focus:bg-white/[0.06] focus-visible:outline-2 focus-visible:outline-violet-400"
                   />
                 </div>
 
@@ -434,6 +438,8 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                     id="client-brief"
                     required
                     aria-required="true"
+                    aria-invalid={errors.message ? 'true' : 'false'}
+                    aria-describedby={errors.message ? 'client-brief-error' : undefined}
                     rows={4}
                     value={message}
                     onChange={(e) => {
@@ -441,14 +447,14 @@ export function ContactPage({ onOpenModal, onNavigateHome }: ContactPageProps) {
                       if (errors.message) setErrors((prev) => ({ ...prev, message: undefined }));
                     }}
                     placeholder="Tell us about the project goals, current stack, timeline, and measurable success metrics..."
-                    className={`mt-2 w-full rounded-2xl border p-4 text-sm text-white placeholder-gray-500 transition-colors focus:bg-white/[0.06] focus:outline-none ${
+                    className={`mt-2 w-full rounded-2xl border p-4 text-sm text-white placeholder-gray-500 transition-colors focus:bg-white/[0.06] focus-visible:outline-2 focus-visible:outline-violet-400 ${
                       errors.message
                         ? 'border-rose-400/80 bg-rose-500/[0.04]'
                         : 'border-white/10 bg-white/[0.03] focus:border-violet-400/60'
                     }`}
                   />
                   {errors.message && (
-                    <p className="mt-1 text-xs text-rose-400">{errors.message}</p>
+                    <p id="client-brief-error" className="mt-1 text-xs text-rose-400">{errors.message}</p>
                   )}
                 </div>
 

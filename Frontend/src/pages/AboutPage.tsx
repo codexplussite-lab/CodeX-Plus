@@ -73,7 +73,7 @@ export function AboutPage({ onOpenModal, onNavigateContact, onNavigateHome }: Ab
             <button
               type="button"
               onClick={onOpenModal}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#0a0612] shadow-[0_0_32px_rgba(168,85,247,0.35)] transition-all duration-300 hover:bg-violet-100 hover:shadow-[0_0_45px_rgba(168,85,247,0.6)]"
+              className="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#0a0612] shadow-[0_0_32px_rgba(168,85,247,0.35)] transition-all duration-300 hover:bg-violet-100 hover:shadow-[0_0_45px_rgba(168,85,247,0.6)] focus-visible:outline-2 focus-visible:outline-violet-400"
             >
               <span>Schedule Architecture Review</span>
               <ArrowRight className="h-4 w-4" />
@@ -81,7 +81,7 @@ export function AboutPage({ onOpenModal, onNavigateContact, onNavigateHome }: Ab
             <button
               type="button"
               onClick={onNavigateContact}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-violet-300 hover:bg-white/10"
+              className="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-violet-300 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-violet-400"
             >
               Contact Global Hubs
             </button>

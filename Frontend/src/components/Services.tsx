@@ -55,9 +55,19 @@ export function Services({ onOpenModal }: ServicesProps) {
             return (
               <article
                 key={service.id}
+                tabIndex={0}
+                role="button"
+                aria-pressed={isActive}
+                aria-label={`Service: ${service.title}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveId(service.id);
+                  }
+                }}
                 onMouseEnter={() => setActiveId(service.id)}
                 onClick={() => setActiveId(service.id)}
-                className={`specular-card group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border p-8 transition-all duration-300 ${
+                className={`specular-card group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border p-8 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-violet-400 ${
                   isLarge ? 'min-h-[340px] lg:row-span-2 lg:min-h-[460px]' : 'min-h-[220px]'
                 } ${
                   isActive

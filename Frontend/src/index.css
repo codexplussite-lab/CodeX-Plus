@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-sans: "Space Grotesk", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Archivo", "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --color-primary: #18181b;
+  --color-on-primary: #ffffff;
+  --color-secondary: #27272a;
+  --color-on-secondary: #ffffff;
+  --color-accent: #f8fafc;
+  --color-on-accent: #0f172a;
+  --color-background: #0a0612;
+  --color-foreground: #fafafa;
+  --color-card: #12091f;
+  --color-card-foreground: #fafafa;
+  --color-muted: #181818;
+  --color-muted-foreground: #94a3b8;
+  --color-border: #3f3f46;
+  --color-destructive: #ef4444;
+  --color-ring: #c084fc;
 }
 
 @layer base {
@@ -11,6 +26,8 @@
     color: #ffffff;
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+    /* WCAG 2.2 AA Focus Not Obscured: prevent sticky header (h-20) from covering in-page anchors */
+    scroll-padding-top: 5.5rem;
   }
 
   body {
@@ -23,6 +40,13 @@
       radial-gradient(ellipse 60% 50% at 10% 80%, rgba(99, 102, 241, 0.08), transparent 60%);
     background-attachment: fixed;
     overflow-x: hidden;
+  }
+
+  /* Ensure all non-disabled interactive elements provide pointer cursor */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  a[href] {
+    cursor: pointer;
   }
 
   /* Custom luxury scrollbar */
@@ -43,9 +67,9 @@
     background: rgba(168, 85, 247, 0.5);
   }
 
-  /* Accessible visible focus ring for keyboard navigation */
+  /* Accessible visible focus ring for keyboard navigation conforming to WCAG 2.2 AAA */
   :focus-visible {
-    outline: 2px solid rgba(168, 85, 247, 0.75);
+    outline: 2px solid #c084fc;
     outline-offset: 3px;
   }
 

@@ -107,7 +107,7 @@ export function Hero({ onOpenModal }: HeroProps) {
           <button
             type="button"
             onClick={onOpenModal}
-            className="group relative inline-flex cursor-pointer items-center gap-3 overflow-hidden rounded-full bg-white px-8 py-4 text-sm font-semibold text-[#0a0612] shadow-[0_0_36px_rgba(168,85,247,0.45)] transition-all duration-300 hover:bg-violet-100 hover:shadow-[0_0_50px_rgba(168,85,247,0.7)]"
+            className="group relative inline-flex min-h-[44px] cursor-pointer items-center gap-3 overflow-hidden rounded-full bg-white px-8 py-4 text-sm font-semibold text-[#0a0612] shadow-[0_0_36px_rgba(168,85,247,0.45)] transition-all duration-300 hover:bg-violet-100 hover:shadow-[0_0_50px_rgba(168,85,247,0.7)] focus-visible:outline-2 focus-visible:outline-violet-400"
           >
             <span>{ctaPrimary} / Start a Project</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -115,7 +115,7 @@ export function Hero({ onOpenModal }: HeroProps) {
 
           <a
             href="#services"
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-7 py-4 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:border-violet-400/50 hover:bg-white/[0.08]"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-7 py-4 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:border-violet-400/50 hover:bg-white/[0.08] focus-visible:outline-2 focus-visible:outline-violet-400"
           >
             <span>{ctaSecondary}</span>
             <ArrowDownRight className="h-4 w-4 text-violet-300" />
@@ -123,7 +123,7 @@ export function Hero({ onOpenModal }: HeroProps) {
 
           <a
             href="#clients"
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-6 py-4 text-sm font-medium text-gray-300 backdrop-blur-md transition-all duration-300 hover:border-violet-400/40 hover:text-white"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-6 py-4 text-sm font-medium text-gray-300 backdrop-blur-md transition-all duration-300 hover:border-violet-400/40 hover:text-white focus-visible:outline-2 focus-visible:outline-violet-400"
           >
             <span>Explore Case Studies</span>
           </a>
