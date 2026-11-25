@@ -1686,14 +1686,31 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-mono text-purple-300">Favicon URL</label>
-              <input
-                type="text"
-                placeholder="/favicon.ico"
-                value={cmsData?.settings?.favicon || ''}
-                onChange={e => updateSectionField('settings', 'favicon', e.target.value)}
-                className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
-              />
+              <label className="text-xs font-mono text-purple-300">Favicon URL / Upload Image</label>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <input
+                  type="text"
+                  placeholder="/favicon.ico"
+                  value={cmsData?.settings?.favicon || ''}
+                  onChange={e => updateSectionField('settings', 'favicon', e.target.value)}
+                  className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+                />
+                <label style={{ margin: 0, cursor: 'pointer', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: '#4f46e5', color: '#fff', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
+                  Upload
+                  <input
+                    type="file"
+                    accept="image/*,.ico"
+                    style={{ display: 'none' }}
+                    onChange={e => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = () => updateSectionField('settings', 'favicon', reader.result);
+                      reader.readAsDataURL(file);
+                    }}
+                  />
+                </label>
+              </div>
             </div>
             <div className="space-y-1.5 md:col-span-2">
               <label className="text-xs font-mono text-purple-300">Meta Description (SEO)</label>

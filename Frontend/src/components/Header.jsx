@@ -48,7 +48,7 @@ export default function Header({ ready }) {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <a className="logo" href="#top" onClick={e => go(e, '#top')} aria-label={`${brand.name} home`}>
-          <span className="logo__mark" aria-hidden="true" />
+          {brand.logoUrl ? <img src={brand.logoUrl} alt={brand.name} style={{ height: '28px', width: 'auto', objectFit: 'contain' }} /> : <span className="logo__mark" aria-hidden="true" />}
           {brand.name}
         </a>
         <nav className="header__nav" aria-label="Primary">

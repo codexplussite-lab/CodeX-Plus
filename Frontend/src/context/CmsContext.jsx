@@ -72,6 +72,21 @@ export function CmsProvider({ children }) {
     fetchCmsContent();
   }, []);
 
+  useEffect(() => {
+    const s = content?.settings;
+    if (!s) return;
+    if (s.siteTitle) document.title = s.siteTitle;
+    if (s.favicon) {
+      let link = document.querySelector("link[rel~='icon']");
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+      }
+      link.href = s.favicon;
+    }
+  }, [content?.settings]);
+
   const updateContent = async (newContent) => {
     try {
       setContent(newContent);
