@@ -130,7 +130,7 @@ img, svg { display: block; max-width: 100%; }
 .about__cards { display: grid; gap: 1.25rem; margin-top: clamp(3rem, 7vw, 6rem); }
 .card { border-radius: 1.75rem; padding: clamp(1.5rem, 3vw, 2.6rem); height: 100%; }
 .card h3 { font-family: var(--display); font-weight: 700; font-size: clamp(1.5rem, 2.4vw, 2rem); letter-spacing: -0.02em; margin-bottom: 0.8rem; }
-.card--paper { background: var(--white); }
+.card--paper { background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--line); }
 .card--ink { background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--line); color: var(--ink); }
 .card p { max-width: 36rem; }
 .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; margin-top: clamp(3rem, 7vw, 6rem); border-top: 1.5px solid var(--line); padding-top: 2rem; }
@@ -140,7 +140,7 @@ img, svg { display: block; max-width: 100%; }
 @media (min-width: 800px) { .about__cards { grid-template-columns: 1fr 1fr; } .about__cards > div:last-child { margin-top: 3rem; } .stats { grid-template-columns: repeat(4, 1fr); } }
 
 /* ===== Statement marquee ===== */
-.statement { padding-block: clamp(2rem, 5vw, 4rem); overflow: hidden; border-block: 1.5px solid var(--line); background: var(--white); }
+.statement { padding-block: clamp(2rem, 5vw, 4rem); overflow: hidden; border-block: 1.5px solid var(--line); background: var(--paper-2); }
 .statement .scroller { font-family: var(--display); font-stretch: 85%; letter-spacing: -0.04em; filter: none; line-height: 1.05; }
 .statement .scroller span { padding-right: 0.3em; }
 
@@ -202,7 +202,7 @@ img, svg { display: block; max-width: 100%; }
 }
 
 /* ===== FAQ + form ===== */
-.faq { background: var(--white); }
+.faq { background: var(--paper); }
 .faq__layout { display: grid; gap: 3rem; }
 .faq__list li { border-top: 1.5px solid var(--line); }
 .faq__list li:last-child { border-bottom: 1.5px solid var(--line); }
