@@ -30,6 +30,8 @@ import { DEFAULT_CMS_DATA } from '../context/CmsContext';
 
 export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publishing, saveAlert }) {
   const [activeSection, setActiveSection] = useState('brand');
+  const [rawJsonText, setRawJsonText] = useState('');
+  const [rawJsonError, setRawJsonError] = useState(null);
 
   const updateSectionField = (section, field, value) => {
     setCmsData(prev => ({
@@ -77,7 +79,10 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
     { id: 'projects', name: 'Flagship Deployments', icon: FolderGit2, count: `${projects?.items?.length || 4} Projects` },
     { id: 'faqs', name: 'Technical FAQs', icon: HelpCircle, count: `${faqs?.items?.length || 5} FAQs` },
     { id: 'testimonials', name: 'Client Feedback', icon: MessageSquareQuote, count: `${testimonials?.items?.length || 3} Reviews` },
+    { id: 'journal', name: 'Journal & Posts', icon: Layers, count: `${Array.isArray(cmsData?.posts) ? cmsData.posts.length : 0} Posts` },
+    { id: 'navigation', name: 'Nav, Searches & Marquee', icon: Globe, count: `${Array.isArray(cmsData?.nav) ? cmsData.nav.length : 0} Links` },
     { id: 'policies', name: 'Compliance & Policies', icon: ShieldAlert, count: '2 Legal Docs' },
+    { id: 'raw', name: 'Raw JSON Editor', icon: CodeXml, count: 'Full CMS' },
   ];
 
   return (
@@ -1625,6 +1630,229 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
             </div>
           </div>
 
+        </div>
+      )}
+
+      {/* 11. JOURNAL & POSTS */}
+      {activeSection === 'journal' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-white font-sans">Journal &amp; Blog Posts</h2>
+              <p className="text-xs text-purple-300/60 font-mono">Add, edit, or remove articles shown in the Journal section.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const current = Array.isArray(cmsData?.posts) ? cmsData.posts : [];
+                setCmsData(prev => ({
+                  ...prev,
+                  posts: [...current, { title: 'New Article', category: 'Engineering', date: '2026', readTime: '4 min read', excerpt: '', image: '' }]
+                }));
+              }}
+              className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5" /> Add Post
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {(Array.isArray(cmsData?.posts) ? cmsData.posts : []).map((post, idx) => (
+              <div key={idx} className="p-4 rounded-2xl bg-[#100722] border border-purple-500/20 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono text-purple-300">Post #{idx + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = [...(cmsData?.posts || [])];
+                      updated.splice(idx, 1);
+                      setCmsData(prev => ({ ...prev, posts: updated }));
+                    }}
+                    className="p-1.5 rounded-lg text-rose-400 hover:bg-rose-500/20 cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Title"
+                  value={post.title || ''}
+                  onChange={e => {
+                    const updated = [...(cmsData?.posts || [])];
+                    updated[idx] = { ...updated[idx], title: e.target.value };
+                    setCmsData(prev => ({ ...prev, posts: updated }));
+                  }}
+                  className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+                />
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="Category"
+                    value={post.category || ''}
+                    onChange={e => {
+                      const updated = [...(cmsData?.posts || [])];
+                      updated[idx] = { ...updated[idx], category: e.target.value };
+                      setCmsData(prev => ({ ...prev, posts: updated }));
+                    }}
+                    className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Date / Read Time"
+                    value={post.date || ''}
+                    onChange={e => {
+                      const updated = [...(cmsData?.posts || [])];
+                      updated[idx] = { ...updated[idx], date: e.target.value };
+                      setCmsData(prev => ({ ...prev, posts: updated }));
+                    }}
+                    className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+                  />
+                </div>
+                <textarea
+                  rows={2}
+                  placeholder="Excerpt"
+                  value={post.excerpt || ''}
+                  onChange={e => {
+                    const updated = [...(cmsData?.posts || [])];
+                    updated[idx] = { ...updated[idx], excerpt: e.target.value };
+                    setCmsData(prev => ({ ...prev, posts: updated }));
+                  }}
+                  className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white resize-none"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 12. NAVIGATION, SEARCHES & MARQUEE */}
+      {activeSection === 'navigation' && (
+        <div className="space-y-6">
+          <div className="p-5 rounded-2xl bg-[#100722] border border-purple-500/20 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold text-white font-sans">Header &amp; Footer Navigation Links</h3>
+              <button
+                type="button"
+                onClick={() => {
+                  const current = Array.isArray(cmsData?.nav) ? cmsData.nav : [];
+                  setCmsData(prev => ({ ...prev, nav: [...current, { label: 'New Link', href: '#section' }] }));
+                }}
+                className="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-mono flex items-center gap-1 cursor-pointer"
+              >
+                <Plus className="w-3 h-3" /> Add Link
+              </button>
+            </div>
+            <div className="space-y-2">
+              {(Array.isArray(cmsData?.nav) ? cmsData.nav : []).map((link, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="Label"
+                    value={link.label || ''}
+                    onChange={e => {
+                      const updated = [...(cmsData?.nav || [])];
+                      updated[idx] = { ...updated[idx], label: e.target.value };
+                      setCmsData(prev => ({ ...prev, nav: updated }));
+                    }}
+                    className="flex-1 bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Href (#about, /services)"
+                    value={link.href || ''}
+                    onChange={e => {
+                      const updated = [...(cmsData?.nav || [])];
+                      updated[idx] = { ...updated[idx], href: e.target.value };
+                      setCmsData(prev => ({ ...prev, nav: updated }));
+                    }}
+                    className="flex-1 bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = [...(cmsData?.nav || [])];
+                      updated.splice(idx, 1);
+                      setCmsData(prev => ({ ...prev, nav: updated }));
+                    }}
+                    className="p-2 rounded-lg text-rose-400 hover:bg-rose-500/20 cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-5 rounded-2xl bg-[#100722] border border-purple-500/20 space-y-3">
+              <h3 className="text-sm font-bold text-white font-sans">Hero Quick Searches (one per line)</h3>
+              <textarea
+                rows={5}
+                value={(Array.isArray(cmsData?.searches) ? cmsData.searches : []).join('\n')}
+                onChange={e => setCmsData(prev => ({ ...prev, searches: e.target.value.split('\n').filter(Boolean) }))}
+                className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs font-mono text-white"
+              />
+            </div>
+            <div className="p-5 rounded-2xl bg-[#100722] border border-purple-500/20 space-y-3">
+              <h3 className="text-sm font-bold text-white font-sans">Statement Marquee Lines (one per line)</h3>
+              <textarea
+                rows={5}
+                value={(Array.isArray(cmsData?.marqueeLines) ? cmsData.marqueeLines : []).join('\n')}
+                onChange={e => setCmsData(prev => ({ ...prev, marqueeLines: e.target.value.split('\n').filter(Boolean) }))}
+                className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs font-mono text-white"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 13. RAW JSON EDITOR */}
+      {activeSection === 'raw' && (
+        <div className="p-5 rounded-2xl bg-[#100722] border border-purple-500/20 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-bold text-white font-sans">Full CMS Raw JSON Editor</h2>
+              <p className="text-xs text-purple-300/60 font-mono">Edit any field in the entire CMS JSON directly, then click Apply JSON &amp; Publish.</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setRawJsonText(JSON.stringify(cmsData, null, 2));
+                  setRawJsonError(null);
+                }}
+                className="px-3 py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 text-purple-200 text-xs font-mono cursor-pointer"
+              >
+                Load Current JSON
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const parsed = JSON.parse(rawJsonText || JSON.stringify(cmsData));
+                    setCmsData(parsed);
+                    setRawJsonError(null);
+                  } catch (err) {
+                    setRawJsonError(err.message);
+                  }
+                }}
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold cursor-pointer flex items-center gap-1.5"
+              >
+                <Check className="w-3.5 h-3.5" /> Apply JSON
+              </button>
+            </div>
+          </div>
+          {rawJsonError && (
+            <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/35 text-rose-200 text-xs font-mono">
+              JSON Error: {rawJsonError}
+            </div>
+          )}
+          <textarea
+            rows={18}
+            value={rawJsonText || JSON.stringify(cmsData, null, 2)}
+            onChange={e => setRawJsonText(e.target.value)}
+            className="w-full bg-[#090314] border border-purple-500/30 rounded-xl p-4 text-xs font-mono text-purple-100 leading-relaxed"
+            spellCheck={false}
+          />
         </div>
       )}
 
