@@ -607,7 +607,7 @@ export default function AdminPanel({ onBackToSite }) {
               setCmsData={setCmsData}
               onPublish={handlePublishCms}
               publishing={cmsPublishing}
-              saveAlert={cmsNotice ? { type: 'success', text: cmsNotice } : null}
+              saveAlert={alert}
             />
           )}
 
