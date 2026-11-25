@@ -48,7 +48,7 @@ export default function Services() {
                       >
                         <p>{s.body}</p>
                         <ul className="tags">
-                          {s.tags.map(t => (
+                          {(s.tags || []).map(t => (
                             <li key={t}>{t}</li>
                           ))}
                         </ul>
