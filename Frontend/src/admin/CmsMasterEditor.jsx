@@ -28,8 +28,10 @@ import {
 } from 'lucide-react';
 import { DEFAULT_CMS_DATA } from '../context/CmsContext';
 
-export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publishing, saveAlert }) {
-  const [activeSection, setActiveSection] = useState('brand');
+export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publishing, saveAlert, activeSection: controlledSection, onSectionChange }) {
+  const [internalSection, setInternalSection] = useState('brand');
+  const activeSection = controlledSection ?? internalSection;
+  const setActiveSection = onSectionChange ?? setInternalSection;
   const [rawJsonText, setRawJsonText] = useState('');
   const [rawJsonError, setRawJsonError] = useState(null);
 

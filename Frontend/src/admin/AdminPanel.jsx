@@ -30,6 +30,7 @@ export default function AdminPanel({ onBackToSite }) {
   const { content: cmsContent, updateContent: updateCmsContent } = useCms();
   const [cmsData, setCmsData] = useState(() => cmsContent);
   const [activeTab, setActiveTab] = useState('overview');
+  const [cmsSection, setCmsSection] = useState('brand');
   const [cmsPublishing, setCmsPublishing] = useState(false);
   const [alert, setAlert] = useState(null);
 
@@ -330,6 +331,46 @@ export default function AdminPanel({ onBackToSite }) {
             <span>Live CMS Studio</span>
           </button>
 
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', paddingLeft: '0.75rem', borderLeft: '2px solid rgba(99,102,241,0.2)', marginLeft: '0.75rem' }}>
+            {[
+              { id: 'brand', label: 'Global Brand & Hubs' },
+              { id: 'settings', label: 'Site Settings & SEO' },
+              { id: 'hero', label: 'Hero Main Section' },
+              { id: 'about', label: 'About & Philosophy' },
+              { id: 'services', label: 'Capabilities & Services' },
+              { id: 'team', label: 'Architects & Leads' },
+              { id: 'pricing', label: 'Investment Sprints' },
+              { id: 'projects', label: 'Flagship Deployments' },
+              { id: 'faqs', label: 'Technical FAQs' },
+              { id: 'testimonials', label: 'Client Feedback' },
+              { id: 'journal', label: 'Journal & Posts' },
+              { id: 'navigation', label: 'Nav, Searches & Marquee' },
+              { id: 'policies', label: 'Compliance & Policies' },
+              { id: 'raw', label: 'Raw JSON Editor' },
+            ].map(sec => (
+              <button
+                key={sec.id}
+                onClick={() => {
+                  setActiveTab('cms');
+                  setCmsSection(sec.id);
+                }}
+                style={{
+                  padding: '0.45rem 0.75rem',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.82rem',
+                  fontWeight: activeTab === 'cms' && cmsSection === sec.id ? 700 : 500,
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: activeTab === 'cms' && cmsSection === sec.id ? 'rgba(51, 38, 255, 0.12)' : 'transparent',
+                  color: activeTab === 'cms' && cmsSection === sec.id ? 'var(--blue)' : 'var(--ink-soft)'
+                }}
+              >
+                {sec.label}
+              </button>
+            ))}
+          </div>
+
           <button
             onClick={() => setActiveTab('settings')}
             style={{
@@ -608,6 +649,8 @@ export default function AdminPanel({ onBackToSite }) {
               onPublish={handlePublishCms}
               publishing={cmsPublishing}
               saveAlert={alert}
+              activeSection={cmsSection}
+              onSectionChange={setCmsSection}
             />
           )}
 
