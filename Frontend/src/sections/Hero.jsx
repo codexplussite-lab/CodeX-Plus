@@ -80,7 +80,7 @@ export default function Hero({ ready }) {
       <h1 className="hero__wordmark">
         {ready && (
           <VariableProximity
-            label={brand.wordmark || 'CODEXX'}
+            label={(brand.name && brand.name !== defaultbrand.name ? brand.name : brand.wordmark) || 'CODEXX'}
             containerRef={section}
             radius={260}
             falloff="gaussian"
