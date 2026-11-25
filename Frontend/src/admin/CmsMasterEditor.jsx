@@ -303,6 +303,34 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
           </div>
 
           <div>
+            <label className="block text-purple-300 uppercase mb-2">Brand Logo Image (Upload or URL)</label>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <input
+                type="text"
+                placeholder="https://... or upload"
+                value={brand.logoUrl || ''}
+                onChange={(e) => updateSectionField('brand', 'logoUrl', e.target.value)}
+                className="w-full bg-[#150a2b] border border-purple-500/25 rounded-xl px-4 py-3 text-white focus:border-[#a855f7] outline-none"
+              />
+              <label style={{ margin: 0, cursor: 'pointer', padding: '0.65rem 1rem', borderRadius: '0.75rem', background: '#4f46e5', color: '#fff', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+                Upload
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    const r = new FileReader();
+                    r.onload = () => updateSectionField('brand', 'logoUrl', r.result);
+                    r.readAsDataURL(f);
+                  }}
+                />
+              </label>
+            </div>
+          </div>
+
+          <div>
             <label className="block text-purple-300 uppercase mb-2">Footer Copyright Statement</label>
             <input
               type="text"
