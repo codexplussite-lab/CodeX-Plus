@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import CmsMasterEditor from './CmsMasterEditor';
 import {
   LayoutDashboard,
   Mail,
@@ -601,153 +602,13 @@ export default function AdminPanel({ onBackToSite }) {
 
           {/* TAB 4: CMS STUDIO */}
           {activeTab === 'cms' && (
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
-                <div>
-                  <h2 style={{ fontFamily: 'var(--display)', fontSize: '2.4rem', fontWeight: 700, margin: 0, letterSpacing: '-0.03em' }}>
-                    Avista Live CMS Studio
-                  </h2>
-                  <p style={{ color: 'var(--ink-soft)', margin: '0.4rem 0 0' }}>
-                    Edit website copy, services, projects, FAQs, and team live in production.
-                  </p>
-                </div>
-
-                <button
-                  onClick={handlePublishCms}
-                  disabled={cmsPublishing}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.85rem 1.6rem',
-                    borderRadius: '999px',
-                    background: 'var(--blue)',
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: '1rem',
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: '0 10px 25px -8px rgba(51, 38, 255, 0.4)'
-                  }}
-                >
-                  <Sparkles size={18} />
-                  <span>{cmsPublishing ? 'Publishing...' : 'Publish to Live Site'}</span>
-                </button>
-              </div>
-
-              {/* CMS Sections Accordion / Forms */}
-              <div style={{ display: 'grid', gap: '1.5rem' }}>
-                {/* 1. Brand & Contact */}
-                <div style={{ background: 'var(--white)', border: '1.5px solid var(--line)', borderRadius: '1.25rem', padding: '1.8rem' }}>
-                  <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.3rem', fontWeight: 700, marginBottom: '1.2rem' }}>
-                    Brand & Studio Identity
-                  </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.3rem' }}>Studio Name</label>
-                      <input
-                        type="text"
-                        value={cmsData?.brand?.name || 'Avista'}
-                        onChange={e => setCmsData(prev => ({ ...prev, brand: { ...prev.brand, name: e.target.value } }))}
-                        style={{ width: '100%', padding: '0.6rem 0.8rem', borderRadius: '0.6rem', border: '1.5px solid var(--line)' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.3rem' }}>Contact Email</label>
-                      <input
-                        type="email"
-                        value={cmsData?.brand?.email || 'hello@avista.studio'}
-                        onChange={e => setCmsData(prev => ({ ...prev, brand: { ...prev.brand, email: e.target.value } }))}
-                        style={{ width: '100%', padding: '0.6rem 0.8rem', borderRadius: '0.6rem', border: '1.5px solid var(--line)' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.3rem' }}>Phone</label>
-                      <input
-                        type="text"
-                        value={cmsData?.brand?.phone || '(0456) 6757-888'}
-                        onChange={e => setCmsData(prev => ({ ...prev, brand: { ...prev.brand, phone: e.target.value } }))}
-                        style={{ width: '100%', padding: '0.6rem 0.8rem', borderRadius: '0.6rem', border: '1.5px solid var(--line)' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.3rem' }}>City / Hub</label>
-                      <input
-                        type="text"
-                        value={cmsData?.brand?.city || 'Los Angeles, CA'}
-                        onChange={e => setCmsData(prev => ({ ...prev, brand: { ...prev.brand, city: e.target.value } }))}
-                        style={{ width: '100%', padding: '0.6rem 0.8rem', borderRadius: '0.6rem', border: '1.5px solid var(--line)' }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 2. Hero Section */}
-                <div style={{ background: 'var(--white)', border: '1.5px solid var(--line)', borderRadius: '1.25rem', padding: '1.8rem' }}>
-                  <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.3rem', fontWeight: 700, marginBottom: '1.2rem' }}>
-                    Hero Section
-                  </h3>
-                  <div style={{ display: 'grid', gap: '1rem' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.3rem' }}>Hero Tagline</label>
-                      <input
-                        type="text"
-                        value={cmsData?.hero?.tag || 'Digital agency in Los Angeles'}
-                        onChange={e => setCmsData(prev => ({ ...prev, hero: { ...prev.hero, tag: e.target.value } }))}
-                        style={{ width: '100%', padding: '0.6rem 0.8rem', borderRadius: '0.6rem', border: '1.5px solid var(--line)' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.3rem' }}>Headline (SplitText animated)</label>
-                      <textarea
-                        rows={2}
-                        value={cmsData?.hero?.headline || 'From vision to reality. Design crafted to captivate.'}
-                        onChange={e => setCmsData(prev => ({ ...prev, hero: { ...prev.hero, headline: e.target.value } }))}
-                        style={{ width: '100%', padding: '0.6rem 0.8rem', borderRadius: '0.6rem', border: '1.5px solid var(--line)' }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. About & Vision */}
-                <div style={{ background: 'var(--white)', border: '1.5px solid var(--line)', borderRadius: '1.25rem', padding: '1.8rem' }}>
-                  <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.3rem', fontWeight: 700, marginBottom: '1.2rem' }}>
-                    About Section & Story
-                  </h3>
-                  <div style={{ display: 'grid', gap: '1rem' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.3rem' }}>Lead Statement</label>
-                      <textarea
-                        rows={3}
-                        value={cmsData?.about?.statement || ''}
-                        onChange={e => setCmsData(prev => ({ ...prev, about: { ...prev.about, statement: e.target.value } }))}
-                        style={{ width: '100%', padding: '0.6rem 0.8rem', borderRadius: '0.6rem', border: '1.5px solid var(--line)' }}
-                      />
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.3rem' }}>Founder Name</label>
-                        <input
-                          type="text"
-                          value={cmsData?.about?.founder?.name || 'Arnold Vain'}
-                          onChange={e => setCmsData(prev => ({ ...prev, about: { ...prev.about, founder: { ...prev.about.founder, name: e.target.value } } }))}
-                          style={{ width: '100%', padding: '0.6rem 0.8rem', borderRadius: '0.6rem', border: '1.5px solid var(--line)' }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.3rem' }}>Founder Role</label>
-                        <input
-                          type="text"
-                          value={cmsData?.about?.founder?.role || 'Founder & CEO'}
-                          onChange={e => setCmsData(prev => ({ ...prev, about: { ...prev.about, founder: { ...prev.about.founder, role: e.target.value } } }))}
-                          style={{ width: '100%', padding: '0.6rem 0.8rem', borderRadius: '0.6rem', border: '1.5px solid var(--line)' }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <CmsMasterEditor
+              cmsData={cmsData}
+              setCmsData={setCmsData}
+              onPublish={handlePublishCms}
+              publishing={cmsPublishing}
+              saveAlert={cmsNotice ? { type: 'success', text: cmsNotice } : null}
+            />
           )}
 
           {/* TAB 5: SYSTEM */}
