@@ -38,8 +38,7 @@ export default function Hero({ ready }) {
           <p className="hero__tag">{brand.name} &bull; {brand.city}</p>
           <div className="hero__headline">
             {ready && (
-              <SplitText
-                tag="h2"
+              <SplitText key={heroHeadline} tag="h2"
                 text={heroHeadline}
                 splitType="words"
                 effect="blur"
