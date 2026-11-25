@@ -178,7 +178,8 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
         </div>
       )}
 
-      {/* Navigation Sub-Menu Bar */}
+      {/* Navigation Sub-Menu Bar (hidden when controlled by AdminPanel sidebar) */}
+      {!controlledSection && (
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-purple-500/15">
         {sectionsMenu.map((item) => {
           const Icon = item.icon;
@@ -204,6 +205,7 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
           );
         })}
       </div>
+      )}
 
       {/* ================= 1. GLOBAL BRAND & HUBS ================= */}
       {activeSection === 'brand' && (
