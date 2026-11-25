@@ -87,7 +87,33 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="cms-editor-root">
+      <style>{`
+        .cms-editor-root { display: flex; flex-direction: column; gap: 1.5rem; font-family: inherit; color: #111827; }
+        .cms-editor-root > div:first-of-type { background: linear-gradient(135deg, #170933, #110526); color: #fff; padding: 1.75rem 2rem; border-radius: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem; }
+        .cms-editor-root > div:first-of-type h1 { color: #fff; font-size: 1.75rem; font-weight: 800; margin: 0.35rem 0; }
+        .cms-editor-root > div:first-of-type p { color: rgba(233,213,255,0.8); font-size: 0.9rem; margin: 0; max-width: 42rem; }
+        .cms-editor-root > div:first-of-type > div:last-child { display: flex; gap: 0.75rem; align-items: center; }
+        .cms-editor-root button { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.6rem 1.1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; background: #fff; color: #1f2937; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+        .cms-editor-root button:hover { background: #f3f4f6; }
+        .cms-editor-root > div:first-of-type button:last-child,
+        .cms-editor-root > div:last-child button { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+        .cms-editor-root > div:first-of-type button:last-child:hover,
+        .cms-editor-root > div:last-child button:hover { background: #4338ca; }
+        .cms-editor-root > div:nth-of-type(2) { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb; }
+        .cms-editor-root > div:nth-of-type(2) button { padding: 0.55rem 0.9rem; font-size: 0.8rem; border-radius: 0.65rem; }
+        .cms-editor-root input[type="text"],
+        .cms-editor-root input[type="email"],
+        .cms-editor-root input[type="url"],
+        .cms-editor-root input[type="number"],
+        .cms-editor-root textarea,
+        .cms-editor-root select { width: 100%; box-sizing: border-box; padding: 0.65rem 0.85rem; border-radius: 0.65rem; border: 1.5px solid #d1d5db; background: #fff; color: #111827; font-size: 0.9rem; font-family: inherit; margin-top: 0.25rem; }
+        .cms-editor-root input:focus, .cms-editor-root textarea:focus, .cms-editor-root select:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
+        .cms-editor-root label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-top: 0.75rem; }
+        .cms-editor-root h2, .cms-editor-root h3 { font-size: 1.15rem; font-weight: 700; color: #111827; margin: 0 0 0.5rem; }
+        .cms-editor-root > div:nth-of-type(3) { background: #fff; border: 1px solid #e5e7eb; border-radius: 1.25rem; padding: 1.75rem; display: flex; flex-direction: column; gap: 1.25rem; }
+        .cms-editor-root > div:last-child { position: sticky; bottom: 1rem; background: #100720; color: #fff; padding: 1rem 1.5rem; border-radius: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+      `}</style>
       
       {/* Top Banner & Control Bar */}
       <div className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-[#170933] via-[#110526] to-[#0d041c] border border-purple-500/25 shadow-[0_0_40px_rgba(139,92,246,0.15)] flex flex-col lg:flex-row lg:items-center justify-between gap-6">
