@@ -24,9 +24,13 @@ export default function Hero({ ready }) {
       moveY((e.clientY / window.innerHeight - 0.5) * 40);
     };
     window.addEventListener('mousemove', onMove, { passive: true });
-    return () => window.removeEventListener('mousemove', onMove);
+    const hero = content?.hero || {};
+  const heroHeadline = [hero.titleLine1, hero.titleHighlight, hero.titleLine2].filter(Boolean).join(' ') || hero.title || 'From vision to reality. Design crafted to captivate.';
+  return () => window.removeEventListener('mousemove', onMove);
   }, []);
 
+  const hero = content?.hero || {};
+  const heroHeadline = [hero.titleLine1, hero.titleHighlight, hero.titleLine2].filter(Boolean).join(' ') || hero.title || 'From vision to reality. Design crafted to captivate.';
   return (
     <section className="hero" id="top" ref={section}>
       <div className="hero__grid">
@@ -36,7 +40,7 @@ export default function Hero({ ready }) {
             {ready && (
               <SplitText
                 tag="h2"
-                text="From vision to reality. Design crafted to captivate."
+                text={heroHeadline}
                 splitType="words"
                 effect="blur"
                 delay={70}
