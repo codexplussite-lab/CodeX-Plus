@@ -36,10 +36,29 @@ export function CmsProvider({ children }) {
       if (res.ok) {
         const json = await res.json();
         if (json.success && json.data && Object.keys(json.data).length > 0) {
-          setContent(prev => ({
-            ...prev,
-            ...json.data,
-          }));
+          setContent(prev => {
+            const next = { ...prev };
+            for (const [key, val] of Object.entries(json.data)) {
+              if (Array.isArray(DEFAULT_CMS_DATA[key])) {
+                if (Array.isArray(val)) next[key] = val;
+              } else if (key === 'about' && val && typeof val === 'object') {
+                next.about = {
+                  ...prev.about,
+                  ...val,
+                  stats: Array.isArray(val.stats) ? val.stats : prev.about.stats,
+                };
+              } else if (key === 'brand' && val && typeof val === 'object') {
+                next.brand = {
+                  ...prev.brand,
+                  ...val,
+                  socials: Array.isArray(val.socials) ? val.socials : prev.brand.socials,
+                };
+              } else if (val !== undefined && val !== null) {
+                next[key] = val;
+              }
+            }
+            return next;
+          });
         }
       }
     } catch (err) {
