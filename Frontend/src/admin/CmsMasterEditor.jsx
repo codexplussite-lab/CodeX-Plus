@@ -71,6 +71,7 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
 
   const sectionsMenu = [
     { id: 'brand', name: 'Global Brand & Hubs', icon: Globe, count: '9 Fields' },
+    { id: 'settings', name: 'Site Settings & SEO', icon: Building, count: '7 Settings' },
     { id: 'hero', name: 'Hero Main Section', icon: Sparkles, count: '8 Fields' },
     { id: 'about', name: 'About & Philosophy', icon: Building, count: `${about?.stats?.length || 4} Stats` },
     { id: 'services', name: 'Capabilities & Services', icon: Cpu, count: `${services?.items?.length || 5} Services` },
@@ -1630,6 +1631,97 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
             </div>
           </div>
 
+        </div>
+      )}
+
+      {/* 1.5 SITE SETTINGS & SEO */}
+      {activeSection === 'settings' && (
+        <div className="p-6 rounded-2xl bg-[#100722] border border-purple-500/20 space-y-5">
+          <div>
+            <h2 className="text-lg font-bold text-white font-sans">Site Settings &amp; SEO</h2>
+            <p className="text-xs text-purple-300/60 font-mono">Configure global site metadata, theme accent, maintenance mode, and footer copyright.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono text-purple-300">Site Title (Browser Tab)</label>
+              <input
+                type="text"
+                placeholder="CodeX Plus — Digital Engineering Studio"
+                value={cmsData?.settings?.siteTitle || ''}
+                onChange={e => updateSectionField('settings', 'siteTitle', e.target.value)}
+                className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono text-purple-300">Favicon URL</label>
+              <input
+                type="text"
+                placeholder="/favicon.ico"
+                value={cmsData?.settings?.favicon || ''}
+                onChange={e => updateSectionField('settings', 'favicon', e.target.value)}
+                className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+              />
+            </div>
+            <div className="space-y-1.5 md:col-span-2">
+              <label className="text-xs font-mono text-purple-300">Meta Description (SEO)</label>
+              <textarea
+                rows={2}
+                placeholder="High-performance web applications, AI systems, and digital products."
+                value={cmsData?.settings?.metaDescription || ''}
+                onChange={e => updateSectionField('settings', 'metaDescription', e.target.value)}
+                className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white resize-none"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono text-purple-300">Primary Accent Color</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={cmsData?.settings?.accentColor || '#8b5cf6'}
+                  onChange={e => updateSectionField('settings', 'accentColor', e.target.value)}
+                  className="h-9 w-12 rounded bg-transparent border border-purple-500/25 cursor-pointer"
+                />
+                <input
+                  type="text"
+                  value={cmsData?.settings?.accentColor || '#8b5cf6'}
+                  onChange={e => updateSectionField('settings', 'accentColor', e.target.value)}
+                  className="flex-1 bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs font-mono text-white"
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono text-purple-300">Google Analytics / Tracking ID</label>
+              <input
+                type="text"
+                placeholder="G-XXXXXXXXXX"
+                value={cmsData?.settings?.analyticsId || ''}
+                onChange={e => updateSectionField('settings', 'analyticsId', e.target.value)}
+                className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs font-mono text-white"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono text-purple-300">Footer Copyright Text</label>
+              <input
+                type="text"
+                placeholder="© 2026 CodeX Plus. All rights reserved."
+                value={cmsData?.settings?.copyright || ''}
+                onChange={e => updateSectionField('settings', 'copyright', e.target.value)}
+                className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+              />
+            </div>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-[#180c33] border border-purple-500/20">
+              <div>
+                <div className="text-xs font-mono text-white font-bold">Maintenance Mode</div>
+                <div className="text-[11px] text-purple-300/60">Show maintenance banner to visitors</div>
+              </div>
+              <input
+                type="checkbox"
+                checked={Boolean(cmsData?.settings?.maintenanceMode)}
+                onChange={e => updateSectionField('settings', 'maintenanceMode', e.target.checked)}
+                className="w-4 h-4 accent-purple-600 cursor-pointer"
+              />
+            </div>
+          </div>
         </div>
       )}
 
