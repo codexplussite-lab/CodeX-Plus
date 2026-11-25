@@ -102,8 +102,12 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
         .cms-editor-root > div:last-child button { background: #4f46e5; color: #fff; border-color: #4f46e5; }
         .cms-editor-root > div:first-of-type button:last-child:hover,
         .cms-editor-root > div:last-child button:hover { background: #4338ca; }
-        .cms-editor-root > div:nth-of-type(2) { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb; }
-        .cms-editor-root > div:nth-of-type(2) button { padding: 0.55rem 0.9rem; font-size: 0.8rem; border-radius: 0.65rem; }
+        .cms-editor-root > div:nth-of-type(2):not(:last-child) { background: #fff; border: 1px solid #e5e7eb; border-radius: 1.25rem; padding: 1.75rem; display: flex; flex-direction: column; gap: 1.25rem; }
+        .cms-editor-root .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; width: 100%; }
+        .cms-editor-root .space-y-6 { display: flex; flex-direction: column; gap: 1.25rem; width: 100%; }
+        .cms-editor-root .space-y-4 { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
+        .cms-editor-root .space-y-3 { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+        .cms-editor-root .space-y-2 { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
         .cms-editor-root input[type="text"],
         .cms-editor-root input[type="email"],
         .cms-editor-root input[type="url"],
@@ -113,7 +117,6 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
         .cms-editor-root input:focus, .cms-editor-root textarea:focus, .cms-editor-root select:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
         .cms-editor-root label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-top: 0.75rem; }
         .cms-editor-root h2, .cms-editor-root h3 { font-size: 1.15rem; font-weight: 700; color: #111827; margin: 0 0 0.5rem; }
-        .cms-editor-root > div:nth-of-type(3) { background: #fff; border: 1px solid #e5e7eb; border-radius: 1.25rem; padding: 1.75rem; display: flex; flex-direction: column; gap: 1.25rem; }
         .cms-editor-root > div:last-child { position: sticky; bottom: 1rem; background: #100720; color: #fff; padding: 1rem 1.5rem; border-radius: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
       `}</style>
       
