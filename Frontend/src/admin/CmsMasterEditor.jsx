@@ -77,7 +77,7 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
     { id: 'hero', name: 'Hero Main Section', icon: Sparkles, count: '8 Fields' },
     { id: 'about', name: 'About & Philosophy', icon: Building, count: `${about?.stats?.length || 4} Stats` },
     { id: 'services', name: 'Capabilities & Services', icon: Cpu, count: `${services?.items?.length || 5} Services` },
-    { id: 'team', name: 'Architects & Leads', icon: Users, count: `${team?.members?.length || 8} Members` },
+    { id: 'team', name: 'Team Members', icon: Users, count: `${team?.members?.length || 8} Members` },
     { id: 'pricing', name: 'Investment Sprints', icon: DollarSign, count: `${pricing?.tiers?.length || 3} Tiers` },
     { id: 'projects', name: 'Flagship Deployments', icon: FolderGit2, count: `${projects?.items?.length || 4} Projects` },
     { id: 'faqs', name: 'Technical FAQs', icon: HelpCircle, count: `${faqs?.items?.length || 5} FAQs` },

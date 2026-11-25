@@ -344,7 +344,7 @@ export default function AdminPanel({ onBackToSite }) {
               { id: 'hero', label: 'Hero Main Section' },
               { id: 'about', label: 'About & Philosophy' },
               { id: 'services', label: 'Capabilities & Services' },
-              { id: 'team', label: 'Architects & Leads' },
+              { id: 'team', label: 'Team Members' },
               { id: 'pricing', label: 'Investment Sprints' },
               { id: 'projects', label: 'Flagship Deployments' },
               { id: 'faqs', label: 'Technical FAQs' },
