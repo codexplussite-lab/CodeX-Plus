@@ -41,6 +41,8 @@ export function CmsProvider({ children }) {
             for (const [key, val] of Object.entries(json.data)) {
               if (Array.isArray(DEFAULT_CMS_DATA[key])) {
                 if (Array.isArray(val)) next[key] = val;
+                else if (val && Array.isArray(val.items)) next[key] = val.items;
+                else if (val && Array.isArray(val.members)) next[key] = val.members;
               } else if (key === 'about' && val && typeof val === 'object') {
                 next.about = {
                   ...prev.about,
