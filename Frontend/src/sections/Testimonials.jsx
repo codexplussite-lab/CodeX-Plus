@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import CircularText from '../components/bits/CircularText.jsx';
 import Visual from '../components/Visual.jsx';
-import { testimonials } from '../data/content.js';
+import { testimonials as defaulttestimonials } from '../data/content.js';
+import { useCms } from '../context/CmsContext.jsx';
 
 export default function Testimonials() {
+  const { content } = useCms();
+  const testimonials = content?.testimonials || defaulttestimonials; 
   const [i, setI] = useState(0);
   const [dir, setDir] = useState(1);
   const t = testimonials[i];

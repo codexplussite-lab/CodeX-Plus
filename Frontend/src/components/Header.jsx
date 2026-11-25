@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import Magnet from './bits/Magnet.jsx';
-import { brand, nav } from '../data/content.js';
+import { brand as defaultbrand, nav as defaultnav } from '../data/content.js';
+import { useCms } from '../context/CmsContext.jsx';
 
 const go = (e, href) => {
   if (!href.startsWith('#')) return;
@@ -13,6 +14,9 @@ const go = (e, href) => {
 };
 
 export default function Header({ ready }) {
+  const { content } = useCms();
+  const brand = content?.brand || defaultbrand; 
+  const nav = content?.nav || defaultnav; 
   const [hidden, setHidden] = useState(false);
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);

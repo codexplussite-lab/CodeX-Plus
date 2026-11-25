@@ -2,9 +2,13 @@ import Visual from '../components/Visual.jsx';
 import ScrollVelocity from '../components/bits/ScrollVelocity.jsx';
 import AnimatedContent from '../components/bits/AnimatedContent.jsx';
 import SplitText from '../components/bits/SplitText.jsx';
-import { partners, posts } from '../data/content.js';
+import { partners as defaultpartners, posts as defaultposts } from '../data/content.js';
+import { useCms } from '../context/CmsContext.jsx';
 
 export default function Journal() {
+  const { content } = useCms();
+  const partners = content?.partners || defaultpartners; 
+  const posts = content?.posts || defaultposts; 
   return (
     <section className="journal section" id="journal">
       <div className="wrap">

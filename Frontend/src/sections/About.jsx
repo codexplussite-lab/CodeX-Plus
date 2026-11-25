@@ -2,9 +2,12 @@ import ScrollReveal from '../components/bits/ScrollReveal.jsx';
 import CountUp from '../components/bits/CountUp.jsx';
 import AnimatedContent from '../components/bits/AnimatedContent.jsx';
 import Visual from '../components/Visual.jsx';
-import { about } from '../data/content.js';
+import { about as defaultabout } from '../data/content.js';
+import { useCms } from '../context/CmsContext.jsx';
 
 export default function About() {
+  const { content } = useCms();
+  const about = content?.about || defaultabout; 
   return (
     <section className="about section" id="about">
       <div className="wrap">

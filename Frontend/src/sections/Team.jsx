@@ -3,10 +3,13 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import Visual from '../components/Visual.jsx';
 import SplitText from '../components/bits/SplitText.jsx';
-import { team } from '../data/content.js';
+import { team as defaultteam } from '../data/content.js';
+import { useCms } from '../context/CmsContext.jsx';
 
 // Roster: hovering a name reveals a portrait that follows the cursor.
 export default function Team() {
+  const { content } = useCms();
+  const team = content?.team || defaultteam; 
   const wrap = useRef(null);
   const portrait = useRef(null);
   const [hover, setHover] = useState(0);

@@ -4,9 +4,13 @@ import SplitText from '../components/bits/SplitText.jsx';
 import VariableProximity from '../components/bits/VariableProximity.jsx';
 import CircularText from '../components/bits/CircularText.jsx';
 import Magnet from '../components/bits/Magnet.jsx';
-import { brand, searches } from '../data/content.js';
+import { brand as defaultbrand, searches as defaultsearches } from '../data/content.js';
+import { useCms } from '../context/CmsContext.jsx';
 
 export default function Hero({ ready }) {
+  const { content } = useCms();
+  const brand = content?.brand || defaultbrand; 
+  const searches = content?.searches || defaultsearches; 
   const section = useRef(null);
   const orb = useRef(null);
 

@@ -2,11 +2,14 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import Visual from '../components/Visual.jsx';
-import { projects } from '../data/content.js';
+import { projects as defaultprojects } from '../data/content.js';
+import { useCms } from '../context/CmsContext.jsx';
 
 // Desktop: the section pins and the cards travel sideways as you scroll.
 // Mobile / reduced motion: a plain swipeable row.
 export default function Projects() {
+  const { content } = useCms();
+  const projects = content?.projects || defaultprojects; 
   const section = useRef(null);
   const track = useRef(null);
   const bar = useRef(null);

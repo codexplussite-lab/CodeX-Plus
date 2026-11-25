@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import Visual from '../components/Visual.jsx';
 import SplitText from '../components/bits/SplitText.jsx';
-import { services } from '../data/content.js';
+import { services as defaultservices } from '../data/content.js';
+import { useCms } from '../context/CmsContext.jsx';
 
 const seeds = [0, 2, 3, 5]; // palette indexes that stay visible on the dark section
 
 export default function Services() {
+  const { content } = useCms();
+  const services = content?.services || defaultservices; 
   const [active, setActive] = useState(0);
 
   return (
