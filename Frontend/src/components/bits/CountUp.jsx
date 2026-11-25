@@ -52,7 +52,7 @@ const EASINGS = {
 };
 
 const getDecimalPlaces = num => {
-  const str = num.toString();
+  const str = (num ?? 0).toString();
 
   if (str.includes('.')) {
     const decimals = str.split('.')[1];
