@@ -138,6 +138,12 @@ export default function AdminPanel({ onBackToSite }) {
 
   return (
     <div style={{
+      '--paper': '#edeef1',
+      '--paper-2': '#e1e3e9',
+      '--white': '#fafafb',
+      '--ink': '#15171c',
+      '--ink-soft': '#4a4f5c',
+      '--line': 'rgba(21, 23, 28, 0.14)',
       minHeight: '100vh',
       background: 'var(--paper)',
       color: 'var(--ink)',
