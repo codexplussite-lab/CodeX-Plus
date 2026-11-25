@@ -3,6 +3,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Noise from './components/bits/Noise.jsx';
+import Loader from './components/Loader.jsx';
 import Header from './components/Header.jsx';
 import CursorLabel from './components/CursorLabel.jsx';
 import Hero from './sections/Hero.jsx';
@@ -21,13 +22,25 @@ import { CmsProvider } from './context/CmsContext.jsx';
 gsap.registerPlugin(ScrollTrigger);
 
 function MainSite() {
-  const ready = true;
+  const [ready, setReady] = useState(false);
+
+  // Safety timeout: ensure page ready & scrolling unlocked within 2.5s regardless of animations
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      setReady(true);
+      window.__lenis?.start();
+    }, 2500);
+    return () => clearTimeout(safetyTimer);
+  }, []);
 
   // Smooth scrolling (Lenis) wired into GSAP ScrollTrigger. Disabled for reduced-motion users.
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
     window.__lenis = lenis;
+    if (!ready) {
+      lenis.stop(); // locked until the loader finishes
+    }
     lenis.on('scroll', ScrollTrigger.update);
     const tick = time => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
@@ -39,8 +52,20 @@ function MainSite() {
     };
   }, []);
 
+  useEffect(() => {
+    if (ready) {
+      window.__lenis?.start();
+    }
+  }, [ready]);
+
   return (
     <>
+      <Loader
+        onReveal={() => {
+          setReady(true);
+          window.__lenis?.start();
+        }}
+      />
       <Header ready={ready} />
       <main>
         <Hero ready={ready} />
