@@ -70,7 +70,6 @@ export default function AdminLogin({ onLogin, onBackToSite }) {
       '--ink': '#15171c',
       '--ink-soft': '#4a4f5c',
       '--line': 'rgba(21, 23, 28, 0.14)',
-      color: '#15171c',
       minHeight: '100vh',
       background: 'var(--paper)',
       color: 'var(--ink)',
