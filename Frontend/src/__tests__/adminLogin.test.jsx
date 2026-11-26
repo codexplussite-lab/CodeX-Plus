@@ -7,15 +7,15 @@ describe('AdminLogin Component', () => {
   it('should render login form inputs and title', () => {
     render(<AdminLogin onLogin={() => {}} onBackToSite={() => {}} />);
 
-    expect(screen.getByText('Avista Admin')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/hello@avista.studio or admin/i)).toBeInTheDocument();
+    expect(screen.getByText('Codex Admin')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/admin@codexplus.site or admin/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Sign in to Dashboard/i })).toBeInTheDocument();
   });
 
   it('should show error when invalid credentials submitted', async () => {
     render(<AdminLogin onLogin={() => {}} onBackToSite={() => {}} />);
 
-    const userInput = screen.getByPlaceholderText(/hello@avista.studio or admin/i);
+    const userInput = screen.getByPlaceholderText(/admin@codexplus.site or admin/i);
     const passInput = screen.getByPlaceholderText('••••••••••••');
     const submitBtn = screen.getByRole('button', { name: /Sign in to Dashboard/i });
 

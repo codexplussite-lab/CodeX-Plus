@@ -35,7 +35,7 @@ export default function AdminLogin({ onLogin, onBackToSite }) {
 
     // Direct fallback check for local admin
     const isValid =
-      (cleanUser === 'admin' || cleanUser === 'admin@codexplus.site' || cleanUser === 'hello@avista.studio') &&
+      (cleanUser === 'admin' || cleanUser === 'admin@codexplus.site' || cleanUser === 'admin@codexplus.site') &&
       (cleanPass === 'admin123' || cleanPass === 'password123' || cleanPass === 'admin');
 
     if (isValid) {
@@ -47,16 +47,16 @@ export default function AdminLogin({ onLogin, onBackToSite }) {
       localStorage.setItem('avista_admin_token', 'token_' + Date.now());
       onLogin(fallbackUser);
     } else {
-      setError('Invalid username or password. (Demo: admin / admin123 or hello@avista.studio / password123)');
+      setError('Invalid username or password. (Demo: admin / admin123 or admin@codexplus.site / password123)');
     }
     setLoading(false);
   };
 
   const handleQuickDemo = () => {
-    setEmail('hello@avista.studio');
+    setEmail('admin@codexplus.site');
     setPassword('password123');
     onLogin({
-      username: 'hello@avista.studio',
+      username: 'admin@codexplus.site',
       name: 'Arnold Vain (Founder & CEO)',
       role: 'Administrator',
     });
@@ -118,7 +118,7 @@ export default function AdminLogin({ onLogin, onBackToSite }) {
             fontWeight: 600
           }}>
             <Activity size={12} />
-            <span>Avista Studio Portal</span>
+            <span>Codex Studio Portal</span>
           </div>
         </div>
 
@@ -138,7 +138,7 @@ export default function AdminLogin({ onLogin, onBackToSite }) {
               letterSpacing: '-0.03em',
               margin: 0
             }}>
-              Avista Admin
+              Codex Admin
             </h1>
           </div>
           <p style={{ color: 'var(--ink-soft)', fontSize: '0.95rem', margin: 0 }}>
@@ -178,7 +178,7 @@ export default function AdminLogin({ onLogin, onBackToSite }) {
                 type="text"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="hello@avista.studio or admin"
+                placeholder="admin@codexplus.site or admin"
                 required
                 style={{ width: '100%', border: 'none', background: 'transparent', outline: 'none', color: 'var(--ink)' }}
               />
