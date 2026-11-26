@@ -104,7 +104,8 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
         .cms-editor-root > div:first-of-type button:last-child:hover,
         .cms-editor-root > div:last-child button:hover { background: #4338ca; }
         .cms-editor-root > div:nth-of-type(2):not(:last-child) { background: #fff; border: 1px solid #e5e7eb; border-radius: 1.25rem; padding: 1.75rem; display: flex; flex-direction: column; gap: 1.25rem; }
-        .cms-editor-root .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; width: 100%; }
+        .cms-editor-root .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; width: 100%; }
+        .cms-editor-root img { width: 56px; height: 56px; object-fit: cover; border-radius: 0.75rem; flex-shrink: 0; }
         .cms-editor-root .space-y-6 { display: flex; flex-direction: column; gap: 1.25rem; width: 100%; }
         .cms-editor-root .space-y-4 { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
         .cms-editor-root .space-y-3 { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
