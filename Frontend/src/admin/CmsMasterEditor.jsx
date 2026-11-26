@@ -63,7 +63,8 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
   const hero = cmsData?.hero || DEFAULT_CMS_DATA.hero;
   const about = cmsData?.about || DEFAULT_CMS_DATA.about;
   const services = cmsData?.services || DEFAULT_CMS_DATA.services;
-  const team = cmsData?.team || DEFAULT_CMS_DATA.team;
+  const rawTeam = cmsData?.team || DEFAULT_CMS_DATA.team;
+  const team = Array.isArray(rawTeam) ? { members: rawTeam } : { ...rawTeam, members: Array.isArray(rawTeam?.members) ? rawTeam.members : DEFAULT_CMS_DATA.team };
   const pricing = cmsData?.pricing || DEFAULT_CMS_DATA.pricing;
   const projects = cmsData?.projects || DEFAULT_CMS_DATA.projects;
   const faqs = cmsData?.faqs || DEFAULT_CMS_DATA.faqs;
