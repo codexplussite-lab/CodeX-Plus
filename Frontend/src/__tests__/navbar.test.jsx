@@ -12,7 +12,7 @@ describe('Header Component', () => {
       </CmsProvider>
     );
 
-    expect(screen.getByText('CODEXX PLUS')).toBeInTheDocument();
+    expect(screen.getByAltText('CODEXX PLUS')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
     expect(screen.getByText('Services')).toBeInTheDocument();
     expect(screen.getByText('Work')).toBeInTheDocument();
