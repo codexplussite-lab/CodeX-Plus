@@ -232,25 +232,6 @@ export default function AdminLogin({ onLogin, onBackToSite }) {
             <ArrowRight size={16} />
           </button>
         </form>
-
-        <div style={{
-          marginTop: '1.8rem',
-          paddingTop: '1.2rem',
-          borderTop: '1px solid var(--line)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: '0.85rem'
-        }}>
-          <button
-            type="button"
-            onClick={handleQuickDemo}
-            style={{ color: 'var(--blue)', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}
-          >
-            Demo One-Click Login
-          </button>
-          <span style={{ color: 'var(--ink-soft)' }}>Arnold Vain (CEO)</span>
-        </div>
       </div>
     </div>
   );
