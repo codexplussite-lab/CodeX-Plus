@@ -53,6 +53,7 @@ export function CmsProvider({ children }) {
                 next.brand = {
                   ...prev.brand,
                   ...val,
+                  name: val.siteName || val.name || prev.brand.name,
                   socials: Array.isArray(val.socials) ? val.socials : prev.brand.socials,
                 };
               } else if (val !== undefined && val !== null) {
