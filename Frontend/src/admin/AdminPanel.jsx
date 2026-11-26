@@ -173,7 +173,7 @@ export default function AdminPanel({ onBackToSite }) {
               transform: 'rotate(-45deg)'
             }} />
             <span style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.3rem', letterSpacing: '-0.03em' }}>
-              Avista Studio Admin
+              Codex Studio Admin
             </span>
           </div>
 
