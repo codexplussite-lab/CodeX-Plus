@@ -109,6 +109,10 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
         .cms-editor-root .space-y-4 { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
         .cms-editor-root .space-y-3 { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
         .cms-editor-root .space-y-2 { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
+        .cms-editor-root .flex { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+        .cms-editor-root .items-center { align-items: center; }
+        .cms-editor-root .justify-between { justify-content: space-between; }
+        .cms-editor-root .p-5, .cms-editor-root .p-6 { padding: 1.25rem; border: 1px solid #e5e7eb; border-radius: 1rem; background: #f9fafb; }
         .cms-editor-root input[type="text"],
         .cms-editor-root input[type="email"],
         .cms-editor-root input[type="url"],
