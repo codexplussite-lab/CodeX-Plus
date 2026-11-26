@@ -1888,6 +1888,38 @@ export default function CmsMasterEditor({ cmsData, setCmsData, onPublish, publis
                   }}
                   className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white resize-none"
                 />
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    placeholder="Post Image URL or Upload"
+                    value={post.image || ''}
+                    onChange={e => {
+                      const updated = [...(cmsData?.posts || [])];
+                      updated[idx] = { ...updated[idx], image: e.target.value };
+                      setCmsData(prev => ({ ...prev, posts: updated }));
+                    }}
+                    className="w-full bg-[#180c33] border border-purple-500/25 rounded-lg px-3 py-2 text-xs text-white"
+                  />
+                  <label style={{ margin: 0, cursor: 'pointer', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: '#4f46e5', color: '#fff', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
+                    Upload
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      onChange={e => {
+                        const f = e.target.files?.[0];
+                        if (!f) return;
+                        const r = new FileReader();
+                        r.onload = () => {
+                          const updated = [...(cmsData?.posts || [])];
+                          updated[idx] = { ...updated[idx], image: r.result };
+                          setCmsData(prev => ({ ...prev, posts: updated }));
+                        };
+                        r.readAsDataURL(f);
+                      }}
+                    />
+                  </label>
+                </div>
               </div>
             ))}
           </div>
