@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CODEX+ | Topographic Logo Preloader</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-espresso: #1F150C;
+      --cream-bone: #F5ECE3;
+      --copper-warm: #C67D53;
+      --copper-bright: #D99166;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #1F150C;
+      color: #F5ECE3;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
+
+    /* Subtle ambient espresso vignette */
+    .espresso-stage {
+      background:
+        radial-gradient(circle at 50% 46%, rgba(198, 125, 83, 0.085) 0%, rgba(31, 21, 12, 0) 62%),
+        #1F150C;
+    }
+
+    /* Crisp vector stripe rendering */
+    .codex-stripe {
+      fill: none;
+      stroke-linecap: butt;
+      stroke-linejoin: round;
+      will-change: stroke-dashoffset, opacity, transform;
+    }
+
+    /* Subtle rim highlight when using Exact Reference dark charcoal gradient on #1F150C */
+    #stripes-layer.reference-rim {
+      filter: drop-shadow(0 0 1.25px rgba(244, 236, 228, 0.28));
+    }
+
+    /* Glassmorphic floating control pill */
+    .control-dock {
+      background: rgba(25, 16, 9, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(245, 236, 227, 0.11);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    }
+
+    .pill-btn {
+      transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .pill-btn:hover {
+      background: rgba(245, 236, 227, 0.09);
+    }
+
+    .pill-btn.active {
+      background: rgba(198, 125, 83, 0.22);
+      border-color: rgba(217, 145, 102, 0.55);
+      color: #F5ECE3;
+    }
+
+    /* Preloader exit & Website Loaded reveal transitions */
+    #preloader-overlay {
+      transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+                  filter 0.85s ease;
+    }
+
+    #preloader-overlay.is-exiting {
+      opacity: 0;
+      transform: scale(1.035);
+      filter: blur(4px);
+      pointer-events: none;
+    }
+
+    #loaded-state {
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.25s,
+                  transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.25s;
+      pointer-events: none;
+    }
+
+    #loaded-state.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    /* Subtle pulse on the plus nexus */
+    @keyframes nexusGlow {
+      0%, 100% { opacity: 0.25; transform: scale(0.95); }
+      50% { opacity: 0.65; transform: scale(1.08); }
+    }
+
+    .nexus-halo {
+      transform-origin: 650px 130px;
+      animation: nexusGlow 3.2s ease-in-out infinite;
+    }
+  .control-dock, #loaded-state { display: none !important; }
+  </style>
+</head>
+<body class="espresso-stage relative w-full h-full flex items-center justify-center">
+
+  <!-- =====================================================================
+       1. WEBSITE PRELOADER OVERLAY (Full-screen #1F150C Showcase)
+       ===================================================================== -->
+  <div id="preloader-overlay" class="fixed inset-0 z-20 flex flex-col items-center justify-center px-6 sm:px-12 bg-[#1F150C]">
+    <!-- Subtle radial warm glow behind the logo -->
+    <div class="pointer-events-none absolute inset-0 espresso-stage"></div>
+
+    <!-- Main Logo + Progress Container -->
+    <div class="relative z-10 w-full max-w-[960px] flex flex-col items-center">
+      <!-- High-Precision Procedural Multi-Line Topographic CODEX+ SVG -->
+      <div id="logo-wrapper" class="w-full flex items-center justify-center">
+        <svg id="codex-svg"
+             viewBox="0 0 1000 260"
+             class="w-full h-auto max-h-[34vh] sm:max-h-[38vh] overflow-visible"
+             role="img"
+             aria-label="CODEX+ animated topographic logo">
+          <defs>
+            <!-- High-Contrast Espresso Gradient for #1F150C Background (Bone -> Sand -> Copper) -->
+            <linearGradient id="grad-adapted" x1="20" y1="0" x2="980" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#F4ECE4" />
+              <stop offset="28%" stop-color="#EFE3D7" />
+              <stop offset="48%" stop-color="#DFB495" />
+              <stop offset="68%" stop-color="#CE855B" />
+              <stop offset="100%" stop-color="#C87A50" />
+            </linearGradient>
+
+            <!-- Exact Reference Palette (Charcoal -> Warm Sepia -> Copper) -->
+            <linearGradient id="grad-original" x1="20" y1="0" x2="980" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#2B2623" />
+              <stop offset="24%" stop-color="#4A3B32" />
+              <stop offset="46%" stop-color="#8A614A" />
+              <stop offset="70%" stop-color="#B8714A" />
+              <stop offset="100%" stop-color="#C4764C" />
+            </linearGradient>
+
+            <!-- Soft radial glow centered inside the negative-space '+' nexus -->
+            <radialGradient id="plus-glow-grad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#D99166" stop-opacity="0.30" />
+              <stop offset="60%" stop-color="#C87A50" stop-opacity="0.08" />
+              <stop offset="100%" stop-color="#1F150C" stop-opacity="0" />
+            </radialGradient>
+          </defs>
+
+          <!-- Ambient glow behind the '+' negative-space intersection -->
+          <circle cx="650" cy="130" r="52" fill="url(#plus-glow-grad)" class="nexus-halo" />
+
+          <!-- Group populated with exact parallel topographic ribbon paths -->
+          <g id="stripes-layer" stroke="url(#grad-adapted)"></g>
+        </svg>
+      </div>
+
+      <!-- Minimalist Loading Progress Indicator -->
+      <div class="mt-10 sm:mt-12 w-full max-w-[320px] sm:max-w-[380px] flex flex-col items-center gap-3">
+        <!-- Thin Copper Track & Progress Fill -->
+        <div class="w-full h-[2px] bg-[#F5ECE3]/12 rounded-full overflow-hidden relative">
+          <div id="progress-bar"
+               class="h-full w-0 rounded-full transition-[width] duration-75 ease-out"
+               style="background: linear-gradient(90deg, #F5ECE3 0%, #C67D53 100%); box-shadow: 0 0 12px rgba(198, 125, 83, 0.65);">
+          </div>
+        </div>
+
+        <!-- Status Label & Monospace Counter -->
+        <div class="w-full flex items-center justify-between text-[11px] tracking-[0.22em] uppercase">
+          <span id="loading-status" class="text-[#F5ECE3]/55 font-medium">Initializing</span>
+          <span id="loading-percent" class="font-mono text-[#C67D53] font-medium tabular-nums">0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       2. WEBSITE LOADED PREVIEW STATE (Revealed at 100% completion)
+       ===================================================================== -->
+  <main id="loaded-state" class="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-xl">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C67D53]/30 bg-[#C67D53]/10 text-[#D99166] text-[11px] tracking-[0.2em] uppercase mb-6">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#D99166] animate-pulse"></span>
+      Preloader Complete
+    </div>
+
+    <h1 class="text-3xl sm:text-5xl font-light tracking-tight text-[#F5ECE3] mb-3">
+      Website Loaded
+    </h1>
+    <p class="text-sm sm:text-base text-[#F5ECE3]/60 font-light leading-relaxed mb-8 max-w-md">
+      The <span class="text-[#C67D53] font-medium">CODEX+</span> topographic sequence transitioned smoothly into your main viewport.
+    </p>
+
+    <button id="hero-replay-btn"
+            class="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#C67D53] hover:bg-[#D48C63] text-[#1F150C] font-medium text-sm tracking-wide transition-all duration-200 shadow-lg shadow-[#C67D53]/20 active:scale-95 cursor-pointer">
+      <svg class="w-4 h-4 transition-transform duration-500 group-hover:-rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
+      </svg>
+      Replay Loader
+    </button>
+  </main>
+
+  <!-- =====================================================================
+       3. SUBTLE COLLAPSIBLE BOTTOM CONTROL TOOLBAR
+       ===================================================================== -->
+  <div class="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 w-[calc(100%-24px)] max-w-[820px] flex flex-col items-center">
+    <!-- Collapse / Expand Pill Toggle -->
+    <button id="toggle-toolbar-btn"
+            aria-expanded="true"
+            class="mb-2 px-3 py-1 rounded-full control-dock text-[11px] tracking-[0.16em] uppercase text-[#F5ECE3]/65 hover:text-[#F5ECE3] flex items-center gap-1.5 transition-all cursor-pointer">
+      <span id="toolbar-toggle-label">Hide Controls</span>
+      <svg id="toolbar-chevron" class="w-3.5 h-3.5 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+
+    <!-- Collapsible Control Dock Panel -->
+    <div id="toolbar-panel"
+         class="control-dock w-full rounded-2xl p-2 sm:p-2.5 flex flex-wrap items-center justify-between gap-2 transition-all duration-300 origin-bottom">
+      <!-- Left: Replay + Palette Toggle -->
+      <div class="flex items-center gap-1.5">
+        <button id="dock-replay-btn"
+                title="Replay Preloader"
+                class="pill-btn inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#F5ECE3]/10 text-[#F5ECE3]/85 text-xs font-medium cursor-pointer active:scale-95">
+          <svg class="w-3.5 h-3.5 text-[#C67D53]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+          <span>Replay</span>
+        </button>
+
+        <!-- Palette Toggle (High-Contrast Espresso vs Exact Reference Palette) -->
+        <button id="palette-toggle-btn"
+                title="Switch between High-Contrast Espresso (Bone to Copper) and Exact Reference Palette"
+                class="pill-btn inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#F5ECE3]/10 text-[#F5ECE3]/80 text-xs cursor-pointer">
+          <span id="palette-swatch" class="w-2.5 h-2.5 rounded-full" style="background: linear-gradient(135deg, #F4ECE4, #C87A50);"></span>
+          <span id="palette-label">Espresso</span>
+        </button>
+      </div>
+
+      <!-- Center: Animation Style Selector -->
+      <div class="flex items-center gap-1 bg-[#140D07]/70 p-1 rounded-xl border border-[#F5ECE3]/5 overflow-x-auto max-w-full">
+        <button data-mode="complete"
+                class="mode-btn pill-btn active px-2.5 sm:px-3 py-1.5 rounded-lg border border-transparent text-[11px] sm:text-xs text-[#F5ECE3]/75 whitespace-nowrap cursor-pointer">
+          Complete Draw Reveal
+        </button>
+        <button data-mode="magnetic"
+                class="mode-btn pill-btn px-2.5 sm:px-3 py-1.5 rounded-lg border border-transparent text-[11px] sm:text-xs text-[#F5ECE3]/75 whitespace-nowrap cursor-pointer">
+          Magnetic Center Convergence
+        </button>
+        <button data-mode="sequential"
+                class="mode-btn pill-btn px-2.5 sm:px-3 py-1.5 rounded-lg border border-transparent text-[11px] sm:text-xs text-[#F5ECE3]/75 whitespace-nowrap cursor-pointer">
+          Sequential Letter Build
+        </button>
+      </div>
+
+      <!-- Right: Copy Embed Code -->
+      <button id="copy-embed-btn"
+              class="pill-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#F5ECE3]/15 text-[#F5ECE3] text-xs font-medium cursor-pointer active:scale-95 ml-auto sm:ml-0">
+        <svg id="copy-icon" class="w-3.5 h-3.5 text-[#C67D53]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span id="copy-btn-text">Copy Embed Code</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification (replaces alert) -->
+  <div id="toast"
+       class="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full control-dock text-xs text-[#F5ECE3] flex items-center gap-2 opacity-0 -translate-y-3 pointer-events-none transition-all duration-300">
+    <span class="w-2 h-2 rounded-full bg-[#C67D53]"></span>
+    <span id="toast-message">Embed snippet copied to clipboard</span>
+  </div>
+
+  <!-- =====================================================================
+       4. PROCEDURAL VECTOR LOGO BUILDER & PRELOADER ANIMATION ENGINE
+       ===================================================================== -->
+  <script>
+    (function () {
+      const SVG_NS = "http://www.w3.org/2000/svg";
+      const stripesLayer = document.getElementById("stripes-layer");
+      const svgEl = document.getElementById("codex-svg");
+      const overlayEl = document.getElementById("preloader-overlay");
+      const loadedEl = document.getElementById("loaded-state");
+      const progressBar = document.getElementById("progress-bar");
+      const percentText = document.getElementById("loading-percent");
+      const statusText = document.getElementById("loading-status");
+
+      // Animation & State Config
+      let currentMode = "complete"; // 'complete' | 'magnetic' | 'sequential'
+      let useAdaptedPalette = true;
+      let isToolbarOpen = true;
+      let animationFrameId = null;
+      let startTime = null;
+      let isFinished = false;
+      const LOAD_DURATION_MS = 3800; // Full 0% -> 100% preloader sequence duration
+
+      // Store metadata for each generated SVG path so we can animate smoothly
+      const stripeRecords = [];
+
+      /**
+       * Helper: Convert an array of [x, y] points into a smooth Catmull-Rom cubic Bezier SVG path
+       */
+      function pointsToSmoothPath(pts, tension = 0.3) {
+        if (!pts || pts.length === 0) return "";
+        if (pts.length === 1) return `M ${pts[0][0].toFixed(2)} ${pts[0][1].toFixed(2)}`;
+        if (pts.length === 2) {
+          return `M ${pts[0][0].toFixed(2)} ${pts[0][1].toFixed(2)} L ${pts[1][0].toFixed(2)} ${pts[1][1].toFixed(2)}`;
+        }
+
+        let d = `M ${pts[0][0].toFixed(2)} ${pts[0][1].toFixed(2)}`;
+        for (let i = 0; i < pts.length - 1; i++) {
+          const p0 = i === 0 ? pts[0] : pts[i - 1];
+          const p1 = pts[i];
+          const p2 = pts[i + 1];
+          const p3 = i + 2 < pts.length ? pts[i + 2] : p2;
+
+          const cp1x = p1[0] + (p2[0] - p0[0]) * tension;
+          const cp1y = p1[1] + (p2[1] - p0[1]) * tension;
+          const cp2x = p2[0] - (p3[0] - p1[0]) * tension;
+          const cp2y = p2[1] - (p3[1] - p1[1]) * tension;
+
+          d += ` C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)}, ${cp2x.toFixed(2)} ${cp2y.toFixed(2)}, ${p2[0].toFixed(2)} ${p2[1].toFixed(2)}`;
+        }
+        return d;
+      }
+
+      /**
+       * Helper: Smooth Hermite interpolation clamped between [0, 1]
+       */
+      function smoothstep(edge0, edge1, x) {
+        const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+        return t * t * (3 - 2 * t);
+      }
+
+      /**
+       * Helper: Create and register an individual ribbon stripe with exact getTotalLength()
+       */
+      function addStripe(d, meta) {
+        const path = document.createElementNS(SVG_NS, "path");
+        path.setAttribute("d", d);
+        path.setAttribute("class", "codex-stripe");
+        path.setAttribute("stroke-width", meta.strokeWidth || "3.2");
+        stripesLayer.appendChild(path);
+
+        // Exact dynamic path length measurement with tiny +0.5 safety margin to prevent subpixel gaps
+        const rawLen = path.getTotalLength();
+        const exactLen = Math.ceil(rawLen * 100) / 100;
+        path.style.strokeDasharray = `${exactLen + 1}`;
+        path.style.strokeDashoffset = `${exactLen + 1}`;
+
+        stripeRecords.push({
+          el: path,
+          length: exactLen,
+          letter: meta.letter,
+          letterOrder: meta.letterOrder || 0,
+          index: meta.index,
+          globalIndex: stripeRecords.length,
+          centerX: meta.centerX,
+          isPlusContour: !!meta.isPlusContour,
+          direction: meta.direction || 1
+        });
+      }
+
+      /**
+       * =====================================================================
+       * EXACT GEOMETRIC RECONSTRUCTION OF 'CODEX+' LOGO (viewBox 1000 x 260)
+       * Strict horizontal top baseline y = 20 and bottom baseline y = 240.
+       * =====================================================================
+       */
+      function buildCodexLogo() {
+        stripesLayer.innerHTML = "";
+        stripeRecords.length = 0;
+
+        const yTop = 20;
+        const yBot = 240;
+        const yMid = 130; // Exact vertical midpoint of [20, 240]
+        const sw = 3.15;
+
+        // -------------------------------------------------------------------
+        // 1. LETTER 'C' (10 concentric vertical stadium-arch stripes)
+        // Top baseline y = 20, bottom baseline y = 240.
+        // Right-side mouth cutoffs align crisply at exact y = 95 and y = 165.
+        // -------------------------------------------------------------------
+        const cCx = 105;
+        const cNum = 10;
+        const cInnerRx = 20;
+        const cStep = 6.2;
+        const yMouthTop = 95;
+        const yMouthBot = 165;
+
+        for (let i = 0; i < cNum; i++) {
+          const rx = cInnerRx + i * cStep;
+          // Ensure outer arch touches yTop = 20 at i = cNum - 1, while inner stripes step cleanly
+          const maxRx = cInnerRx + (cNum - 1) * cStep;
+          const ry = 42 + (i / (cNum - 1)) * 28; // Inner ry = 42, Outer ry = 70
+          const topCrownY = yTop + (cNum - 1 - i) * 4.4; // Concentric crown spacing down from y=20
+          const topBaseY = topCrownY + ry;
+          const botCrownY = yBot - (cNum - 1 - i) * 4.4; // Concentric crown spacing up from y=240
+          const botBaseY = botCrownY - ry;
+
+          const pts = [];
+          const domeSteps = 26;
+
+          // Right-top vertical segment from exact y=95 cutoff UP to top arch base
+          if (yMouthTop > topBaseY) {
+            pts.push([cCx + rx, yMouthTop]);
+            pts.push([cCx + rx, topBaseY]);
+          } else {
+            pts.push([cCx + rx, yMouthTop]);
+          }
+
+          // Top stadium semicircle (0 -> PI)
+          for (let s = 1; s <= domeSteps; s++) {
+            const theta = (Math.PI * s) / domeSteps;
+            pts.push([
+              cCx + rx * Math.cos(theta),
+              topBaseY - ry * Math.sin(theta)
+            ]);
+          }
+
+          // Left continuous vertical spine straight down to bottom arch base
+          pts.push([cCx - rx, botBaseY]);
+
+          // Bottom stadium semicircle (PI -> 2*PI)
+          for (let s = 1; s <= domeSteps; s++) {
+            const theta = Math.PI + (Math.PI * s) / domeSteps;
+            pts.push([
+              cCx + rx * Math.cos(theta),
+              botBaseY - ry * Math.sin(theta)
+            ]);
+          }
+
+          // Right-bottom vertical segment UP to exact y=165 cutoff
+          if (yMouthBot < botBaseY) {
+            pts.push([cCx + rx, yMouthBot]);
+          }
+
+          addStripe(pointsToSmoothPath(pts, 0.22), {
+            letter: "C",
+            letterOrder: 0,
+            index: i,
+            centerX: cCx,
+            strokeWidth: sw,
+            direction: i % 2 === 0 ? 1 : -1
+          });
+        }
+
+        // -------------------------------------------------------------------
+        // 2. LETTER 'O' (10 concentric closed stadium rings, y=20 to y=240)
+        // -------------------------------------------------------------------
+        const oCx = 294;
+        const oNum = 10;
+        const oInnerRx = 20;
+        const oStep = 6.2;
+
+        for (let i = 0; i < oNum; i++) {
+          const rx = oInnerRx + i * oStep;
+          const ry = 42 + (i / (oNum - 1)) * 28;
+          const topCrownY = yTop + (oNum - 1 - i) * 4.4;
+          const topBaseY = topCrownY + ry;
+          const botCrownY = yBot - (oNum - 1 - i) * 4.4;
+          const botBaseY = botCrownY - ry;
+
+          const d = [
+            `M ${(oCx + rx).toFixed(2)} ${topBaseY.toFixed(2)}`,
+            `A ${rx.toFixed(2)} ${ry.toFixed(2)} 0 1 0 ${(oCx - rx).toFixed(2)} ${topBaseY.toFixed(2)}`,
+            `L ${(oCx - rx).toFixed(2)} ${botBaseY.toFixed(2)}`,
+            `A ${rx.toFixed(2)} ${ry.toFixed(2)} 0 1 0 ${(oCx + rx).toFixed(2)} ${botBaseY.toFixed(2)}`,
+            `Z`
+          ].join(" ");
+
+          addStripe(d, {
+            letter: "O",
+            letterOrder: 1,
+            index: i,
+            centerX: oCx,
+            strokeWidth: sw,
+            direction: 1
+          });
+        }
+
+        // -------------------------------------------------------------------
+        // 3. LETTER 'D' + '+' (SWISS PLUS NEXUS) + LETTER 'E'
+        // Aligned cleanly on y=20 top baseline and y=240 bottom baseline.
+        // Plus nexus centered at (plusCx = 650, plusCy = 130) spanning y=95..165.
+        // -------------------------------------------------------------------
+        const plusCx = 650;
+        const plusCy = 130;
+
+        // 3A. Left vertical spine of 'D': 10 straight parallel vertical lines (y=20 to y=240)
+        const dLeftX = 412;
+        const dSpineCount = 10;
+        const dSpineStep = 5.6;
+
+        for (let i = 0; i < dSpineCount; i++) {
+          const x = dLeftX + i * dSpineStep;
+          addStripe(`M ${x.toFixed(2)} ${yTop} L ${x.toFixed(2)} ${yBot}`, {
+            letter: "D",
+            letterOrder: 2,
+            index: i,
+            centerX: x,
+            strokeWidth: sw,
+            direction: 1
+          });
+        }
+
+        // 3B. Curved right bowl of 'D' (10 topographic ribbons sweeping from y=20 to y=240
+        // and pinching tightly around the left arm of '+' at y=130)
+        const dBowlCount = 10;
+        for (let i = 0; i < dBowlCount; i++) {
+          const t = i / (dBowlCount - 1); // 0 = innermost D bowl, 1 = outermost hugging '+'
+          const anchorX = dLeftX + (dSpineCount - 1) * dSpineStep + 6 + i * 5.2;
+          const peakBulgeX = 528 + i * 7.2;
+
+          const pts = [];
+          const samples = 40;
+          for (let s = 0; s <= samples; s++) {
+            const u = s / samples; // 0 (y=20) -> 1 (y=240)
+            const y = yTop + u * (yBot - yTop);
+
+            // Smooth D-curve arch across full vertical height
+            const arch = Math.pow(Math.sin(Math.PI * u), 0.52);
+
+            // Magnetic pinch around '+' horizontal left arm at y = 130 (y=95..165)
+            const dy = (y - plusCy) / (26 + (1 - t) * 14);
+            const pinchStrength = Math.pow(t, 1.2) * (34 + t * 14);
+            const pinch = Math.exp(-dy * dy) * pinchStrength;
+
+            const x = anchorX + (peakBulgeX - anchorX) * arch - pinch;
+            pts.push([x, y]);
+          }
+
+          addStripe(pointsToSmoothPath(pts, 0.34), {
+            letter: "D",
+            letterOrder: 2,
+            index: dSpineCount + i,
+            centerX: (anchorX + peakBulgeX) * 0.5,
+            isPlusContour: i >= 4,
+            strokeWidth: sw,
+            direction: -1
+          });
+        }
+
+        // 3C. Central '+' Nexus: 6 concentric nested outline rings of a bold Swiss plus sign
+        // Positioned at (650, 130), spanning y=95..165, with open interior cross cutout
+        const plusRings = 6;
+        for (let r = 0; r < plusRings; r++) {
+          const armLen = 30 + r * 5.0;   // Half-length of '+' arms from center
+          const armHalf = 10 + r * 4.4;  // Half-thickness of '+' arms
+
+          // 12-vertex clockwise polygon tracing the Swiss '+' cross outline
+          const v = [
+            [plusCx - armHalf, plusCy - armLen],
+            [plusCx + armHalf, plusCy - armLen],
+            [plusCx + armHalf, plusCy - armHalf],
+            [plusCx + armLen,  plusCy - armHalf],
+            [plusCx + armLen,  plusCy + armHalf],
+            [plusCx + armHalf, plusCy + armHalf],
+            [plusCx + armHalf, plusCy + armLen],
+            [plusCx - armHalf, plusCy + armLen],
+            [plusCx - armHalf, plusCy + armHalf],
+            [plusCx - armLen,  plusCy + armHalf],
+            [plusCx - armLen,  plusCy - armHalf],
+            [plusCx - armHalf, plusCy - armHalf]
+          ];
+
+          // Build slightly rounded crisp corners so nested rings nest cleanly
+          const d =
+            v.map((pt, idx) => `${idx === 0 ? "M" : "L"} ${pt[0].toFixed(2)} ${pt[1].toFixed(2)}`).join(" ") +
+            " Z";
+
+          addStripe(d, {
+            letter: "+",
+            letterOrder: 3,
+            index: r,
+            centerX: plusCx,
+            isPlusContour: true,
+            strokeWidth: sw * 0.96,
+            direction: r % 2 === 0 ? 1 : -1
+          });
+        }
+
+        // 3D. Letter 'E':
+        // - Top horizontal bar: vertical parallel stripes cut cleanly at y = 20 and y = 65
+        // - Bottom horizontal bar: vertical parallel stripes cut cleanly at y = 195 and y = 240
+        // - Left vertical spine of 'E' wraps organically around the right arms of '+'
+        const eStartX = 616;
+        const eTotalCols = 24;
+        const eColStep = 6.2;
+
+        // 6 inner left-spine ribbons of 'E' wrapping seamlessly around top/right/bottom of '+'
+        for (let i = 0; i < 6; i++) {
+          const baseX = eStartX + i * eColStep;
+          const wrap = i * 5.4;
+          const rightReach = plusCx + 36 + wrap * 0.85;
+          const topShoulderY = 74 - wrap * 0.35;
+          const botShoulderY = 186 + wrap * 0.35;
+
+          // Upper 'E' spine wrapping from y=20 down around top-right of '+' to y=130
+          const upperE = [
+            [baseX, yTop],
+            [baseX, 62 - wrap * 0.3],
+            [plusCx - 12, topShoulderY],
+            [plusCx + 16 + wrap * 0.75, topShoulderY + 12],
+            [plusCx + 16 + wrap * 0.75, plusCy - 14 - wrap * 0.65],
+            [rightReach, plusCy - 14 - wrap * 0.65],
+            [rightReach, plusCy]
+          ];
+
+          addStripe(pointsToSmoothPath(upperE, 0.32), {
+            letter: "E",
+            letterOrder: 4,
+            index: i,
+            centerX: plusCx + 30,
+            isPlusContour: true,
+            strokeWidth: sw,
+            direction: 1
+          });
+
+          // Lower 'E' spine mirroring from y=130 around bottom-right of '+' down to y=240
+          const lowerE = [
+            [rightReach, plusCy],
+            [rightReach, plusCy + 14 + wrap * 0.65],
+            [plusCx + 16 + wrap * 0.75, plusCy + 14 + wrap * 0.65],
+            [plusCx + 16 + wrap * 0.75, botShoulderY - 12],
+            [plusCx - 12, botShoulderY],
+            [baseX, 198 + wrap * 0.3],
+            [baseX, yBot]
+          ];
+
+          addStripe(pointsToSmoothPath(lowerE, 0.32), {
+            letter: "E",
+            letterOrder: 4,
+            index: i + 6,
+            centerX: plusCx + 30,
+            isPlusContour: true,
+            strokeWidth: sw,
+            direction: -1
+          });
+        }
+
+        // Top horizontal bar (y=20 to y=65) and Bottom horizontal bar (y=195 to y=240) of 'E'
+        for (let c = 6; c < eTotalCols; c++) {
+          const x = eStartX + c * eColStep;
+          // Top bar vertical stripe
+          addStripe(`M ${x.toFixed(2)} ${yTop} L ${x.toFixed(2)} 65`, {
+            letter: "E",
+            letterOrder: 4,
+            index: 12 + c,
+            centerX: x,
+            strokeWidth: sw,
+            direction: 1
+          });
+          // Bottom bar vertical stripe
+          addStripe(`M ${x.toFixed(2)} 195 L ${x.toFixed(2)} ${yBot}`, {
+            letter: "E",
+            letterOrder: 4,
+            index: 40 + c,
+            centerX: x,
+            strokeWidth: sw,
+            direction: -1
+          });
+        }
+
+        // -------------------------------------------------------------------
+        // 4. LETTER 'X' (10 parallel stripes left + 10 parallel stripes right)
+        // Starting straight on exact baselines y=20 and y=240, curving smoothly
+        // inward to nearly kiss at vertical centerline y=130, and flaring out.
+        // -------------------------------------------------------------------
+        const xCenter = 885;
+        const xHalfCount = 10;
+
+        for (let side = -1; side <= 1; side += 2) {
+          for (let i = 0; i < xHalfCount; i++) {
+            // i = 0 is innermost ribbon kissing centerline at y=130; i = 9 is outermost ribbon
+            const waistOffset = (2.2 + i * 3.1) * side;
+            const terminalSpread = (26 + i * 7.2) * side;
+
+            const endX = xCenter + terminalSpread;
+            const midX = xCenter + waistOffset;
+
+            // Straight vertical entry at y=20 and exit at y=240, smooth hourglass pinch at y=130
+            const pts = [
+              [endX, yTop],
+              [endX, yTop + 18],
+              [xCenter + terminalSpread * 0.72, yTop + 56],
+              [midX, yMid - 10],
+              [midX, yMid + 10],
+              [xCenter + terminalSpread * 0.72, yBot - 56],
+              [endX, yBot - 18],
+              [endX, yBot]
+            ];
+
+            addStripe(pointsToSmoothPath(pts, 0.34), {
+              letter: "X",
+              letterOrder: 5,
+              index: (side === -1 ? 0 : xHalfCount) + i,
+              centerX: xCenter,
+              strokeWidth: sw,
+              direction: side === -1 ? 1 : -1
+            });
+          }
+        }
+      }
+
+      /**
+       * Update SVG stroke gradient palette
+       */
+      function applyPalette() {
+        const gradId = useAdaptedPalette ? "url(#grad-adapted)" : "url(#grad-original)";
+        stripesLayer.setAttribute("stroke", gradId);
+
+        const swatch = document.getElementById("palette-swatch");
+        const label = document.getElementById("palette-label");
+        if (useAdaptedPalette) {
+          stripesLayer.classList.remove("reference-rim");
+          swatch.style.background = "linear-gradient(135deg, #F4ECE4, #C87A50)";
+          label.textContent = "Espresso";
+        } else {
+          stripesLayer.classList.add("reference-rim");
+          swatch.style.background = "linear-gradient(135deg, #2B2623, #C4764C)";
+          label.textContent = "Reference";
+        }
+      }
+
+      /**
+       * Main Animation Loop (handles 0% -> 100% preloader progress + selected animation mode)
+       * Guarantees EVERY single stroke locks at strokeDashoffset = 0 at 100% completion.
+       */
+      function tick(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const rawProgress = Math.min(1, elapsed / LOAD_DURATION_MS);
+
+        // Smooth ease-in-out curve for the percentage counter
+        const easedProgress =
+          rawProgress < 0.5
+            ? 2 * rawProgress * rawProgress
+            : 1 - Math.pow(-2 * rawProgress + 2, 2) / 2;
+
+        const pct = Math.round(easedProgress * 100);
+        progressBar.style.width = `${pct}%`;
+        percentText.textContent = `${pct}%`;
+
+        // Update subtle status label
+        if (pct < 28) {
+          statusText.textContent = "Mapping Contours";
+        } else if (pct < 68) {
+          statusText.textContent = "Aligning Nexus +";
+        } else if (pct < 100) {
+          statusText.textContent = "Finalizing Vector";
+        } else {
+          statusText.textContent = "Complete";
+        }
+
+        const totalStripes = stripeRecords.length;
+
+        // Animate each individual vertical ribbon independently and lock at 0 offset when complete
+        for (let idx = 0; idx < totalStripes; idx++) {
+          const s = stripeRecords[idx];
+          const normX = s.centerX / 1000; // 0 (left C) -> 1 (right X)
+
+          let localDraw = 1;
+
+          if (rawProgress >= 0.96) {
+            // Hard-lock 100% of every stroke into exact final position before 100% mark
+            localDraw = 1;
+          } else if (currentMode === "complete") {
+            // 1. COMPLETE DRAW REVEAL (Default): Smooth left-to-right + inner-to-outer draw
+            const stagger = normX * 0.44 + (s.index % 10) * 0.012;
+            const drawSpan = 0.40;
+            localDraw = smoothstep(stagger, stagger + drawSpan, rawProgress);
+          } else if (currentMode === "magnetic") {
+            // 2. MAGNETIC CENTER CONVERGENCE: Starts from '+' nexus (x = 650) and radiates outward
+            const distFromPlus = Math.abs(s.centerX - 650) / 650;
+            const stagger = distFromPlus * 0.44 + (s.index % 8) * 0.01;
+            const drawSpan = 0.40;
+            localDraw = smoothstep(stagger, stagger + drawSpan, rawProgress);
+          } else if (currentMode === "sequential") {
+            // 3. SEQUENTIAL LETTER BUILD: Builds C -> O -> D -> + -> E -> X cleanly in order
+            const letterStart = s.letterOrder * 0.125;
+            const stripeOffset = (s.index % 10) * 0.008;
+            const drawSpan = 0.26;
+            localDraw = smoothstep(letterStart + stripeOffset, letterStart + stripeOffset + drawSpan, rawProgress);
+          }
+
+          if (localDraw >= 0.999) {
+            // 100% completed stroke: zero dashoffset, full opacity, zero transform drift
+            s.el.style.strokeDashoffset = "0";
+            s.el.style.opacity = "1";
+            s.el.style.transform = "none";
+          } else {
+            const offset = (s.length + 1) * (1 - localDraw) * s.direction;
+            s.el.style.strokeDashoffset = `${offset.toFixed(2)}`;
+            s.el.style.opacity = `${(0.15 + 0.85 * localDraw).toFixed(3)}`;
+
+            if (currentMode === "magnetic") {
+              const dirToPlus = s.centerX < 650 ? 1 : -1;
+              const pull = (1 - localDraw) * 8 * dirToPlus;
+              s.el.style.transform = `translateX(${pull.toFixed(2)}px)`;
+            } else {
+              s.el.style.transform = "none";
+            }
+          }
+        }
+
+        // Check completion at 100%: hold the 100% unbroken logo briefly before transitioning
+        if (rawProgress >= 1 && !isFinished) {
+          isFinished = true;
+          // Ensure every single path is explicitly locked at strokeDashoffset = 0
+          for (let idx = 0; idx < totalStripes; idx++) {
+            stripeRecords[idx].el.style.strokeDashoffset = "0";
+            stripeRecords[idx].el.style.opacity = "1";
+            stripeRecords[idx].el.style.transform = "none";
+          }
+          setTimeout(() => {
+            overlayEl.classList.add("is-exiting");
+            loadedEl.classList.add("is-visible");
+          }, 650);
+          return;
+        }
+
+        if (!isFinished) {
+          animationFrameId = requestAnimationFrame(tick);
+        }
+      }
+
+      /**
+       * Start or Replay the full 0% -> 100% preloader sequence
+       */
+      function startPreloader() {
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+        isFinished = false;
+        startTime = null;
+
+        // Reset overlays
+        overlayEl.classList.remove("is-exiting");
+        loadedEl.classList.remove("is-visible");
+
+        // Reset progress bar
+        progressBar.style.width = "0%";
+        percentText.textContent = "0%";
+        statusText.textContent = "Initializing";
+
+        // Reset stripes to un-drawn state using exact path length
+        for (const s of stripeRecords) {
+          s.el.style.strokeDasharray = `${s.length + 1}`;
+          s.el.style.strokeDashoffset = `${s.length + 1}`;
+          s.el.style.opacity = "0";
+          s.el.style.transform = "none";
+        }
+
+        animationFrameId = requestAnimationFrame(tick);
+      }
+
+      /**
+       * Generate clean, self-contained HTML/CSS/SVG embed snippet for clipboard copy
+       */
+      function generateEmbedSnippet() {
+        const svgMarkup = svgEl.outerHTML
+          .replace(/\s+/g, " ")
+          .replace(/> </g, "><");
+
+        return `<!-- CODEX+ Website Preloader Snippet (#1F150C Espresso Theme) -->
+<div id="codex-preloader" style="position:fixed;inset:0;z-index:9999;background:#1F150C;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;transition:opacity .8s ease,transform .8s ease;">
+  <div style="width:100%;max-width:820px;">
+    ${svgMarkup}
+  </div>
+  <div style="margin-top:36px;width:100%;max-width:340px;">
+    <div style="height:2px;width:100%;background:rgba(244,236,228,0.12);border-radius:999px;overflow:hidden;">
+      <div id="codex-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#F4ECE4,#C87A50);transition:width .1s linear;"></div>
+    </div>
+    <div style="margin-top:10px;display:flex;justify-content:space-between;font-family:monospace;font-size:11px;letter-spacing:.2em;color:#C87A50;">
+      <span style="color:rgba(244,236,228,0.6)">LOADING</span>
+      <span id="codex-pct">0%</span>
+    </div>
+  </div>
+</div>
+<script>
+  (function(){
+    const loader = document.getElementById('codex-preloader');
+    const bar = document.getElementById('codex-bar');
+    const pct = document.getElementById('codex-pct');
+    const paths = loader.querySelectorAll('.codex-stripe');
+    paths.forEach((p, i) => {
+      const len = Math.ceil(p.getTotalLength() * 100) / 100 + 1;
+      p.style.strokeDasharray = len;
+      p.style.strokeDashoffset = len;
+      p.style.opacity = '1';
+      p.style.transition = 'stroke-dashoffset 1.65s cubic-bezier(0.22,1,0.36,1) ' + (i * 0.012) + 's';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { p.style.strokeDashoffset = '0'; });
+      });
+    });
+    let p = 0;
+    const iv = setInterval(() => {
+      p = Math.min(100, p + 2);
+      bar.style.width = p + '%';
+      pct.textContent = p + '%';
+      if (p >= 100) {
+        clearInterval(iv);
+        paths.forEach((path) => { path.style.strokeDashoffset = '0'; });
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          loader.style.transform = 'scale(1.03)';
+          setTimeout(() => loader.remove(), 850);
+        }, 550);
+      }
+    }, 45);
+  })();
+<\/script>`;
+      }
+
+      /**
+       * Show subtle toast feedback
+       */
+      let toastTimeout = null;
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        const toastMsg = document.getElementById("toast-message");
+        toastMsg.textContent = msg;
+        toast.classList.remove("opacity-0", "-translate-y-3");
+        toast.classList.add("opacity-100", "translate-y-0");
+
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove("opacity-100", "translate-y-0");
+          toast.classList.add("opacity-0", "-translate-y-3");
+        }, 2600);
+      }
+
+      /**
+       * Bind UI Event Listeners
+       */
+      function bindEvents() {
+        // Replay buttons (both in toolbar and Website Loaded hero)
+        document.getElementById("dock-replay-btn").addEventListener("click", startPreloader);
+        document.getElementById("hero-replay-btn").addEventListener("click", startPreloader);
+
+        // Palette toggle
+        document.getElementById("palette-toggle-btn").addEventListener("click", () => {
+          useAdaptedPalette = !useAdaptedPalette;
+          applyPalette();
+          showToast(
+            useAdaptedPalette
+              ? "Switched to High-Contrast Espresso (Bone → Copper)"
+              : "Switched to Exact Reference Palette (Charcoal → Copper)"
+          );
+        });
+
+        // Animation mode selector
+        document.querySelectorAll(".mode-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document.querySelectorAll(".mode-btn").forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentMode = btn.getAttribute("data-mode");
+            startPreloader();
+          });
+        });
+
+        // Collapsible toolbar toggle
+        const toggleToolbarBtn = document.getElementById("toggle-toolbar-btn");
+        const toolbarPanel = document.getElementById("toolbar-panel");
+        const toolbarLabel = document.getElementById("toolbar-toggle-label");
+        const toolbarChevron = document.getElementById("toolbar-chevron");
+
+        toggleToolbarBtn.addEventListener("click", () => {
+          isToolbarOpen = !isToolbarOpen;
+          toggleToolbarBtn.setAttribute("aria-expanded", String(isToolbarOpen));
+          if (isToolbarOpen) {
+            toolbarPanel.classList.remove("opacity-0", "scale-95", "pointer-events-none", "h-0", "p-0", "overflow-hidden");
+            toolbarLabel.textContent = "Hide Controls";
+            toolbarChevron.style.transform = "rotate(0deg)";
+          } else {
+            toolbarPanel.classList.add("opacity-0", "scale-95", "pointer-events-none", "h-0", "p-0", "overflow-hidden");
+            toolbarLabel.textContent = "Controls";
+            toolbarChevron.style.transform = "rotate(180deg)";
+          }
+        });
+
+        // Copy Embed Code using textarea + execCommand('copy') for reliable iFrame support
+        document.getElementById("copy-embed-btn").addEventListener("click", () => {
+          const snippet = generateEmbedSnippet();
+          const textarea = document.createElement("textarea");
+          textarea.value = snippet;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          try {
+            document.execCommand("copy");
+            const btnText = document.getElementById("copy-btn-text");
+            btnText.textContent = "Copied!";
+            showToast("Self-contained preloader HTML/CSS/SVG copied!");
+            setTimeout(() => {
+              btnText.textContent = "Copy Embed Code";
+            }, 2200);
+          } catch (err) {
+            showToast("Unable to copy automatically");
+          }
+          document.body.removeChild(textarea);
+        });
+      }
+
+      // Initialize on window load
+      window.addEventListener("load", () => {
+        buildCodexLogo();
+        applyPalette();
+        bindEvents();
+        startPreloader();
+      });
+    })();
+  </script>
+</body>
+</html>

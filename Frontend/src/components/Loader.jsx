@@ -64,11 +64,11 @@ export default function Loader({ onReveal }) {
       <div className="loader__content">
         <div className="loader__word">
           <span className="loader__mask">
-            <img
-              src="/preloader.gif"
-              alt="CODEX+"
+            <iframe
+              src="/loader.html"
+              title="CODEX+"
               className="loader__letter"
-              style={{ width: 'min(74vw, 34rem)', height: 'auto', borderRadius: '1rem', boxShadow: '0 0 40px rgba(65, 45, 21, 0.45)' }}
+              style={{ width: 'min(90vw, 52rem)', height: 'min(45vh, 22rem)', border: 'none', background: 'transparent', pointerEvents: 'none' }}
             />
           </span>
         </div>
