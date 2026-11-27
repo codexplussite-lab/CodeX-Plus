@@ -13,7 +13,7 @@ export default function Loader({ onReveal }) {
     const fallbackTimer = setTimeout(() => {
       onReveal?.();
       setIsDismissed(true);
-    }, 2400);
+    }, 5200);
 
     return () => clearTimeout(fallbackTimer);
   }, [onReveal]);
@@ -30,12 +30,12 @@ export default function Loader({ onReveal }) {
         }
       });
 
-      tl.from('.loader__letter', { yPercent: 110, duration: 0.8, ease: 'expo.out', stagger: 0.06 }, 0)
+      tl.from('.loader__letter', { opacity: 0, duration: 0.4, ease: 'power2.out' }, 0)
         .to(
           state,
           {
             v: 100,
-            duration: reduce ? 0.2 : 1.6,
+            duration: reduce ? 0.2 : 3.6,
             ease: 'power2.inOut',
             onUpdate: () => {
               if (counter.current) counter.current.textContent = String(Math.round(state.v)).padStart(3, '0');

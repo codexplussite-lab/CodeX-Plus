@@ -24,7 +24,7 @@ describe('Loader Component', () => {
     expect(container.querySelector('.loader')).toBeInTheDocument();
 
     act(() => {
-      vi.advanceTimersByTime(2500);
+      vi.advanceTimersByTime(5500);
     });
 
     expect(onReveal).toHaveBeenCalled();
