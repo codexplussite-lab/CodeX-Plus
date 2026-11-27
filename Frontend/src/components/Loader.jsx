@@ -65,7 +65,7 @@ export default function Loader({ onReveal }) {
         <div className="loader__word">
           <span className="loader__mask">
             <img
-              src="/preloader-logo.png"
+              src="/preloader.gif"
               alt="CODEX+"
               className="loader__letter"
               style={{ width: 'min(74vw, 34rem)', height: 'auto', borderRadius: '1rem', boxShadow: '0 0 40px rgba(65, 45, 21, 0.45)' }}
