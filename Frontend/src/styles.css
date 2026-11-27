@@ -1,20 +1,20 @@
 /* ===== Avista design tokens (see DESIGN.md for the rationale) ===== */
 :root {
   --paper: #000000;
-  --paper-2: #140B1A;
+  --paper-2: #1F150C;
   --white: #E1DCC9;
   --ink: #E1DCC9;
   --ink-soft: rgba(225, 220, 201, 0.76);
   --muted: rgba(225, 220, 201, 0.56);
-  --blue: #6D28D9;
-  --blue-soft: #C084FC;
-  --coral: #412D15;
-  --gradient: linear-gradient(135deg, #290044 0%, #6D28D9 42%, #412D15 80%, #E1DCC9 100%);
-  --glass: rgba(20, 11, 26, 0.76);
+  --blue: #412D15;
+  --blue-soft: #E1DCC9;
+  --coral: #290044;
+  --gradient: linear-gradient(135deg, #412D15 0%, #1F150C 52%, #290044 85%, #E1DCC9 100%);
+  --glass: rgba(31, 21, 12, 0.8);
   --line: rgba(225, 220, 201, 0.22);
-  --line-hover: rgba(192, 132, 252, 0.65);
+  --line-hover: rgba(225, 220, 201, 0.65);
   --line-light: rgba(225, 220, 201, 0.2);
-  --glow: 0 0 28px rgba(109, 40, 217, 0.45), 0 0 55px rgba(65, 45, 21, 0.35);
+  --glow: 0 0 25px rgba(65, 45, 21, 0.65), 0 0 45px rgba(41, 0, 68, 0.35);
   --display: 'Bricolage Grotesque Variable', 'Helvetica Neue', Arial, sans-serif;
   --body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -304,7 +304,7 @@ img, svg { display: block; max-width: 100%; }
   width: min(85vw, 56rem);
   height: min(85vw, 56rem);
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(109, 40, 217, 0.28) 0%, rgba(41, 0, 68, 0.22) 38%, rgba(65, 45, 21, 0.14) 62%, transparent 75%);
+  background: radial-gradient(circle, rgba(65, 45, 21, 0.32) 0%, rgba(41, 0, 68, 0.16) 45%, transparent 72%);
   filter: blur(40px);
   pointer-events: none;
   z-index: 0;
