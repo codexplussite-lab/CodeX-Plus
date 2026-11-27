@@ -1,20 +1,20 @@
 /* ===== Avista design tokens (see DESIGN.md for the rationale) ===== */
 :root {
-  --paper: #0E2954;
-  --paper-2: #1F6E8C;
-  --white: #FFFFFF;
-  --ink: #FFFFFF;
-  --ink-soft: #84A7A1;
-  --muted: #84A7A1;
-  --blue: #2E8A99;
-  --blue-soft: #84A7A1;
-  --coral: #1F6E8C;
-  --gradient: linear-gradient(135deg, #2E8A99 0%, #1F6E8C 55%, #84A7A1 100%);
-  --glass: rgba(14, 41, 84, 0.72);
-  --line: rgba(132, 167, 161, 0.28);
-  --line-hover: rgba(46, 138, 153, 0.75);
-  --line-light: rgba(132, 167, 161, 0.25);
-  --glow: 0 0 25px rgba(46, 138, 153, 0.45), 0 0 50px rgba(31, 110, 140, 0.3);
+  --paper: #000000;
+  --paper-2: #1F150C;
+  --white: #E1DCC9;
+  --ink: #E1DCC9;
+  --ink-soft: rgba(225, 220, 201, 0.72);
+  --muted: rgba(225, 220, 201, 0.55);
+  --blue: #412D15;
+  --blue-soft: #E1DCC9;
+  --coral: #412D15;
+  --gradient: linear-gradient(135deg, #412D15 0%, #1F150C 60%, #E1DCC9 100%);
+  --glass: rgba(31, 21, 12, 0.78);
+  --line: rgba(225, 220, 201, 0.22);
+  --line-hover: rgba(225, 220, 201, 0.65);
+  --line-light: rgba(225, 220, 201, 0.2);
+  --glow: 0 0 25px rgba(65, 45, 21, 0.65), 0 0 50px rgba(225, 220, 201, 0.15);
   --display: 'Bricolage Grotesque Variable', 'Helvetica Neue', Arial, sans-serif;
   --body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -304,7 +304,7 @@ img, svg { display: block; max-width: 100%; }
   width: min(85vw, 56rem);
   height: min(85vw, 56rem);
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(46, 138, 153, 0.25) 0%, rgba(31, 110, 140, 0.14) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(65, 45, 21, 0.35) 0%, rgba(31, 21, 12, 0.2) 45%, transparent 70%);
   filter: blur(40px);
   pointer-events: none;
   z-index: 0;
