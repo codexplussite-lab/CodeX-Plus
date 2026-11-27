@@ -14,7 +14,7 @@ describe('Loader Component', () => {
   it('renders initial loader elements correctly', () => {
     render(<Loader onReveal={vi.fn()} />);
     expect(screen.getByText('000')).toBeInTheDocument();
-    expect(screen.getByText('C')).toBeInTheDocument();
+    expect(screen.getByAltText('CODEX+')).toBeInTheDocument();
   });
 
   it('triggers onReveal via safety fallback timeout and unmounts', () => {

@@ -63,11 +63,14 @@ export default function Loader({ onReveal }) {
       <div className="loader__panel loader__panel--b" />
       <div className="loader__content">
         <div className="loader__word">
-          {'CODEXX'.split('').map((l, i) => (
-            <span className="loader__mask" key={i}>
-              <span className="loader__letter">{l}</span>
-            </span>
-          ))}
+          <span className="loader__mask">
+            <img
+              src="/preloader-logo.png"
+              alt="CODEX+"
+              className="loader__letter"
+              style={{ width: 'min(74vw, 34rem)', height: 'auto', borderRadius: '1rem', boxShadow: '0 0 40px rgba(65, 45, 21, 0.45)' }}
+            />
+          </span>
         </div>
         <span className="loader__count" ref={counter}>000</span>
       </div>
