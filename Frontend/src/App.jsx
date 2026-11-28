@@ -3,7 +3,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Noise from './components/bits/Noise.jsx';
-import Loader from './components/Loader.jsx';
+import Preloader from './components/preloader/Preloader.jsx';
 import Header from './components/Header.jsx';
 import CursorLabel from './components/CursorLabel.jsx';
 import Hero from './sections/Hero.jsx';
@@ -60,8 +60,8 @@ function MainSite() {
 
   return (
     <>
-      <Loader
-        onReveal={() => {
+      <Preloader
+        onDone={() => {
           setReady(true);
           window.__lenis?.start();
         }}

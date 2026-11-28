@@ -1,0 +1,187 @@
+:root {
+  --cx-bg: #1F150C;
+  --cx-ink: #E1DCC9;
+  --cx-copper: #E1DCC9;
+  --cx-copper-deep: #E1DCC9;
+}
+
+.cx-pre {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--cx-bg);
+}
+
+/* ---------- cinematic ambient glow & film grain ---------- */
+.cx-glow {
+  position: absolute;
+  inset: -20%;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 48%, rgba(225, 220, 201, 0.1) 0%, rgba(225, 220, 201, 0.03) 45%, transparent 72%);
+  opacity: 0;
+  animation: cx-glow-in 1800ms cubic-bezier(0.22, 1, 0.36, 1) 150ms forwards,
+             cx-glow-pulse 5s ease-in-out 2s infinite alternate;
+}
+
+@keyframes cx-glow-in {
+  to { opacity: 1; }
+}
+@keyframes cx-glow-pulse {
+  from { transform: scale(0.98); opacity: 0.85; }
+  to   { transform: scale(1.06); opacity: 1; }
+}
+
+.cx-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: radial-gradient(rgba(244, 239, 230, 0.9) 0.5px, transparent 0.5px);
+  background-size: 3px 3px;
+}
+
+/* ---------- subtle architectural corner brackets ---------- */
+.cx-frame {
+  position: absolute;
+  inset: clamp(18px, 4vw, 44px);
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  animation: cx-fade 900ms ease 250ms forwards;
+}
+.cx-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: rgba(244, 239, 230, 0.2);
+  border-style: solid;
+  border-width: 0;
+}
+.cx-corner--tl { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+.cx-corner--tr { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+.cx-corner--bl { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+.cx-corner--br { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+.cx-stage {
+  position: relative;
+  z-index: 2;
+  width: min(86vw, 880px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  animation: cx-push 3400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes cx-push {
+  from { transform: scale(0.965); }
+  to   { transform: scale(1); }
+}
+
+.cx-logo {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 24px rgba(225, 220, 201, 0.14));
+}
+
+/* ---------- draw animation ---------- */
+.cx-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: cx-draw 950ms cubic-bezier(0.65, 0, 0.25, 1) var(--d, 0ms) forwards;
+}
+.cx-outline { animation-duration: 1150ms; }
+.cx-ripple { animation-duration: 1000ms; }
+
+@keyframes cx-draw { to { stroke-dashoffset: 0; } }
+
+.cx-plus-fill {
+  opacity: 0;
+  animation: cx-fade 450ms ease 1200ms forwards;
+}
+@keyframes cx-fade { to { opacity: 1; } }
+
+/* plus ripple "saans" lene wala pulse, draw ke baad */
+.cx-plus {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cx-breathe 2.6s ease-in-out 2.6s infinite;
+}
+@keyframes cx-breathe {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(225, 220, 201, 0)); }
+  50% { transform: scale(1.06); filter: drop-shadow(0 0 14px rgba(225, 220, 201, 0.35)); }
+}
+
+/* ---------- exit: logo zoom + curtain wipe up ---------- */
+.cx-pre.is-exit {
+  animation: cx-wipe 1050ms cubic-bezier(0.76, 0, 0.24, 1) 150ms forwards;
+}
+.cx-pre.is-exit .cx-stage {
+  animation: cx-logo-out 650ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.cx-pre.is-exit .cx-frame,
+.cx-pre.is-exit .cx-glow {
+  opacity: 0;
+  transition: opacity 450ms ease;
+}
+@keyframes cx-wipe {
+  from { clip-path: inset(0 0 0 0); }
+  to   { clip-path: inset(0 0 100% 0); }
+}
+@keyframes cx-logo-out {
+  to { opacity: 0; transform: scale(1.1) translateY(-14px); filter: blur(8px); }
+}
+
+/* ---------- progress & status bar ---------- */
+.cx-meta {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  color: var(--cx-ink);
+  opacity: 0;
+  animation: cx-fade 650ms ease 350ms forwards;
+}
+.cx-label {
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(225, 220, 201, 0.65);
+  white-space: nowrap;
+}
+.cx-bar {
+  flex: 1;
+  height: 1.5px;
+  background: rgba(225, 220, 201, 0.14);
+  overflow: hidden;
+  border-radius: 999px;
+}
+.cx-bar i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left;
+  background: #E1DCC9;
+  box-shadow: 0 0 10px rgba(225, 220, 201, 0.4);
+}
+.cx-pct {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  font-variant-numeric: tabular-nums;
+  color: #E1DCC9;
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .cx-line { animation-duration: 1ms; animation-delay: 0ms; }
+  .cx-plus, .cx-glow, .cx-stage { animation: none; }
+  .cx-pre.is-exit { animation-duration: 300ms; animation-delay: 0ms; }
+}
